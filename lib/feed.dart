@@ -73,26 +73,21 @@ class PostPreview extends StatelessWidget {
                 )
               ],
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+            ButtonBar(
+              children: <Widget>[
                   Container(
-                    margin: const EdgeInsets.only(left: 20.0),
                     child: FlatButton(
-                      color: Colors.blue,
-                      textColor: Colors.white,
+                      padding: EdgeInsets.all(20),
+                      textColor: Colors.grey,
                       child: Row(
                         children: <Widget>[
                           Icon(
                             Icons.comment,
                             size: 25,
-                            color: Colors.white,
+                            color: Colors.grey,
                           ),
                           Container(
-                            margin: const EdgeInsets.only(left: 10.0),
-                            child: Text('Commenter'),
+                            child: Text('124 Commentaires'),
                           ),
                         ],
                       ),
@@ -101,17 +96,18 @@ class PostPreview extends StatelessWidget {
                       },
                     ),
                   ),
-                  FlatButton(
-                    child: Icon(Icons.keyboard_arrow_up),
-                    onPressed: () {/* ... */},
+                  Container(
+                    child: IconButton(
+                      icon: Icon(Icons.keyboard_arrow_up),
+                      onPressed: () {/* ... */},
+                    ),
                   ),
-                  FlatButton(
-                    child: Icon(Icons.keyboard_arrow_down),
+                  IconButton(
+                    icon: Icon(Icons.keyboard_arrow_down),
                     onPressed: () {/* ... */},
                   ),
                 ],
               ),
-            ),
           ],
         ),
       ),
