@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
+import 'settings.dart';
 
 void main() => runApp(Feed());
 
@@ -10,7 +12,20 @@ class Feed extends StatelessWidget {
     return MaterialApp(
       title: _title,
       home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
+        appBar: AppBar(
+          title: const Text(_title),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.settings,
+                semanticLabel: 'settings',
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
+              },
+            )
+          ],
+        ),
         body: PostPreview(),
       ),
     );
@@ -81,7 +96,9 @@ class PostPreview extends StatelessWidget {
                           ),
                         ],
                       ),
-                      onPressed: () {/* ... */},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+                      },
                     ),
                   ),
                   FlatButton(

@@ -1,9 +1,5 @@
-// Flutter code sample for material.Card.1
-
-// This sample shows creation of a [Card] widget that shows album information
-// and two actions.
-
 import 'package:flutter/material.dart';
+import 'feed.dart';
 
 void main() => runApp(MyApp());
 
@@ -77,7 +73,9 @@ class MyStatelessWidget extends StatelessWidget {
                   ),
                   FlatButton(
                     child: const Text('Poster'),
-                    onPressed: () {/* ... */},
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
+                    },
                   ),
                 ],
               ),
