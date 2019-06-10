@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'feed.dart';
 
 void main() => runApp(MyApp());
@@ -20,11 +21,49 @@ class MyApp extends StatelessWidget {
 }
 
 /// This is the stateless widget that the main application instantiates.
-class MyStatelessWidget extends StatelessWidget {
+class MyStatelessWidget extends StatefulWidget {
   MyStatelessWidget({Key key}) : super(key: key);
+
+
+  @override
+  _MyStatefulWidgetState createState() {
+    // TODO: implement createState
+    return _MyStatefulWidgetState();
+  }
+}
+
+class _MyStatefulWidgetState extends State<MyStatelessWidget> {
+  bool isLoading=false;
+  bool havePosition = false;
+  Position position;
+  List<Placemark> placemark;
 
   @override
   Widget build(BuildContext context) {
+    if (havePosition) {
+      try {
+        return Center(
+          child: AlertDialog(
+            title: Text("Your position"),
+            content: Text(placemark[0].locality),
+          ),
+        );
+      }
+      catch (e) {
+
+      }
+    }
+
+    if (this.isLoading)
+
+      return Center(
+        child: CircularProgressIndicator(
+
+        ),
+      );
+
+    else
+
     return Center(
       child: Card(
         child: Column(
@@ -51,15 +90,31 @@ class MyStatelessWidget extends StatelessWidget {
               ),
             ),
             MaterialButton(
-              onPressed: () {/* ... */},
+              onPressed: () async {
+                setState(() {
+                  this.isLoading = true;
+                  this.havePosition = true;
+                });
+                position =  await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+                placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
+                print("k2");
+
+
+                setState(() {
+                  this.isLoading = false;
+                });
+                print(position.longitude);
+                print("k");
+
+              },
               child:
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(Icons.gps_fixed),
-                    Text('Ajouter ma position')
-                  ],
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(Icons.gps_fixed),
+                  Text('Ajouter ma position')
+                ],
+              ),
               color: Colors.blue,
               textColor: Colors.white,
             ),
