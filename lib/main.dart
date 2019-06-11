@@ -38,7 +38,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
   bool isLoading=false;
   bool havePosition = false;
   Position position;
-  bool chooseCamera = false;
+  bool chooseCamera ;
   List<Placemark> placemark;
 
   final _formKey = GlobalKey<FormState>();
@@ -57,16 +57,6 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
   }
   @override
   Widget build(BuildContext context) {
-
-    if (this.isLoading)
-
-      return Center(
-        child: CircularProgressIndicator(
-
-        ),
-      );
-
-    else
 
     return Center(
       child: Card(
@@ -101,7 +91,12 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                       )
                     ],
                   ));
+                  try {
                   getImage(chooseCamera);
+
+                  } catch (e){
+
+                  }
                 },
               ),
               title: Text('Accident de voiture'),
