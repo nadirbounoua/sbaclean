@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'settings.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'dart:convert';
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'projectSettings.dart' as ProjectSettings;
 void main() => runApp(Feed());
-
+  String apiUrl = 'http://192.168.1.119:7000';
+  String authToken = "485d5e2f79512be1280a9f82b8b95c3ecb934bf4" ;
 
 class Feed extends StatelessWidget {
   static const String _title = 'Signalements';
@@ -26,14 +32,67 @@ class Feed extends StatelessWidget {
             )
           ],
         ),
-        body: PostPreview(),
+        body: FutureBuilder<List<Post>>(
+          future: getPosts(),
+          builder: (context,snapshot) {
+            if (snapshot.hasError) print(snapshot.error);
+            return snapshot.hasData
+              ? PostList(posts: snapshot.data)
+              : Center(child: CircularProgressIndicator());
+        
+          },
+        ),
       ),
     );
   }
 }
 
+Future<List<Post>> getPosts() async{
+  var url = ProjectSettings.apiUrl+"/api/v1/posts/post/";
+  var response = await http.get(url,
+  headers: {HttpHeaders.authorizationHeader : "Token "+ProjectSettings.authToken});
+  return compute(parsePost, response.body);
+}
+
+
+List<Post> parsePost(String responseBody){
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    
+    return parsed.map<Post>((json) => Post.fromJson(json)).toList();
+}
+class PostList extends StatelessWidget {
+  final List<Post> posts;
+
+  PostList({Key key, this.posts}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+      return ListView.builder(
+        itemCount: posts.length,
+        itemBuilder: (context, index) {
+          return PostPreview(description: posts[index].description, title: posts[index].title);
+        },
+      );
+  }
+}
+
+class Post {
+  String title;
+  String description;
+
+  Post({this.title, this.description});
+
+  factory Post.fromJson(Map<String,dynamic> json){
+    return Post(description: json['description'] as String,title: json['title'] as String);
+  }
+
+}
+
 class PostPreview extends StatelessWidget {
-  PostPreview({Key key}) : super(key: key);
+  String title;
+  String description;
+  PostPreview({Key key,  this.title, this.description}) : super(key: key);     
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -62,13 +121,13 @@ class PostPreview extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    Text(
-                      'Accident de voiture',
+                    Text(title
+                      ,
                       style: new TextStyle(
                         fontSize: 25,
                       ),
                     ),
-                    Text('Rue, Quartier, Wilaya, Algérie'),
+                    Text(description),
                   ],
                 )
               ],
@@ -122,4 +181,5 @@ class PostPreview extends StatelessWidget {
       ),
     );
   }
+
 }
