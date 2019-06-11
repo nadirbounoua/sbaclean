@@ -58,6 +58,8 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
   @override
   Widget build(BuildContext context) {
 
+    if(isLoading) return Center(child: CircularProgressIndicator(),);
+
     return Center(
       child: Card(
         child: Column(
@@ -113,7 +115,6 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                     ),
                     validator: (value) {
                       if (value.isEmpty){
-                        print('k');
                         return 'Please enter some text';
                       }
                       return null;
