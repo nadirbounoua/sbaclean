@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'feed.dart';
 import 'dart:io';
+import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:http/http.dart' as http;
+import 'projectSettings.dart' as ProjectSettings;
 void main() => runApp(MyApp());
 
 /// This Widget is the main application widget.
@@ -35,12 +37,16 @@ class MyStatelessWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatelessWidget> {
+  String apiUrl = ProjectSettings.apiUrl;
+  String authToken = ProjectSettings.authToken ;
   bool isLoading=false;
   bool havePosition = false;
   Position position;
   bool chooseCamera ;
   List<Placemark> placemark;
-
+  String description ;
+  String title ;
+  
   final _formKey = GlobalKey<FormState>();
 
   File _image;
@@ -117,6 +123,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                       if (value.isEmpty){
                         return 'Please enter some text';
                       }
+                      title = value;
                       return null;
                     },
                   ),
@@ -126,6 +133,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                       if (value.isEmpty){
                         return 'Please enter some text';
                       }
+                      description = value;
                       return null;
                     },
                     controller: TextEditingController(),
@@ -185,8 +193,14 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                   ),
                   FlatButton(
                     child: const Text('Poster'),
-                    onPressed: () {
-                      if (_formKey.currentState.validate() && _image != null){
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()){
+                        var url = ProjectSettings.apiUrl + "/api/v1/posts/post/";
+                        var response = await http.post(url,
+                        body : {'title': title,'description': description, 'longitude': position.longitude.toString(), 'latitude':position.latitude.toString(), 'post_owner': "1",'city':'1' },
+                        headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+                        );
+                        if (response.statusCode != 500)
                         Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
                       }
                     },
