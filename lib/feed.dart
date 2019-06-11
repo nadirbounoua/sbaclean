@@ -73,11 +73,12 @@ class PostPreview extends StatelessWidget {
                 )
               ],
             ),
-            ButtonBar(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                  Container(
+                  Expanded(
                     child: FlatButton(
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.only(left: 10),
                       textColor: Colors.grey,
                       child: Row(
                         children: <Widget>[
@@ -96,16 +97,24 @@ class PostPreview extends StatelessWidget {
                       },
                     ),
                   ),
+                  Text(
+                    "2493",
+                    style: TextStyle(color: Colors.blue),
+                  ),
                   Container(
+                    padding: EdgeInsets.all(0),
                     child: IconButton(
-                      icon: Icon(Icons.keyboard_arrow_up),
+                      icon: Icon(Icons.keyboard_arrow_up, color: Colors.blue),
                       onPressed: () {/* ... */},
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    onPressed: () {/* ... */},
-                  ),
+                  Container(
+                    padding: EdgeInsets.all(0),
+                    child: IconButton(
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      onPressed: () {/* ... */},
+                    ),
+                  )
                 ],
               ),
           ],
