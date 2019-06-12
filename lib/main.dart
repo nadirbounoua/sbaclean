@@ -44,11 +44,11 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
   Position position;
   bool chooseCamera ;
   List<Placemark> placemark;
-  String description ;
-  String title ;
-  
+  String description ='' ;
+  String title = '' ;
+  TextEditingController titleController =TextEditingController(text: '');
+  TextEditingController descriptionController = TextEditingController(text: '') ;
   final _formKey = GlobalKey<FormState>();
-
   File _image;
 
   Future getImage(camera) async {
@@ -61,6 +61,16 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
       _image = image;
     });
   }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    titleController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -115,6 +125,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
+                    controller: titleController,
                     decoration: InputDecoration(
                     labelText: 'Title',
                     labelStyle: TextStyle(color: Colors.blue),
@@ -128,6 +139,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                     },
                   ),
                   TextFormField(
+                    controller: descriptionController,
                     maxLines: null,
                     validator: (value) {
                       if (value.isEmpty){
@@ -136,7 +148,6 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                       description = value;
                       return null;
                     },
-                    controller: TextEditingController(),
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                     labelText: 'Description',
@@ -152,7 +163,6 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
               onPressed: havePosition ? () {
                 position = null;
                 placemark = null;
-
                 setState(() {
                   this.havePosition = false;    
                 });
@@ -165,8 +175,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
 
                 position =  await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
                 placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
-
-
+                
                 setState(() {
                   this.isLoading = false;
                 });
