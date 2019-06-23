@@ -12,7 +12,7 @@ void main() {
 class MyApp extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
   final store = Store<AppState>(appStateReducers,
-  initialState: AppState(anomalies: []),
+  initialState: AppState(),
   middleware: [thunkMiddleware]
   );
   @override
