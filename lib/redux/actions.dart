@@ -41,22 +41,55 @@ class GetAnomaliesAction {
   }
 }
 
+class SetLoadingAction {
+  final bool isLoading;
+  SetLoadingAction(this.isLoading);
+}
+
+class RemoveLoadingAction {
+  final bool isLoading;
+  RemoveLoadingAction(this.isLoading);
+}
 
 
 class AddPositionAction {
+  final bool havePosition;
   final Position position;
+  final List<Placemark> placemark;
 
-  AddPositionAction(this.position);
+  AddPositionAction(this.position, this.placemark, this.havePosition,);
 
     ThunkAction<AppState> getPosition() {
-      return (Store<AppState> store) async {
+      return (Store<AppState> store) async {        
         final myPosition =  await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        store.dispatch(new AddPositionAction(myPosition));
+        final myLocation = await Geolocator().placemarkFromCoordinates(myPosition.latitude, myPosition.longitude);
+        final havePosition = true;
+        store.dispatch(new AddPositionAction(myPosition, myLocation, havePosition));
+
         //final placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
 
   };
 }
 }
+
+class DeletePositionAction {
+  final bool havePosition;
+  final Position position;
+  final List<Placemark> placemark;
+  DeletePositionAction(this.position, this.placemark, this.havePosition);
+
+    ThunkAction<AppState> deletePosition() {
+      return (Store<AppState> store) async {
+        final myPosition =  null;
+        final myLocation = null;
+        print('k');
+        store.dispatch(new DeletePositionAction(myPosition, myLocation, false));
+        //final placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
+
+  };
+}
+}
+
 
 class ChoosePickerCameraAction {
   final bool value;
