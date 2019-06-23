@@ -4,27 +4,18 @@ import '../feed/feed.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-import '../../projectSettings.dart' as ProjectSettings;
-import '../../backend/api.dart';
-import 'widgets/image_chooser.dart';
-void main() => runApp(MyApp());
+import 'package:learning2/screens/main/widgets/image_chooser.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
+import 'package:learning2/models/anomaly.dart';
+import 'package:learning2/redux/actions.dart';
+import 'package:learning2/redux/reducers.dart';
+import 'package:learning2/models/app_state.dart';
+
+//void main() => runApp(MyApp());
 
 /// This Widget is the main application widget.
-class MyApp extends StatelessWidget {
-  static const String _title = 'Flutter Code Sample';
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _title,
-      home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
-        body: MyStatelessWidget(),
-      ),
-    );
-  }
-}
 
 /// This is the stateless widget that the main application instantiates.
 class MyStatelessWidget extends StatefulWidget {
@@ -39,21 +30,20 @@ class MyStatelessWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatelessWidget> {
-  String apiUrl = ProjectSettings.apiUrl;
-  String authToken = ProjectSettings.authToken ;
   bool isLoading=false;
   bool havePosition = false;
   Position position;
   List<Placemark> placemark;
   String description ='' ;
   String title = '' ;
+  String latitude;
+  String longitude;
   TextEditingController titleController =TextEditingController(text: '');
   TextEditingController descriptionController = TextEditingController(text: '') ;
   ImageChooser imageChooser;
   final _formKey = GlobalKey<FormState>();
   File _image;
   bool chooseCamera = false;
-  Api api = Api();
 
 
   Future getImage(camera) async {
@@ -91,32 +81,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                 icon: (_image == null) ? Icon(Icons.image) : Image.file(_image,height: 100,width: 100,),
                 iconSize: (_image != null ) ? 60 : 24,
                 onPressed:  () async {
-                  imageChooser = ImageChooser();
-                  await showDialog(
-                    context: context,
-                    child: SimpleDialog(
-        title: Text("Choisissez"),
-        children: <Widget>[
-          SimpleDialogOption(
-            onPressed: () {
-              setState(() {
-                chooseCamera = true;
-              });
-              Navigator.of(context).pop();
-            },
-            child: Text("Camera"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              setState(() {
-                chooseCamera = false;
-              });
-              Navigator.of(context).pop();
-            },
-            child: Text("Gallery"),
-          )
-          ],
-      ));
+                  ImageChooser();
                   try {
                   getImage(chooseCamera);
 
@@ -183,7 +148,10 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
 
                 position =  await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
                 placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
-                
+                latitude = position.latitude.toString();
+                longitude = position.longitude.toString();
+
+
                 setState(() {
                   this.isLoading = false;
                 });
@@ -208,16 +176,38 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                     child: const Text('Annuler'),
                     onPressed: () {/* ... */},
                   ),
-                  FlatButton(
-                    child: const Text('Poster'),
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()){
-                        var response = await api.createPost(title,description,position.longitude.toString(),position.latitude.toString());
-                        if (response.statusCode != 500)
+                  StoreConnector<AppState,OnSaveAnomaly>(
+                    converter: (Store<AppState> store) {
+                      return (title, description, latitude, longitude) {
+                        store.dispatch(new AddAnomalyAction(Anomaly(title: title,description: description, latitude: latitude, longitude: longitude)).postAnomaly());
+                      };
+                    },
+
+                    builder: (BuildContext context, onSave) {
+                      return new FlatButton(
+                        child: const Text('Poster'),
+                        onPressed: () async {
+                        if (_formKey.currentState.validate()){
+                          onSave(title,description, latitude, longitude);
                           Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
                       }
                     },
+                  );
+                      
+                    },
                   ),
+                  StoreConnector<AppState,VoidCallback>(
+                    converter: (store) => () => store.dispatch(new GetAnomaliesAction([]).getAnomalies()),
+                    builder: (context,callback) {
+                      return FlatButton(
+                        child: const Text('Skip'),
+                        onPressed: () async {
+                          callback();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
+
+                    });
+                    },)
+                  ,
                 ],
               ),
             ),
