@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:learning2/redux/actions.dart';
+import 'package:learning2/models/app_state.dart';
 final state_key = GlobalKey<ImageChooserState>();
 
 
@@ -18,7 +21,41 @@ class ImageChooserState extends State<ImageChooser> {
 
   @override
   Widget build(BuildContext context) {
-    return null;
+        return new SimpleDialog(
+          title: Text("Choisissez"),
+          children: <Widget>[
+            StoreConnector<AppState, VoidCallback>(
+             converter: (store) {
+            return () => store.dispatch(Actions.ChoosePickerCameraAction);
+             },
+  
+           builder: (context,callback) {
+             return new
+            SimpleDialogOption(
+              onPressed: () {
+              callback();
+              Navigator.of(context).pop();
+            },
+            child: Text("Camera"),
+          );}),
+            StoreConnector<AppState, VoidCallback>(
+             converter: (store) {
+            return () => store.dispatch(Actions.ChoosePickerGalleryAction);
+             },
+  
+           builder: (context,callback) {
+             return new
+            SimpleDialogOption(
+              onPressed: () {
+              callback();
+              Navigator.of(context).pop();
+            },
+            child: Text("Gallery"),
+          );})
+          ],
+      );
       
+    }
+    
+
   }
-}
