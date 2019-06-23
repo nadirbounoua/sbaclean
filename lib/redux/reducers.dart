@@ -18,6 +18,19 @@ AppState appStateReducers(AppState state, dynamic action) {
   if (action is AddPositionAction) {
     return getPostion(state.position, action);
   }
+
+  if (action is DeletePositionAction) {
+    return deletePosition(state.position, action);
+  }
+
+  if (action is SetLoadingAction) {
+    return setLoading(action);
+  }
+
+  if (action is RemoveLoadingAction) {
+    return removeLoading(action);
+  }
+
   return state;
 }
 
@@ -32,7 +45,19 @@ AppState getAnomalies(List<Anomaly> items, GetAnomaliesAction action) {
 AppState getPostion(Position position, AddPositionAction action){
   
   if (action.position != null)   
-    return AppState(position: action.position);
+    return AppState(position: action.position,placemark: action.placemark, havePosition: action.havePosition);
 
   return AppState(position: position);
+}
+
+AppState deletePosition(Position position, DeletePositionAction action){
+    return AppState(position: action.position,placemark: action.placemark, havePosition: action.havePosition);
+}
+
+AppState setLoading(SetLoadingAction action) {
+  return AppState(isLoading: action.isLoading);
+}
+
+AppState removeLoading(RemoveLoadingAction action) {
+  return AppState(isLoading: action.isLoading);
 }
