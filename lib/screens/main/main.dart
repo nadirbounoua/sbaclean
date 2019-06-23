@@ -68,30 +68,56 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-    if(isLoading) return Center(child: CircularProgressIndicator(),);
-
-    return Center(
+    return StoreConnector<AppState, bool>(
+      converter: (store) => store.state.isLoading,
+      builder: (context, isLoading) => isLoading ? Center(child: CircularProgressIndicator(),) 
+      :Center(
       child: Card(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: IconButton(
-                icon: (_image == null) ? Icon(Icons.image) : Image.file(_image,height: 100,width: 100,),
-                iconSize: (_image != null ) ? 60 : 24,
-                onPressed:  () async {
-                  ImageChooser();
-                  try {
-                  getImage(chooseCamera);
+              leading: StoreConnector<AppState,AppState>(
+                converter: (store) => store.state,
+                builder: (context, state) {
+                return IconButton(
+                  icon: (state.image == null) ? Icon(Icons.image) : Image.file(state.image,height: 100,width: 100,),
+                  iconSize: (state.image != null ) ? 60 : 24,
+                  onPressed:  () async {
+                    
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ImageChooser();
+                      });
+                    try {
+                      getImage(state.chooseCamera);
 
-                  } catch (e){
+                    } catch (e){
 
-                  }
+                    }
+                },
+              );
                 },
               ),
               title: Text('Accident de voiture'),
-              subtitle: havePosition ?  Text(placemark[0].locality + ", "+placemark[0].country) : Text(""),
+              subtitle: 
+              StoreConnector<AppState,AppState>(
+                converter: (store) {
+                  try{
+                  print(store.state.placemark[0]);
+
+                  }
+                  catch (e) {
+                    print(e);
+                  }
+                  return store.state;
+                },
+                builder: (context, state) => 
+                  state.havePosition ? Text(state.placemark[0].locality + ", "+state.placemark[0].country) 
+                  : Text("")
+                ,
+              )
             ),
             Form(
               key: _formKey,
@@ -132,42 +158,32 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                 ],
               ),
             ),
-            MaterialButton(
-              onPressed: havePosition ? () {
-                position = null;
-                placemark = null;
-                setState(() {
-                  this.havePosition = false;    
-                });
-              } : () async {
-  
-                setState(() {
-                  this.isLoading = true;
-                  this.havePosition = true;
-                });
+            StoreConnector<AppState, AppState>(
+              converter: (store1) => store1.state,
+              builder: (context, state) =>
+                StoreConnector<AppState,VoidCallback>(
+                  converter: (store) => state.havePosition ? 
 
-                position =  await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-                placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
-                latitude = position.latitude.toString();
-                longitude = position.longitude.toString();
-
-
-                setState(() {
-                  this.isLoading = false;
-                });
-             
-              },
-              child:
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Icon(Icons.gps_fixed),
-                  havePosition ? Text('Supprimer ma position') : Text('Ajouter ma position') 
-                ],
-              ),
-              color:havePosition ? Colors.red : Colors.blue,
-              textColor: Colors.white,
-            ),
+                  () => store.dispatch(new DeletePositionAction(position, placemark, havePosition).deletePosition())
+                  : () => store.dispatch(new AddPositionAction(position, placemark, havePosition).getPosition())
+                  ,
+                  builder: (context, callback) {
+                    return MaterialButton(
+                      onPressed: callback,
+                      child:
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(Icons.gps_fixed),
+                          state.havePosition ? Text('Supprimer ma position') : Text('Ajouter ma position') 
+                        ],
+                      ),
+                      color:state.havePosition ? Colors.red : Colors.blue,
+                      textColor: Colors.white,
+                      );
+                  },
+                )
+                ),
             ButtonTheme.bar(
               // make buttons use the appropriate styles for cards
               child: ButtonBar(
@@ -214,7 +230,11 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
           ],
         ),
       ),
+    )
+  ,
     );
+
+
   }
 
 }
