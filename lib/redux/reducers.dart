@@ -31,6 +31,19 @@ AppState appStateReducers(AppState state, dynamic action) {
     return removeLoading(action);
   }
 
+  if (action is ChoosePickerCameraAction) {
+    return chooseCamera(action);
+  }
+
+  if (action is ChoosePickerGalleryAction) {
+
+    return chooseGallery(action);
+  }
+
+  if (action is SetAnomalyImageAction){
+    return setPostImage(action);
+  }
+
   return state;
 }
 
@@ -60,4 +73,20 @@ AppState setLoading(SetLoadingAction action) {
 
 AppState removeLoading(RemoveLoadingAction action) {
   return AppState(isLoading: action.isLoading);
+}
+
+AppState chooseCamera(ChoosePickerCameraAction action) {
+  print('Action value: '+ action.value.toString());
+
+  return AppState(chooseCamera: action.value);
+}
+
+AppState chooseGallery(ChoosePickerGalleryAction action) {
+  print('Action value: '+ action.value.toString());
+
+  return AppState(chooseCamera: action.value);
+}
+
+AppState setPostImage(SetAnomalyImageAction action) {
+  return AppState(image: action.image);
 }
