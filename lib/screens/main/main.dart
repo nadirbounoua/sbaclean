@@ -43,7 +43,6 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
   ImageChooser imageChooser;
   final _formKey = GlobalKey<FormState>();
   File _image;
-  bool chooseCamera = false;
 
 
   Future getImage(camera) async {
@@ -77,25 +76,22 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: StoreConnector<AppState,AppState>(
-                converter: (store) => store.state,
-                builder: (context, state) {
+              leading: StoreConnector<AppState,Store<AppState>>(
+                converter: (store) => store,
+                builder: (context, store) {
                 return IconButton(
-                  icon: (state.image == null) ? Icon(Icons.image) : Image.file(state.image,height: 100,width: 100,),
-                  iconSize: (state.image != null ) ? 60 : 24,
+                  icon: (store.state.image == null) ? Icon(Icons.image) : Image.file(store.state.image,height: 100,width: 100,),
+                  iconSize: (store.state.image != null ) ? 60 : 24,
                   onPressed:  () async {
-                    
+
                     await showDialog(
                       context: context,
                       builder: (context) {
                         return ImageChooser();
                       });
-                    try {
-                      getImage(state.chooseCamera);
 
-                    } catch (e){
+                    store.dispatch(new SetAnomalyImageAction().setImage());
 
-                    }
                 },
               );
                 },
@@ -104,13 +100,6 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
               subtitle: 
               StoreConnector<AppState,AppState>(
                 converter: (store) {
-                  try{
-                  print(store.state.placemark[0]);
-
-                  }
-                  catch (e) {
-                    print(e);
-                  }
                   return store.state;
                 },
                 builder: (context, state) => 
@@ -232,7 +221,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
       ),
     )
   ,
-    );
+  );
 
 
   }
