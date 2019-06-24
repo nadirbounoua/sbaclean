@@ -30,21 +30,9 @@ class _FeedState extends State<Feed> {
       converter: (store) =>  store.state,
       builder: (context,state) {
 
-        return PostList(posts: state.anomalies);
-      },
-    );
-  }
-}
-/*
-class Feed extends StatelessWidget {
-  Api api = Api();
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _title,
-      home: Scaffold(
+        return Scaffold(
         appBar: AppBar(
-          title: const Text(_title),
+          title: Text('Signalements'),
           actions: <Widget>[
             IconButton(
               icon: Icon(
@@ -57,20 +45,11 @@ class Feed extends StatelessWidget {
             )
           ],
         ),
-        body: FutureBuilder<List<Anomaly>>(
-          future: api.getPosts(),
-          builder: (context,snapshot) {
-            if (snapshot.hasError) print(snapshot.error);
-            return snapshot.hasData
-              ? PostList(posts: snapshot.data)
-              : Center(child: CircularProgressIndicator());
-        
-          },
-        ),
-      ),
+        body: PostList(posts: state.anomalies),
+        );
+      } 
     );
   }
 }
-*/
 
 
