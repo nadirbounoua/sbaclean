@@ -5,6 +5,8 @@ import 'package:learning2/models/app_state.dart';
 import 'package:learning2/backend/api.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:learning2/backend/utils.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 enum Actions {AddAnomalyAction,ChoosePickerCameraAction,ChoosePickerGalleryAction, GetAnomaliesAction}
 Api api = Api();
@@ -18,7 +20,6 @@ class AddAnomalyAction {
   return (Store<AppState> store) async {
     final responsePost = await api.createPost(item);
     //final response = await api.getPosts();
-    
     store.dispatch(new AddAnomalyAction(item));
 
     //store.dispatch(new GetAnomaliesAction([]).getAnomalies());
@@ -93,11 +94,33 @@ class DeletePositionAction {
 
 class ChoosePickerCameraAction {
   final bool value;
-  ChoosePickerCameraAction(this.value);
+  ChoosePickerCameraAction({this.value});
+  ThunkAction<AppState> chooseCamera() {
+    return (Store<AppState> store) {
+      store.dispatch(new ChoosePickerCameraAction(value: true));
+    };
+  }
 }
 
 class ChoosePickerGalleryAction {
   final bool value;
-  ChoosePickerGalleryAction(this.value);
+  ChoosePickerGalleryAction({this.value});
+}
+
+class SetAnomalyImageAction {
+  final File image;
+  SetAnomalyImageAction({this.image});
+
+  ThunkAction<AppState> setImage() {
+    return (Store<AppState> store) async {
+    File image;
+    if (store.state.chooseCamera)
+      image = await ImagePicker.pickImage(source: ImageSource.camera);
+    else 
+      image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    store.dispatch(new SetAnomalyImageAction(image: image));
+    };
+    
+  }
 }
 
