@@ -14,5 +14,5 @@ class AppState {
   bool havePosition;
   List<Placemark> placemark;
   File image;
-  AppState({this.anomalies = const [], this.chooseCamera = false, this.position,this.placemark,this.havePosition = false, this.isLoading = false});
+  AppState({this.anomalies = const [], this.chooseCamera, this.position,this.placemark,this.havePosition = false, this.isLoading = false, this.image});
 }
