@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:learning2/backend/utils.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'dart:async';
 
 enum Actions {AddAnomalyAction,ChoosePickerCameraAction,ChoosePickerGalleryAction, GetAnomaliesAction}
 Api api = Api();
@@ -31,6 +32,7 @@ class AddAnomalyAction {
 
 class GetAnomaliesAction {
   final List<Anomaly> list;
+  Completer completer=  new Completer();
   GetAnomaliesAction(this.list);
 
   ThunkAction<AppState> getAnomalies() {
@@ -38,6 +40,7 @@ class GetAnomaliesAction {
       final response = await api.getPosts();
       List<Anomaly> anomalyList = parsePost(response);
       store.dispatch(new GetAnomaliesAction(anomalyList));
+      completer.complete();
     };
   }
 }
@@ -57,8 +60,7 @@ class AddPositionAction {
   final bool havePosition;
   final Position position;
   final List<Placemark> placemark;
-
-  AddPositionAction(this.position, this.placemark, this.havePosition,);
+  AddPositionAction(this.position, this.placemark, this.havePosition);
 
     ThunkAction<AppState> getPosition() {
       return (Store<AppState> store) async {        

@@ -7,6 +7,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:learning2/models/app_state.dart';
 import 'package:learning2/redux/actions.dart';
 import 'package:learning2/redux/reducers.dart';
+import 'package:redux/redux.dart';
+import 'dart:async';
 //void main() => runApp(Feed());
  
 class Feed extends StatefulWidget {
@@ -22,13 +24,18 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+    new GlobalKey<RefreshIndicatorState>();
   bool loading = false;
   List<Anomaly> list;
+
+
   @override
   Widget build(BuildContext context){
-    return StoreConnector<AppState,AppState>(
-      converter: (store) =>  store.state,
-      builder: (context,state) {
+    
+    return StoreConnector<AppState, Store<AppState>>(
+      converter: (store) =>  store,
+      builder: (context,store) {
 
         return Scaffold(
         appBar: AppBar(
@@ -45,7 +52,18 @@ class _FeedState extends State<Feed> {
             )
           ],
         ),
-        body: PostList(posts: state.anomalies),
+        body: RefreshIndicator(
+          key: _refreshIndicatorKey,
+          child:PostList(posts: store.state.anomalies),
+          color: Colors.blueAccent,
+          onRefresh: () {
+            GetAnomaliesAction action = new GetAnomaliesAction(list);
+            store.dispatch(action.getAnomalies());
+            return action.completer.future;
+          },
+
+        )
+        
         );
       } 
     );
