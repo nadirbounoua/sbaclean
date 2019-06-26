@@ -9,6 +9,8 @@ import 'package:learning2/redux/actions.dart';
 import 'package:learning2/redux/reducers.dart';
 import 'package:redux/redux.dart';
 import 'dart:async';
+import 'package:learning2/main.dart';
+import 'package:learning2/screens/feed/widgets/change_notification.dart';
 //void main() => runApp(Feed());
  
 class Feed extends StatefulWidget {
@@ -28,11 +30,27 @@ class _FeedState extends State<Feed> {
     new GlobalKey<RefreshIndicatorState>();
   bool loading = false;
   List<Anomaly> list;
+  Timer timer;
+  
+  @override
+    void initState() {
+      // TODO: implement initState
+      super.initState();
+      timer = Timer.periodic(Duration(seconds: 10), (Timer t) async  {
+        bool changed  = await api.checkNewPosts(MyApp.store);
+        if (changed) MyApp.store.dispatch(new SetPostsChanged(changed: changed));
+        });
+    }
 
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context){
-    
+
     return StoreConnector<AppState, Store<AppState>>(
       converter: (store) =>  store,
       builder: (context,store) {
@@ -52,17 +70,34 @@ class _FeedState extends State<Feed> {
             )
           ],
         ),
-        body: RefreshIndicator(
-          key: _refreshIndicatorKey,
-          child:PostList(posts: store.state.anomalies),
-          color: Colors.blueAccent,
-          onRefresh: () {
-            GetAnomaliesAction action = new GetAnomaliesAction(list);
-            store.dispatch(action.getAnomalies());
-            return action.completer.future;
-          },
-
-        )
+        body: 
+          Stack(
+            alignment: Alignment.topCenter  ,
+            children: store.state.postsChanged ? <Widget>[
+              RefreshIndicator(
+                key: _refreshIndicatorKey,
+                child:PostList(posts: store.state.anomalies),
+                color: Colors.blueAccent,
+                onRefresh: () {
+                  GetAnomaliesAction action = new GetAnomaliesAction(list);
+                  store.dispatch(action.getAnomalies());
+                  return action.completer.future;
+                }),
+              PostsChangedNotification(store),
+              
+            ] :
+            <Widget>[
+              RefreshIndicator(
+                key: _refreshIndicatorKey,
+                child:PostList(posts: store.state.anomalies),
+                color: Colors.blueAccent,
+                onRefresh: () {
+                  GetAnomaliesAction action = new GetAnomaliesAction(list);
+                  store.dispatch(action.getAnomalies());
+                  return action.completer.future;
+                }),              
+            ],
+          )
         
         );
       } 
