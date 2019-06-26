@@ -11,7 +11,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
-  final store = Store<AppState>(appStateReducers,
+  static final  store = Store<AppState>(appStateReducers,
   initialState: AppState(),
   middleware: [thunkMiddleware]
   );
