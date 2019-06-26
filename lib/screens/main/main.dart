@@ -189,15 +189,22 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                     },
 
                     builder: (BuildContext context, onSave) {
-                      return new FlatButton(
-                        child: const Text('Poster'),
-                        onPressed: () async {
-                        if (_formKey.currentState.validate()){
-                          onSave(title,description, latitude, longitude);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
-                      }
-                    },
-                  );
+                      return new 
+                        StoreConnector<AppState,AppState> (
+                          converter: (store) => store.state,
+                          builder: (context, state) =>
+                            FlatButton(
+                              child: const Text('Poster'),
+                              onPressed: () async {
+                              if (_formKey.currentState.validate()){
+                                onSave(title,description, state.position.latitude.toString(), state.position.longitude.toString());
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
+                                }
+                              },
+                              )
+                          ,
+                        )
+                      ;
                       
                     },
                   ),
