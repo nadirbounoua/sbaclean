@@ -44,6 +44,10 @@ AppState appStateReducers(AppState state, dynamic action) {
     return setPostImage(action);
   }
 
+  if (action is SetPostsChanged){
+    return setPostsChanged(state,action);
+  }
+
   return state;
 }
 
@@ -89,4 +93,8 @@ AppState chooseGallery(ChoosePickerGalleryAction action) {
 
 AppState setPostImage(SetAnomalyImageAction action) {
   return AppState(image: action.image);
+}
+
+AppState setPostsChanged(AppState state,SetPostsChanged action) {
+  return AppState(postsChanged: action.changed,anomalies: state.anomalies);
 }

@@ -126,3 +126,7 @@ class SetAnomalyImageAction {
   }
 }
 
+class SetPostsChanged {
+  final bool changed;
+  SetPostsChanged({this.changed});
+}
