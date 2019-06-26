@@ -10,4 +10,9 @@
     return Anomaly(description: json['description'] as String,title: json['title'] as String);
   }
 
+  @override
+    String toString() {
+      // TODO: implement toString
+      return "Anomaly $description $latitude $longitude $title";
+    }
 }
