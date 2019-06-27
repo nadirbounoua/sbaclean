@@ -56,6 +56,10 @@ AppState appStateReducers(AppState state, dynamic action) {
   if (action is DeleteReactionAction) {
     return deleteReaction(state, action);
   }
+
+  if (action is UpdateReactionAction) {
+    return updateReaction(state, action);
+  }
   return state;
 }
 
@@ -110,19 +114,48 @@ AppState setPostsChanged(AppState state,SetPostsChanged action) {
 }
 
 AppState setReaction(AppState state, SetReactionAction action) {
+  
   List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
   Anomaly anomaly = action.anomaly;
   Reaction reaction = action.reaction;
   anomaly.reactions.add(action.reaction.id);
   anomaly.userReaction = reaction;
-  return AppState(anomalies: List.from(state.anomalies)..add(anomaly));
+  
+  return AppState(
+    anomalies: List.from(list)
+    ..add(anomaly)
+    ..sort((anomaly, anomaly1) => anomaly.id > anomaly1.id ? 1 : -1 )
+  );
 }
 
 AppState deleteReaction(AppState state, DeleteReactionAction action) {
+  
   List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
   Anomaly anomaly = action.anomaly;
-  print(anomaly);
   anomaly.userReaction = null;
   anomaly.reactions.removeWhere((id)=> id == action.reaction.id);
-  return AppState(anomalies: List.from(list)..add(anomaly));
+  
+  return AppState(
+    anomalies: List.from(list)
+    ..add(anomaly)
+    ..sort((anomaly, anomaly1) => anomaly.id > anomaly1.id ? 1 : -1 )
+  );
+
+}
+
+AppState updateReaction(AppState state, UpdateReactionAction action) {
+
+  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  Anomaly anomaly = action.anomaly;
+  anomaly.userReaction = action.reaction;
+  anomaly.reactions.removeWhere((id)=> id == action.reaction.id);
+  anomaly.reactions..add(anomaly.userReaction.id);
+
+  return AppState(
+    anomalies: List.from(list)
+    ..add(anomaly)
+    ..sort((anomaly, anomaly1) => anomaly.id > anomaly1.id ? 1 : -1 )
+  );
+
+
 }
