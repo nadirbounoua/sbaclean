@@ -1,5 +1,6 @@
 import '../models/app_state.dart';
 import '../models/anomaly.dart';
+import 'package:learning2/models/reaction.dart';
 import 'actions.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
@@ -47,9 +48,18 @@ AppState appStateReducers(AppState state, dynamic action) {
   if (action is SetPostsChanged){
     return setPostsChanged(state,action);
   }
+  
+  if (action is SetReactionAction) {
+    return setReaction(state, action);
+  }
 
+  if (action is DeleteReactionAction) {
+    return deleteReaction(state, action);
+  }
   return state;
 }
+
+
 
 AppState addItem(List<Anomaly> items, AddAnomalyAction action) {
   return AppState(anomalies: List.from(items)..add(action.item));
@@ -97,4 +107,22 @@ AppState setPostImage(SetAnomalyImageAction action) {
 
 AppState setPostsChanged(AppState state,SetPostsChanged action) {
   return AppState(postsChanged: action.changed,anomalies: state.anomalies);
+}
+
+AppState setReaction(AppState state, SetReactionAction action) {
+  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  Anomaly anomaly = action.anomaly;
+  Reaction reaction = action.reaction;
+  anomaly.reactions.add(action.reaction.id);
+  anomaly.userReaction = reaction;
+  return AppState(anomalies: List.from(state.anomalies)..add(anomaly));
+}
+
+AppState deleteReaction(AppState state, DeleteReactionAction action) {
+  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  Anomaly anomaly = action.anomaly;
+  print(anomaly);
+  anomaly.userReaction = null;
+  anomaly.reactions.removeWhere((id)=> id == action.reaction.id);
+  return AppState(anomalies: List.from(list)..add(anomaly));
 }
