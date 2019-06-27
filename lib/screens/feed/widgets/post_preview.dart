@@ -1,12 +1,13 @@
-
-
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
-import '../../main/main.dart';
-
+import 'package:learning2/models/anomaly.dart';
+import 'package:learning2/models/reaction.dart';
+import 'package:learning2/models/app_state.dart';
+import 'package:redux/redux.dart';
+import 'package:learning2/redux/actions.dart';
 class PostPreview extends StatelessWidget {
-  String title;
-  String description;
-  PostPreview({Key key,  this.title, this.description}) : super(key: key);     
+  Anomaly anomaly;
+  PostPreview({Key key, this.anomaly}) : super(key: key);     
 
   
 
@@ -37,13 +38,13 @@ class PostPreview extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    Text(title
+                    Text(anomaly.title
                       ,
                       style: new TextStyle(
                         fontSize: 25,
                       ),
                     ),
-                    Text(description),
+                    Text(anomaly.description),
                   ],
                 )
               ],
@@ -68,7 +69,7 @@ class PostPreview extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+                       // Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
                       },
                     ),
                   ),
@@ -78,17 +79,68 @@ class PostPreview extends StatelessWidget {
                   ),
                   Container(
                     padding: EdgeInsets.all(0),
-                    child: IconButton(
-                      icon: Icon(Icons.keyboard_arrow_up, color: Colors.blue),
-                      onPressed: () {/* ... */},
+                    child: StoreConnector<AppState,Store<AppState>>(
+                      converter: (store) => store,
+                      builder: (context,store) => 
+                      IconButton(
+                      icon: Icon(
+                        Icons.keyboard_arrow_up, 
+                        color: 
+                        store.state.anomalies
+                        .firstWhere((e) => e.id == anomaly.id)
+                        .userReaction != null ?
+                         store.state.anomalies
+                        .firstWhere((e) => e.id == anomaly.id)
+                        .userReaction.isLike 
+                         
+                         ?  Colors.blue : Colors.grey : Colors.grey),
+                      onPressed: () {
+                        store.state.anomalies
+                        .firstWhere((e) => e.id == anomaly.id)
+                        .userReaction != null ?
+                        !store.state.anomalies
+                        .firstWhere((e) => e.id == anomaly.id)
+                        .userReaction.isLike ?
+                        store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.id, reactionOwner: 1)).setLike())
+                        :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
+                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.id, reactionOwner: 1)).setLike());
+                      },
                     ),
                   ),
+                    ),
+                    
+                    
                   Container(
                     padding: EdgeInsets.all(0),
-                    child: IconButton(
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      onPressed: () {/* ... */},
+                    child: StoreConnector<AppState,Store<AppState>>(
+                      converter: (store) => store,
+                      builder: (context,store) => 
+                      IconButton(
+                      icon: Icon(
+                        Icons.keyboard_arrow_down, 
+                        color: 
+                        store.state.anomalies
+                        .firstWhere((e) => e.id == anomaly.id)
+                        .userReaction != null ?
+                         ! store.state.anomalies
+                        .firstWhere((e) => e.id == anomaly.id)
+                        .userReaction.isLike 
+                         
+                         ?  Colors.black : Colors.grey : Colors.grey),
+                      onPressed: () {
+                        store.state.anomalies
+                        .firstWhere((e) => e.id == anomaly.id)
+                        .userReaction != null ?
+                        store.state.anomalies
+                        .firstWhere((e) => e.id == anomaly.id)
+                        .userReaction.isLike ?
+                        store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.id, reactionOwner: 1)).setLike())
+                        :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
+                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.id, reactionOwner: 1)).setLike());
+                      },
                     ),
+                  ),
+
                   )
                 ],
               ),
