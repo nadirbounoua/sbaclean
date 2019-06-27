@@ -40,6 +40,11 @@ class GetAnomaliesAction {
     return (Store<AppState> store) async {
       final response = await api.getPosts();
       List<Anomaly> anomalyList = parsePost(response);
+      for (var anomaly in anomalyList) {
+        for (var reaction in store.state.userReactions) {
+          if (anomaly.id == reaction.post) anomaly.userReaction = reaction;
+        }
+      }
       store.dispatch(new GetAnomaliesAction(anomalyList));
       completer.complete();
     };
@@ -175,9 +180,25 @@ class UpdateReactionAction {
         reaction = anomaly.userReaction;
         reaction.isLike = !reaction.isLike;
         var response = await api.updateReaction(reaction);
+        print(reaction);
         reaction = Reaction.fromJson(response);
         store.dispatch( new UpdateReactionAction(anomaly:anomaly, reaction: reaction));
 
+    };
+  }
+}
+
+class GetUserReactionAction {
+  List<Reaction> list;
+  Completer completer=  new Completer();
+  GetUserReactionAction(this.list);
+
+  ThunkAction<AppState> getReactions() {
+    return (Store<AppState> store) async {
+      final response = await api.getUserReaction(1);
+      list = parseReaction(response);
+      store.dispatch(new GetUserReactionAction(list));
+      completer.complete();
     };
   }
 }
