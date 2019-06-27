@@ -1,6 +1,7 @@
  import 'package:learning2/models/reaction.dart';
  
  class Anomaly {
+
   int id;
   int postOwner;
   String title;
@@ -10,7 +11,15 @@
   List<int> reactions = [];
   Reaction userReaction;
 
-  Anomaly({this.title , this.description, this.longitude,this.latitude,this.id, this.reactions ,this.userReaction, this.postOwner });
+  Anomaly({this.title, 
+           this.description, 
+           this.longitude,
+           this.latitude,
+           this.id, 
+           this.reactions,
+           this.userReaction, 
+           this.postOwner 
+  });
 
   factory Anomaly.fromJson(Map<String,dynamic> json){
     return Anomaly(id:json['id'] as int,
