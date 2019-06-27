@@ -163,3 +163,21 @@ class DeleteReactionAction {
     };
   }
 }
+
+class UpdateReactionAction {
+  Anomaly anomaly;
+  Reaction reaction;
+
+  UpdateReactionAction({this.anomaly, this.reaction});
+
+  ThunkAction<AppState> updateReaction() {
+    return (Store<AppState> store) async {
+        reaction = anomaly.userReaction;
+        reaction.isLike = !reaction.isLike;
+        var response = await api.updateReaction(reaction);
+        reaction = Reaction.fromJson(response);
+        store.dispatch( new UpdateReactionAction(anomaly:anomaly, reaction: reaction));
+
+    };
+  }
+}
