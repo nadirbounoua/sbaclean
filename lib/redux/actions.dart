@@ -1,4 +1,5 @@
 import 'package:learning2/models/anomaly.dart';
+import 'package:learning2/models/reaction.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
 import 'package:learning2/models/app_state.dart';
@@ -129,4 +130,36 @@ class SetAnomalyImageAction {
 class SetPostsChanged {
   final bool changed;
   SetPostsChanged({this.changed});
+}
+
+class SetReactionAction {
+  Anomaly anomaly;
+  Reaction reaction;
+  final bool isLike; 
+  SetReactionAction({this.isLike, this.anomaly, this.reaction});
+
+  ThunkAction<AppState> setLike() {
+    return (Store<AppState> store) async {
+      print("Action" + reaction.toString());
+      var response = await api.setReactionPost(anomaly, reaction);
+      reaction = Reaction.fromJson(response);
+      print(response);
+      store.dispatch( new SetReactionAction(anomaly:anomaly, reaction: reaction));
+    };
+  }
+}
+
+class DeleteReactionAction {
+  Anomaly anomaly;
+  Reaction reaction;
+
+  DeleteReactionAction({this.anomaly, this.reaction});
+
+  ThunkAction<AppState> deleteReaction() {
+    return (Store<AppState> store) async {
+        reaction = anomaly.userReaction;
+        await api.deleteReaction(reaction);
+        store.dispatch(new DeleteReactionAction(anomaly: anomaly, reaction: reaction));
+    };
+  }
 }
