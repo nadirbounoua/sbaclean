@@ -75,8 +75,17 @@ class Api {
             },
       headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
     );
-    Map<String, dynamic> responseJson = json.decode(response.body);
-    print(responseJson);
-    return responseJson;
+
+    return response.body;
+  }
+
+  Future getUserReaction(int userId) async {
+    var url = ProjectSettings.apiUrl + '/api/v1/posts/reaction/user/'+ userId.toString();
+    var response = await http.get(url,
+    headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+    
+    );
+    return response.body;
   }
 }
+
