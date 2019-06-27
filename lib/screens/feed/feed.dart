@@ -92,9 +92,19 @@ class _FeedState extends State<Feed> {
                 child:PostList(posts: store.state.anomalies),
                 color: Colors.blueAccent,
                 onRefresh: () {
-                  GetAnomaliesAction action = new GetAnomaliesAction(list);
-                  store.dispatch(action.getAnomalies());
-                  return action.completer.future;
+                 final getReactions = GetUserReactionAction([]);
+                          final getAnomalies = GetAnomaliesAction([]);
+                          
+                          store.dispatch(getReactions.getReactions());
+                          store.dispatch(getAnomalies.getAnomalies());
+                          
+                          Future.wait([
+                            getAnomalies.completer.future,
+                            getReactions.completer.future,
+                          ]).then((c)  {
+                            
+                });
+                return getReactions.completer.future;
                 }),              
             ],
           )
