@@ -73,9 +73,18 @@ class PostPreview extends StatelessWidget {
                       },
                     ),
                   ),
-                  Text(
-                    "2493",
+                  StoreConnector<AppState,Store<AppState>>(
+                    converter: (store) => store,
+                    builder: (context, store) => 
+                    store.state.anomalies
+                    .firstWhere((e) => e.id == anomaly.id)
+                    .reactions.length >0 ?
+                    Text(
+                      store.state.anomalies
+                    .firstWhere((e) => e.id == anomaly.id)
+                    .reactions.length.toString(),
                     style: TextStyle(color: Colors.blue),
+                    ) : Text("")
                   ),
                   Container(
                     padding: EdgeInsets.all(0),
@@ -94,17 +103,20 @@ class PostPreview extends StatelessWidget {
                         .userReaction.isLike 
                          
                          ?  Colors.blue : Colors.grey : Colors.grey),
-                      onPressed: () {
+                      onPressed: () =>
                         store.state.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction != null ?
                         !store.state.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction.isLike ?
-                        store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.id, reactionOwner: 1)).setLike())
+                        .userReaction.isLike ? 
+                          
+                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.userReaction).updateReaction())
                         :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
-                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.id, reactionOwner: 1)).setLike());
-                      },
+                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.id, reactionOwner: 1)).setLike())
+                          
+                        
+                     
                     ),
                   ),
                     ),
@@ -134,7 +146,7 @@ class PostPreview extends StatelessWidget {
                         store.state.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction.isLike ?
-                        store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.id, reactionOwner: 1)).setLike())
+                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.userReaction).updateReaction())
                         :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
                         :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.id, reactionOwner: 1)).setLike());
                       },
