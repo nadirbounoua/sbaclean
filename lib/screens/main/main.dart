@@ -208,14 +208,24 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                       
                     },
                   ),
-                  StoreConnector<AppState,VoidCallback>(
-                    converter: (store) => () => store.dispatch(new GetAnomaliesAction([]).getAnomalies()),
-                    builder: (context,callback) {
+                  StoreConnector<AppState,Store<AppState>>(
+                    converter: (store) => store,
+                    builder: (context,store) {
                       return FlatButton(
                         child: const Text('Skip'),
-                        onPressed: () async {
-                          callback();
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
+                        onPressed: ()  {
+                          final getReactions = GetUserReactionAction([]);
+                          final getAnomalies = GetAnomaliesAction([]);
+                          
+                          store.dispatch(getReactions.getReactions());
+                          store.dispatch(getAnomalies.getAnomalies());
+                          
+                          Future.wait([
+                            getAnomalies.completer.future,
+                            getReactions.completer.future,
+                          ]).then((c)  {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
+                          });
 
                     });
                     },)
