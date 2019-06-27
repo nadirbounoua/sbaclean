@@ -65,4 +65,18 @@ class Api {
 
     return response.statusCode;
   }
+
+  Future updateReaction(Reaction reaction) async {
+    var url = ProjectSettings.apiUrl + '/api/v1/posts/reaction/'+ reaction.id.toString();
+    var response = await http.put(url,
+      body: {'post' : reaction.post.toString(), 
+            'reaction_owner': reaction.reactionOwner.toString(), 
+            'is_like': reaction.isLike.toString()
+            },
+      headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+    );
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    print(responseJson);
+    return responseJson;
+  }
 }
