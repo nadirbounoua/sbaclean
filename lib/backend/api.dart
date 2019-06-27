@@ -51,7 +51,6 @@ class Api {
       headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
     );
     Map<String, dynamic> responseJson = json.decode(response.body);
-    print(responseJson);
     return responseJson;
 
   }
@@ -75,8 +74,8 @@ class Api {
             },
       headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
     );
-
-    return response.body;
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    return responseJson;
   }
 
   Future getUserReaction(int userId) async {
