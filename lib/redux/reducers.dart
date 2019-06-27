@@ -60,6 +60,11 @@ AppState appStateReducers(AppState state, dynamic action) {
   if (action is UpdateReactionAction) {
     return updateReaction(state, action);
   }
+
+  if (action is GetUserReactionAction) {
+    return getUserReactions(state, action);
+  }
+  
   return state;
 }
 
@@ -157,5 +162,10 @@ AppState updateReaction(AppState state, UpdateReactionAction action) {
     ..sort((anomaly, anomaly1) => anomaly.id > anomaly1.id ? 1 : -1 )
   );
 
-
 }
+
+AppState getUserReactions(AppState state,GetUserReactionAction action){
+  List<Reaction> list = action.list;
+  return AppState(userReactions: list);
+}
+
