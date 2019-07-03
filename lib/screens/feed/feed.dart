@@ -10,13 +10,13 @@ import 'package:learning2/redux/reducers.dart';
 import 'package:redux/redux.dart';
 import 'dart:async';
 import 'package:learning2/main.dart';
+import 'package:learning2/screens/main/main.dart';
 import 'package:learning2/screens/feed/widgets/change_notification.dart';
 //void main() => runApp(Feed());
  
-class Feed extends StatefulWidget {
-  Feed({Key key}) : super(key: key);
+class FeedScreen extends StatefulWidget {
+  FeedScreen({Key key}) : super(key: key);
   static const String _title = 'Signalements';
-
 
   @override
   _FeedState createState() {
@@ -25,11 +25,11 @@ class Feed extends StatefulWidget {
   }
 }
 
-class _FeedState extends State<Feed> {
+class _FeedState extends State<FeedScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
     new GlobalKey<RefreshIndicatorState>();
   bool loading = false;
-  List<Anomaly> list;
+  List<Anomaly> list = [];
   Timer timer;
   
   @override
@@ -40,6 +40,18 @@ class _FeedState extends State<Feed> {
         bool changed  = await api.checkNewPosts(MyApp.store);
         if (changed) MyApp.store.dispatch(new SetPostsChanged(changed: changed));
         });
+        final getReactions = GetUserReactionAction([]);
+        final getAnomalies = GetAnomaliesAction([]);
+        
+        MyApp.store.dispatch(getReactions.getReactions());
+        MyApp.store.dispatch(getAnomalies.getAnomalies());
+        
+        Future.wait([
+          getAnomalies.completer.future,
+          getReactions.completer.future,
+        ]).then((c)  {
+                  
+      });
     }
 
   @override
@@ -70,6 +82,7 @@ class _FeedState extends State<Feed> {
             )
           ],
         ),
+        
         body: 
           Stack(
             alignment: Alignment.topCenter  ,
@@ -92,23 +105,31 @@ class _FeedState extends State<Feed> {
                 child:PostList(posts: store.state.anomalies),
                 color: Colors.blueAccent,
                 onRefresh: () {
-                 final getReactions = GetUserReactionAction([]);
-                          final getAnomalies = GetAnomaliesAction([]);
-                          
-                          store.dispatch(getReactions.getReactions());
-                          store.dispatch(getAnomalies.getAnomalies());
-                          
-                          Future.wait([
-                            getAnomalies.completer.future,
-                            getReactions.completer.future,
-                          ]).then((c)  {
+                  final getReactions = GetUserReactionAction([]);
+                  final getAnomalies = GetAnomaliesAction([]);
+                  
+                  store.dispatch(getReactions.getReactions());
+                  store.dispatch(getAnomalies.getAnomalies());
+                  
+                  Future.wait([
+                    getAnomalies.completer.future,
+                    getReactions.completer.future,
+                  ]).then((c)  {
                             
                 });
                 return getReactions.completer.future;
                 }),              
             ],
-          )
+        ),
         
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PostScreenWidget()));
+          },
+          child: Icon(Icons.add),
+          backgroundColor: Colors.blue,
+        ),
         );
       } 
     );
