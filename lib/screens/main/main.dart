@@ -18,8 +18,8 @@ import 'package:learning2/models/app_state.dart';
 
 
 /// This is the stateless widget that the main application instantiates.
-class PostScreenWidget extends StatefulWidget {
-  PostScreenWidget({Key key}) : super(key: key);
+class MyStatelessWidget extends StatefulWidget {
+  MyStatelessWidget({Key key}) : super(key: key);
 
 
   @override
@@ -29,7 +29,7 @@ class PostScreenWidget extends StatefulWidget {
   }
 }
 
-class _MyStatefulWidgetState extends State<PostScreenWidget> {
+class _MyStatefulWidgetState extends State<MyStatelessWidget> {
   bool isLoading=false;
   bool havePosition = false;
   Position position;
@@ -67,11 +67,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
 
   @override
   Widget build(BuildContext context) {
-    
-    return Scaffold(
-      appBar: AppBar(title: const Text('Ajouter un post')),
-
-      body:  StoreConnector<AppState, bool>(
+    return StoreConnector<AppState, bool>(
       converter: (store) => store.state.isLoading,
       builder: (context, isLoading) => isLoading ? Center(child: CircularProgressIndicator(),) 
       :Center(
@@ -193,44 +189,26 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                     },
 
                     builder: (BuildContext context, onSave) {
-                      return new 
-                        StoreConnector<AppState,AppState> (
-                          converter: (store) => store.state,
-                          builder: (context, state) =>
-                            FlatButton(
-                              child: const Text('Poster'),
-                              onPressed: () async {
-                              if (_formKey.currentState.validate()){
-                                onSave(title,description, state.position.latitude.toString(), state.position.longitude.toString());
-                                Navigator.pop(context);
-                                }
-                              },
-                              )
-                          ,
-                        )
-                      ;
+                      return new FlatButton(
+                        child: const Text('Poster'),
+                        onPressed: () async {
+                        if (_formKey.currentState.validate()){
+                          onSave(title,description, latitude, longitude);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
+                      }
+                    },
+                  );
                       
                     },
                   ),
-                  StoreConnector<AppState,Store<AppState>>(
-                    converter: (store) => store,
-                    builder: (context,store) {
+                  StoreConnector<AppState,VoidCallback>(
+                    converter: (store) => () => store.dispatch(new GetAnomaliesAction([]).getAnomalies()),
+                    builder: (context,callback) {
                       return FlatButton(
                         child: const Text('Skip'),
-                        onPressed: ()  {
-                          final getReactions = GetUserReactionAction([]);
-                          final getAnomalies = GetAnomaliesAction([]);
-                          
-                          store.dispatch(getReactions.getReactions());
-                          store.dispatch(getAnomalies.getAnomalies());
-                          
-                          Future.wait([
-                            getAnomalies.completer.future,
-                            getReactions.completer.future,
-                          ]).then((c)  {
-
-                            Navigator.pop(context);
-                          });
+                        onPressed: () async {
+                          callback();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
 
                     });
                     },)
@@ -243,11 +221,9 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
       ),
     )
   ,
-  )
+  );
 
 
-    );
-   
   }
 
 }

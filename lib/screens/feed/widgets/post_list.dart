@@ -10,7 +10,7 @@ class PostList extends StatelessWidget {
       return ListView.builder(
         itemCount: posts.length,
         itemBuilder: (context, index) {
-          return PostPreview(anomaly: posts[index],);
+          return PostPreview(description: posts[index].description, title: posts[index].title);
         },
       );
   }
