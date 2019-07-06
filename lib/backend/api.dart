@@ -37,7 +37,7 @@ Future upload(File imageFile) async {
       var length = await imageFile.length();
 
       // string to uri
-      var uri = Uri.parse("http://1f92c88b.ngrok.io/photos");
+      var uri = Uri.parse(ProjectSettings.imageServer);
 
       // create multipart request
       var request = new http.MultipartRequest("POST", uri);
