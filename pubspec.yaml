@@ -27,6 +27,7 @@ dependencies:
   redux_thunk: '0.2.1'
   http: 0.12.0+2
   image_picker:
+  material_search: ^0.2.8
 
 dev_dependencies:
   flutter_test:
