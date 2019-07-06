@@ -5,11 +5,11 @@ import 'actions.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
 import 'package:geolocator/geolocator.dart';
-typedef OnSaveAnomaly = Function(String title, String description, String longitude, String latitude);
+typedef OnSaveAnomaly = Function(String title, String description, String longitude, String latitude, String imageUrl);
 
 AppState appStateReducers(AppState state, dynamic action) {
   if (action is AddAnomalyAction) {
-    return addItem(state.anomalies, action);
+    return addItem(state, action);
   }  
 
   if (action is GetAnomaliesAction) {
@@ -17,11 +17,11 @@ AppState appStateReducers(AppState state, dynamic action) {
   }
 
   if (action is AddPositionAction) {
-    return getPostion(state.position, action);
+    return getPostion(state, action);
   }
 
   if (action is DeletePositionAction) {
-    return deletePosition(state.position, action);
+    return deletePosition(state, action);
   }
 
   if (action is SetLoadingAction) {
@@ -33,16 +33,16 @@ AppState appStateReducers(AppState state, dynamic action) {
   }
 
   if (action is ChoosePickerCameraAction) {
-    return chooseCamera(action);
+    return chooseCamera(state,action);
   }
 
   if (action is ChoosePickerGalleryAction) {
 
-    return chooseGallery(action);
+    return chooseGallery(state,action);
   }
 
   if (action is SetAnomalyImageAction){
-    return setPostImage(action);
+    return setPostImage(state,action);
   }
 
   if (action is SetPostsChanged){
@@ -70,24 +70,26 @@ AppState appStateReducers(AppState state, dynamic action) {
 
 
 
-AppState addItem(List<Anomaly> items, AddAnomalyAction action) {
-  return AppState(anomalies: List.from(items)..add(action.item));
+AppState addItem(AppState state, AddAnomalyAction action) {
+  var list = List.from(state.anomalies)..add(action.item);
+  print(list);
+  return AppState( userReactions: state.userReactions, anomalies: List.from(state.anomalies)..add(action.item));
 }
 
 AppState getAnomalies(List<Anomaly> items, GetAnomaliesAction action) {
   return AppState(anomalies: List.from(action.list));
 }
 
-AppState getPostion(Position position, AddPositionAction action){
+AppState getPostion(AppState state, AddPositionAction action){
   
   if (action.position != null)   
-    return AppState(position: action.position,placemark: action.placemark, havePosition: action.havePosition);
+    return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,position: action.position,placemark: action.placemark, havePosition: action.havePosition);
 
-  return AppState(position: position);
+  return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies, position: state.position);
 }
 
-AppState deletePosition(Position position, DeletePositionAction action){
-    return AppState(position: action.position,placemark: action.placemark, havePosition: action.havePosition);
+AppState deletePosition(AppState state, DeletePositionAction action){
+    return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,position: action.position,placemark: action.placemark, havePosition: action.havePosition);
 }
 
 AppState setLoading(SetLoadingAction action) {
@@ -98,24 +100,24 @@ AppState removeLoading(RemoveLoadingAction action) {
   return AppState(isLoading: action.isLoading);
 }
 
-AppState chooseCamera(ChoosePickerCameraAction action) {
+AppState chooseCamera(AppState state,ChoosePickerCameraAction action) {
   print('Action value: '+ action.value.toString());
 
-  return AppState(chooseCamera: action.value);
+  return AppState(userReactions: state.userReactions,image: state.image,anomalies : state.anomalies,chooseCamera: action.value);
 }
 
-AppState chooseGallery(ChoosePickerGalleryAction action) {
+AppState chooseGallery(AppState state,ChoosePickerGalleryAction action) {
   print('Action value: '+ action.value.toString());
 
-  return AppState(chooseCamera: action.value);
+  return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,chooseCamera: action.value);
 }
 
-AppState setPostImage(SetAnomalyImageAction action) {
-  return AppState(image: action.image);
+AppState setPostImage(AppState state,SetAnomalyImageAction action) {
+  return AppState(userReactions: state.userReactions,anomalies : state.anomalies, image: action.image);
 }
 
 AppState setPostsChanged(AppState state,SetPostsChanged action) {
-  return AppState(postsChanged: action.changed,anomalies: state.anomalies);
+  return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,position: state.position,placemark: state.placemark, havePosition: state.havePosition,postsChanged: action.changed);
 }
 
 AppState setReaction(AppState state, SetReactionAction action) {
