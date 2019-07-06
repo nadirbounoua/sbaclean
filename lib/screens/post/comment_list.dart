@@ -15,10 +15,9 @@ class CommentList extends StatelessWidget {
     return ListView.builder(
       itemCount: comments.length,
       itemBuilder: (context, index) {
-        
         return CommentPreview(
             commentOwner: comments[index].commentOwner.toString(),
-            commentPost: comments[index].commentPost.toString(),
+            created_at: comments[index].created_at.toString(),
             commentContent: comments[index].commentContent);
       },
     );

@@ -5,14 +5,14 @@ import '../models/anomaly.dart';
 import 'dart:async';
 
 class Comment {
-  int id;
   int commentOwner;
   int commentPost;
+  String created_at;
   String commentContent;
 
-  Comment({this.id,this.commentOwner, this.commentPost, this.commentContent});
+  Comment({this.commentOwner,this.commentPost,this.created_at, this.commentContent});
   factory Comment.fromJson(Map<String, dynamic> json) {
-    return Comment( id: json['id'],commentOwner: json['comment_owner'],commentPost: json['post'],commentContent: json['description'] as String);
+    return Comment(commentOwner: json['comment_owner'],commentPost:json['post'],created_at: json['created_at'],commentContent: json['description'] as String);
   }
 }
 

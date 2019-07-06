@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/home/yaya/sbaClean/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-v24/values-v24.xml",
+            "outputFile": "/home/yaya/sbaclean-dev/sbaclean/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-v24/values-v24.xml",
             "map": [
                 {
                     "source": "/home/yaya/.gradle/caches/transforms-1/files-1.1/media-1.0.0.aar/4e008994847c73a2e8edefca142e4699/res/values-v24/values-v24.xml",

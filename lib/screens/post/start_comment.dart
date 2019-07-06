@@ -6,26 +6,33 @@ import 'package:redux/redux.dart';
 import '../../redux/reducers_comment.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import '../post/middle.dart';
+import 'comment_input.dart';
 
-void main(){
+void main() {
   runApp(MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   static const String _title = 'Comments';
-  final store = Store<AppStateComment>(appStateReducers, initialState: AppStateComment(),  middleware: [thunkMiddleware]);
+  final store = Store<AppStateComment>(appStateReducers,
+      initialState: AppStateComment(), middleware: [thunkMiddleware]);
   @override
   Widget build(BuildContext context) {
-    return
-      StoreProvider<AppStateComment>(
-        store:store , 
-        child: MaterialApp(
+    return StoreProvider<AppStateComment>(
+      store: store,
+      child: MaterialApp(
         title: _title,
-        home: Comments(),
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text("Add Comment"),
+          ),
+          body: Center(
+            child: Column(
+              children: <Widget>[Comments()],
+            ),
+          ),
         ),
-    
+      ),
     );
-
   }
 }

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class CommentPreview extends StatelessWidget {
   String commentOwner;
-  String commentPost;
+  String created_at;
   String commentContent;
-  CommentPreview({Key key,  this.commentOwner, this.commentPost, this.commentContent}) : super(key: key);     
+  CommentPreview({Key key,  this.commentOwner, this.created_at, this.commentContent}) : super(key: key);     
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class CommentPreview extends StatelessWidget {
                     padding: EdgeInsets.only(left: 5),
                   ),
                   Text(
-                    commentPost,
+                    created_at,
                     style: TextStyle(
                       color: Colors.grey,
                     ),

@@ -1,4 +1,4 @@
-#Fri Jul 05 14:52:14 CET 2019
-base.0=/home/yaya/sbaClean/build/app/intermediates/transforms/dexMerger/debug/0
+#Sat Jul 06 21:38:40 CET 2019
+base.0=/home/yaya/sbaclean-dev/sbaclean/build/app/intermediates/transforms/dexMerger/debug/0
 path.0=classes.dex
 renamed.0=classes.dex

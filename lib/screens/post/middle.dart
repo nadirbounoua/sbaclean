@@ -5,6 +5,7 @@ import 'package:learning2/models/app_state_comment.dart';
 import '../post/post.dart';
 import '../../redux/actions_comment.dart';
 import '../post/start_comment.dart';
+import 'comment_input.dart';
 
 
 
@@ -14,13 +15,19 @@ class Comments extends StatelessWidget {
       converter: (store) =>
           () => store.dispatch(new GetCommentsAction([]).getComments()),
       builder: (context, callback) {
-        return FlatButton(
-            child: const Text('Skip'),
+        return Column(
+          children: <Widget>[
+           CommentInput(),
+            FlatButton(
+            child: const Text('All comments'),
             onPressed: () async {
               callback();
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Post()));
-            });
+            }),
+
+          ],
+         );
       },
     );
   }
