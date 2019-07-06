@@ -38,6 +38,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
   String title = '' ;
   String latitude;
   String longitude;
+  String imageUrl;
   TextEditingController titleController =TextEditingController(text: '');
   TextEditingController descriptionController = TextEditingController(text: '') ;
   ImageChooser imageChooser;
@@ -187,8 +188,8 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                   ),
                   StoreConnector<AppState,OnSaveAnomaly>(
                     converter: (Store<AppState> store) {
-                      return (title, description, latitude, longitude) {
-                        store.dispatch(new AddAnomalyAction(Anomaly(title: title,description: description, latitude: latitude, longitude: longitude)).postAnomaly());
+                      return (title, description, latitude, longitude, imageUrl) {
+                        store.dispatch(new AddAnomalyAction(Anomaly(title: title,description: description, latitude: latitude, longitude: longitude,imageUrl: imageUrl )).postAnomaly());
                       };
                     },
 
@@ -201,7 +202,9 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                               child: const Text('Poster'),
                               onPressed: () async {
                               if (_formKey.currentState.validate()){
-                                onSave(title,description, state.position.latitude.toString(), state.position.longitude.toString());
+                                var imageurl = await api.upload(state.image);
+                                print(imageurl);
+                                onSave(title,description, state.position.latitude.toString(), state.position.longitude.toString(), imageurl);
                                 Navigator.pop(context);
                                 }
                               },
@@ -217,8 +220,8 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                     builder: (context,store) {
                       return FlatButton(
                         child: const Text('Skip'),
-                        onPressed: ()  {
-                          final getReactions = GetUserReactionAction([]);
+                        onPressed: () async {
+                          /*final getReactions = GetUserReactionAction([]);
                           final getAnomalies = GetAnomaliesAction([]);
                           
                           store.dispatch(getReactions.getReactions());
@@ -231,7 +234,8 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
 
                             Navigator.pop(context);
                           });
-
+*/                  var result= await api.upload(store.state.image);
+                    print(result);
                     });
                     },)
                   ,

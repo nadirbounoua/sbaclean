@@ -10,7 +10,7 @@
   String latitude;
   List<int> reactions = [];
   Reaction userReaction;
-
+  String imageUrl;
   Anomaly({this.title, 
            this.description, 
            this.longitude,
@@ -18,7 +18,8 @@
            this.id, 
            this.reactions,
            this.userReaction, 
-           this.postOwner 
+           this.postOwner,
+           this.imageUrl
   });
 
   factory Anomaly.fromJson(Map<String,dynamic> json){
@@ -28,13 +29,14 @@
             longitude: json['longitude'] as String,
             latitude: json['latitude'] as String,
             postOwner: json['post_owner'] as int,
-            reactions: json['reactions'].cast<int>() as List<int>
+            reactions: json['reactions'].cast<int>() as List<int>,
+            imageUrl: json['image'] as String,
             );
   }
 
   @override
     String toString() {
       // TODO: implement toString
-      return "Anomaly $id $description $latitude $longitude $title";
+      return "Anomaly $reactions";
     }
 }
