@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 geolocator=/home/yaya/flutter/.pub-cache/hosted/pub.dartlang.org/geolocator-5.0.1/
 google_api_availability=/home/yaya/flutter/.pub-cache/hosted/pub.dartlang.org/google_api_availability-2.0.1/
 image_picker=/home/yaya/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.0+10/
 location_permissions=/home/yaya/flutter/.pub-cache/hosted/pub.dartlang.org/location_permissions-2.0.2/
+=======
+geolocator=/home/devaziz/.pub-cache/hosted/pub.dartlang.org/geolocator-5.0.0/
+google_api_availability=/home/devaziz/.pub-cache/hosted/pub.dartlang.org/google_api_availability-2.0.1/
+image_picker=/home/devaziz/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.0+8/
+location_permissions=/home/devaziz/.pub-cache/hosted/pub.dartlang.org/location_permissions-2.0.1/
+>>>>>>> da5ccd2f9b0e2770f84e3bafe98868de7a239710
