@@ -4,11 +4,11 @@ import 'actions.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
 import 'package:geolocator/geolocator.dart';
-typedef OnSaveAnomaly = Function(String title, String description, String longitude, String latitude);
+typedef OnSaveAnomaly = Function(String title, String description, String longitude, String latitude, String imageUrl);
 
 AppState appStateReducers(AppState state, dynamic action) {
   if (action is AddAnomalyAction) {
-    return addItem(state.anomalies, action);
+    return addItem(state, action);
   }  
 
   if (action is GetAnomaliesAction) {
@@ -16,11 +16,11 @@ AppState appStateReducers(AppState state, dynamic action) {
   }
 
   if (action is AddPositionAction) {
-    return getPostion(state.position, action);
+    return getPostion(state, action);
   }
 
   if (action is DeletePositionAction) {
-    return deletePosition(state.position, action);
+    return deletePosition(state, action);
   }
 
   if (action is SetLoadingAction) {
@@ -32,39 +32,43 @@ AppState appStateReducers(AppState state, dynamic action) {
   }
 
   if (action is ChoosePickerCameraAction) {
-    return chooseCamera(action);
+    return chooseCamera(state,action);
   }
 
   if (action is ChoosePickerGalleryAction) {
 
-    return chooseGallery(action);
+    return chooseGallery(state,action);
   }
 
   if (action is SetAnomalyImageAction){
-    return setPostImage(action);
+    return setPostImage(state,action);
   }
 
   return state;
 }
 
-AppState addItem(List<Anomaly> items, AddAnomalyAction action) {
-  return AppState(anomalies: List.from(items)..add(action.item));
+
+
+AppState addItem(AppState state, AddAnomalyAction action) {
+  var list = List.from(state.anomalies)..add(action.item);
+  print(list);
+  return AppState( userReactions: state.userReactions, anomalies: List.from(state.anomalies)..add(action.item));
 }
 
 AppState getAnomalies(List<Anomaly> items, GetAnomaliesAction action) {
   return AppState(anomalies: List.from(action.list));
 }
 
-AppState getPostion(Position position, AddPositionAction action){
+AppState getPostion(AppState state, AddPositionAction action){
   
   if (action.position != null)   
-    return AppState(position: action.position,placemark: action.placemark, havePosition: action.havePosition);
+    return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,position: action.position,placemark: action.placemark, havePosition: action.havePosition);
 
-  return AppState(position: position);
+  return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies, position: state.position);
 }
 
-AppState deletePosition(Position position, DeletePositionAction action){
-    return AppState(position: action.position,placemark: action.placemark, havePosition: action.havePosition);
+AppState deletePosition(AppState state, DeletePositionAction action){
+    return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,position: action.position,placemark: action.placemark, havePosition: action.havePosition);
 }
 
 AppState setLoading(SetLoadingAction action) {
@@ -75,18 +79,77 @@ AppState removeLoading(RemoveLoadingAction action) {
   return AppState(isLoading: action.isLoading);
 }
 
-AppState chooseCamera(ChoosePickerCameraAction action) {
+AppState chooseCamera(AppState state,ChoosePickerCameraAction action) {
   print('Action value: '+ action.value.toString());
 
-  return AppState(chooseCamera: action.value);
+  return AppState(userReactions: state.userReactions,image: state.image,anomalies : state.anomalies,chooseCamera: action.value);
 }
 
-AppState chooseGallery(ChoosePickerGalleryAction action) {
+AppState chooseGallery(AppState state,ChoosePickerGalleryAction action) {
   print('Action value: '+ action.value.toString());
 
-  return AppState(chooseCamera: action.value);
+  return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,chooseCamera: action.value);
 }
 
 AppState setPostImage(SetAnomalyImageAction action) {
   return AppState(image: action.image);
 }
+AppState setPostImage(AppState state,SetAnomalyImageAction action) {
+  return AppState(userReactions: state.userReactions,anomalies : state.anomalies, image: action.image);
+}
+
+AppState setPostsChanged(AppState state,SetPostsChanged action) {
+  return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,position: state.position,placemark: state.placemark, havePosition: state.havePosition,postsChanged: action.changed);
+}
+
+AppState setReaction(AppState state, SetReactionAction action) {
+  
+  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  Anomaly anomaly = action.anomaly;
+  Reaction reaction = action.reaction;
+  anomaly.reactions.add(action.reaction.id);
+  anomaly.userReaction = reaction;
+  
+  return AppState(
+    anomalies: List.from(list)
+    ..add(anomaly)
+    ..sort((anomaly, anomaly1) => anomaly.id > anomaly1.id ? 1 : -1 )
+  );
+}
+
+AppState deleteReaction(AppState state, DeleteReactionAction action) {
+  
+  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  Anomaly anomaly = action.anomaly;
+  anomaly.userReaction = null;
+  anomaly.reactions.removeWhere((id)=> id == action.reaction.id);
+  
+  return AppState(
+    anomalies: List.from(list)
+    ..add(anomaly)
+    ..sort((anomaly, anomaly1) => anomaly.id > anomaly1.id ? 1 : -1 )
+  );
+
+}
+
+AppState updateReaction(AppState state, UpdateReactionAction action) {
+
+  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  Anomaly anomaly = action.anomaly;
+  anomaly.userReaction = action.reaction;
+  anomaly.reactions.removeWhere((id)=> id == action.reaction.id);
+  anomaly.reactions..add(anomaly.userReaction.id);
+
+  return AppState(
+    anomalies: List.from(list)
+    ..add(anomaly)
+    ..sort((anomaly, anomaly1) => anomaly.id > anomaly1.id ? 1 : -1 )
+  );
+
+}
+
+AppState getUserReactions(AppState state,GetUserReactionAction action){
+  List<Reaction> list = action.list;
+  return AppState(userReactions: list);
+}
+

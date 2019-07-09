@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 import '../settings/settings.dart';
-import '../../models/anomaly.dart';
-import '../../backend/api.dart';
 import 'widgets/post_list.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:learning2/models/app_state.dart';
 import 'package:learning2/redux/actions.dart';
 import 'package:learning2/redux/reducers.dart';
+import 'package:redux/redux.dart';
+import 'dart:async';
+import 'package:learning2/main.dart';
+import 'package:learning2/screens/main/main.dart';
+import 'package:learning2/screens/feed/widgets/change_notification.dart';
+import 'package:material_search/material_search.dart';
+import 'package:learning2/backend/api.dart';
+import 'package:learning2/models/anomaly.dart';
+import 'package:learning2/backend/utils.dart';
+import 'package:learning2/screens/anomaly_details/anomaly_details.dart';
 //void main() => runApp(Feed());
  
-class Feed extends StatefulWidget {
-  Feed({Key key}) : super(key: key);
+class FeedScreen extends StatefulWidget {
+  FeedScreen({Key key, this.anomalies, this.searchresult}) : super(key: key);
   static const String _title = 'Signalements';
+  List<Anomaly> anomalies = [];
+  bool searchresult;
 
 
   @override
@@ -21,9 +31,46 @@ class Feed extends StatefulWidget {
   }
 }
 
-class _FeedState extends State<Feed> {
+
+class _FeedState extends State<FeedScreen> {
+  _FeedState({this.anomalies,this.searchresult});
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+    new GlobalKey<RefreshIndicatorState>();
   bool loading = false;
-  List<Anomaly> list;
+  List<Anomaly> anomalies = [];
+  bool searchresult;
+  Timer timer;
+  Api api = Api();
+  
+  @override
+    void initState() {
+      // TODO: implement initState
+      super.initState();
+      
+        final getReactions = GetUserReactionAction([]);
+        final getAnomalies = GetAnomaliesAction([]);
+        
+        MyApp.store.dispatch(getReactions.getReactions());
+        MyApp.store.dispatch(getAnomalies.getAnomalies());
+        
+        Future.wait([
+          getAnomalies.completer.future,
+          getReactions.completer.future,
+        ]).then((c)  {
+                  
+      });
+      timer = Timer.periodic(Duration(seconds: 10), (Timer t) async  {
+        bool changed  = await api.checkNewPosts(MyApp.store);
+        if (changed) MyApp.store.dispatch(new SetPostsChanged(changed: changed));
+        });
+    }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context){
     return StoreConnector<AppState,AppState>(
@@ -42,14 +89,113 @@ class _FeedState extends State<Feed> {
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
               },
+            ),
+            IconButton(
+              onPressed: () {
+                _showMaterialSearch(context);
+              },
+              tooltip: 'Search',
+              icon: new Icon(Icons.search),
             )
           ],
         ),
-        body: PostList(posts: state.anomalies),
+        
+        body: 
+          Stack(
+            alignment: Alignment.topCenter  ,
+            children: store.state.postsChanged ? <Widget>[
+              RefreshIndicator(
+                key: _refreshIndicatorKey,
+                child:PostList(posts: store.state.anomalies),
+                color: Colors.blueAccent,
+                onRefresh: () {
+                  GetAnomaliesAction action = new GetAnomaliesAction(anomalies);
+                  store.dispatch(action.getAnomalies());
+                  return action.completer.future;
+                }),
+              PostsChangedNotification(store),
+              
+            ] :
+            <Widget>[
+              RefreshIndicator(
+                key: _refreshIndicatorKey,
+                child:PostList(posts: store.state.anomalies),
+                color: Colors.blueAccent,
+                onRefresh: () {
+                  final getReactions = GetUserReactionAction([]);
+                  final getAnomalies = GetAnomaliesAction([]);
+                  
+                  store.dispatch(getReactions.getReactions());
+                  store.dispatch(getAnomalies.getAnomalies());
+                  
+                  Future.wait([
+                    getAnomalies.completer.future,
+                    getReactions.completer.future,
+                  ]).then((c)  {
+                            
+                });
+                return getReactions.completer.future;
+                }),              
+            ],
+        ),
+        
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PostScreenWidget()));
+          },
+          child: Icon(Icons.add),
+          backgroundColor: Colors.blue,
+        ),
         );
       } 
     );
   }
+
+  _showMaterialSearch(BuildContext context) {
+    Navigator.of(context)
+      .push(_buildMaterialSearchPage(context))
+      .then((dynamic value) {
+      });
+  }
+
+   _buildMaterialSearchPage(BuildContext context) {
+    return new MaterialPageRoute<dynamic>(
+      settings: new RouteSettings(
+        name: 'material_search',
+        isInitialRoute: false,
+      ),
+      builder: (BuildContext context) {
+        return new Material(
+          child: new MaterialSearch<dynamic>(
+            placeholder: 'Search',
+            getResults: (String criteria) async {
+              if (criteria.isEmpty) {
+                setState(() {
+                 anomalies = [];
+               });
+              } else {
+              var list = await api.queryPosts(criteria);
+               setState(() {
+                 anomalies = parsePost(list);
+               });
+              }
+              return anomalies.map((anomaly) => new MaterialSearchResult<dynamic>(
+                value: anomaly, //The value must be of type <String>
+                text: anomaly.title, //String that will be show in the list
+                //icon: anomaly.imageUrl == "/media/images/default.png" ? Icons.image : ImageIcon(Image.network(src))
+                //.network(anomaly.imageUrl ,width: 24, height: 24,)
+              )).toList();
+            },
+
+            onSelect: (dynamic value) => Navigator.push(context, MaterialPageRoute(builder: (context) => AnomalyDetails(anomaly: value,))),
+            onSubmit: (dynamic value) => Navigator.push(context, MaterialPageRoute(builder: (context) => AnomalyDetails(anomaly: value,))),
+          ),
+        );
+      }
+    );
+  }
+
+
 }
 
 

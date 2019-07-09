@@ -26,10 +26,13 @@ class PostPreview extends StatelessWidget {
                   decoration: new BoxDecoration(
                       border: Border(bottom: BorderSide(width: 1))
                   ),
-                  child: Icon(
+                  child: anomaly.imageUrl == "/media/images/default.png" ?
+                  Icon(
                     Icons.image,
                     size: 100,
-                  ),
+                  ):
+                  Image.network(anomaly.imageUrl,width: 100, height: 100,)
+                  
                 ),
               ],
             ),

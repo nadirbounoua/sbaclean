@@ -38,6 +38,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
   String title = '' ;
   String latitude;
   String longitude;
+  String imageUrl;
   TextEditingController titleController =TextEditingController(text: '');
   TextEditingController descriptionController = TextEditingController(text: '') ;
   ImageChooser imageChooser;
@@ -183,21 +184,30 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                   ),
                   StoreConnector<AppState,OnSaveAnomaly>(
                     converter: (Store<AppState> store) {
-                      return (title, description, latitude, longitude) {
-                        store.dispatch(new AddAnomalyAction(Anomaly(title: title,description: description, latitude: latitude, longitude: longitude)).postAnomaly());
+                      return (title, description, latitude, longitude, imageUrl) {
+                        store.dispatch(new AddAnomalyAction(Anomaly(title: title,description: description, latitude: latitude, longitude: longitude,imageUrl: imageUrl )).postAnomaly());
                       };
                     },
 
                     builder: (BuildContext context, onSave) {
-                      return new FlatButton(
-                        child: const Text('Poster'),
-                        onPressed: () async {
-                        if (_formKey.currentState.validate()){
-                          onSave(title,description, latitude, longitude);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
-                      }
-                    },
-                  );
+                      return new 
+                        StoreConnector<AppState,AppState> (
+                          converter: (store) => store.state,
+                          builder: (context, state) =>
+                            FlatButton(
+                              child: const Text('Poster'),
+                              onPressed: () async {
+                              if (_formKey.currentState.validate()){
+                                var imageurl = await api.upload(state.image);
+                                print(imageurl);
+                                onSave(title,description, state.position.latitude.toString(), state.position.longitude.toString(), imageurl);
+                                Navigator.pop(context);
+                                }
+                              },
+                              )
+                          ,
+                        )
+                      ;
                       
                     },
                   ),
@@ -207,9 +217,22 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                       return FlatButton(
                         child: const Text('Skip'),
                         onPressed: () async {
-                          callback();
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
 
+                          /*final getReactions = GetUserReactionAction([]);
+                          final getAnomalies = GetAnomaliesAction([]);
+                          
+                          store.dispatch(getReactions.getReactions());
+                          store.dispatch(getAnomalies.getAnomalies());
+                          
+                          Future.wait([
+                            getAnomalies.completer.future,
+                            getReactions.completer.future,
+                          ]).then((c)  {
+
+                            Navigator.pop(context);
+                          });
+*/                  var result= await api.upload(store.state.image);
+                    print(result);
                     });
                     },)
                   ,
