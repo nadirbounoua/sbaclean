@@ -1,5 +1,6 @@
 import '../models/app_state.dart';
 import '../models/anomaly.dart';
+import 'package:learning2/models/reaction.dart';
 import 'actions.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
@@ -8,8 +9,8 @@ typedef OnSaveAnomaly = Function(String title, String description, String longit
 
 AppState appStateReducers(AppState state, dynamic action) {
   if (action is AddAnomalyAction) {
-    return addItem(state, action);
-  }  
+     return addItem(state, action); 
+ }  
 
   if (action is GetAnomaliesAction) {
     return getAnomalies(state.anomalies,action );
@@ -44,6 +45,26 @@ AppState appStateReducers(AppState state, dynamic action) {
     return setPostImage(state,action);
   }
 
+  if (action is SetPostsChanged){
+    return setPostsChanged(state,action);
+  }
+  
+  if (action is SetReactionAction) {
+    return setReaction(state, action);
+  }
+
+  if (action is DeleteReactionAction) {
+    return deleteReaction(state, action);
+  }
+
+  if (action is UpdateReactionAction) {
+    return updateReaction(state, action);
+  }
+
+  if (action is GetUserReactionAction) {
+    return getUserReactions(state, action);
+  }
+  
   return state;
 }
 
@@ -60,15 +81,15 @@ AppState getAnomalies(List<Anomaly> items, GetAnomaliesAction action) {
 }
 
 AppState getPostion(AppState state, AddPositionAction action){
-  
+
   if (action.position != null)   
     return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,position: action.position,placemark: action.placemark, havePosition: action.havePosition);
 
   return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies, position: state.position);
 }
 
-AppState deletePosition(AppState state, DeletePositionAction action){
-    return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,position: action.position,placemark: action.placemark, havePosition: action.havePosition);
+ AppState deletePosition(AppState state, DeletePositionAction action){ 
+  return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,position: action.position,placemark: action.placemark, havePosition: action.havePosition);
 }
 
 AppState setLoading(SetLoadingAction action) {
@@ -91,10 +112,8 @@ AppState chooseGallery(AppState state,ChoosePickerGalleryAction action) {
   return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,chooseCamera: action.value);
 }
 
-AppState setPostImage(SetAnomalyImageAction action) {
-  return AppState(image: action.image);
-}
-AppState setPostImage(AppState state,SetAnomalyImageAction action) {
+
+ AppState setPostImage(AppState state,SetAnomalyImageAction action) { 
   return AppState(userReactions: state.userReactions,anomalies : state.anomalies, image: action.image);
 }
 

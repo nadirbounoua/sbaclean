@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import '../settings/settings.dart';
-import 'widgets/post_list.dart';
+import '../../models/anomaly.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:learning2/models/app_state.dart';
 import 'package:learning2/redux/actions.dart';
-import 'package:learning2/redux/reducers.dart';
 import 'package:redux/redux.dart';
 import 'dart:async';
 import 'package:learning2/main.dart';
 import 'package:learning2/screens/main/main.dart';
 import 'package:learning2/screens/feed/widgets/change_notification.dart';
+import 'package:learning2/screens/feed/widgets/post_list.dart';
 import 'package:material_search/material_search.dart';
 import 'package:learning2/backend/api.dart';
 import 'package:learning2/models/anomaly.dart';
@@ -23,7 +23,6 @@ class FeedScreen extends StatefulWidget {
   List<Anomaly> anomalies = [];
   bool searchresult;
 
-
   @override
   _FeedState createState() {
     // TODO: implement createState
@@ -31,9 +30,8 @@ class FeedScreen extends StatefulWidget {
   }
 }
 
-
 class _FeedState extends State<FeedScreen> {
-  _FeedState({this.anomalies,this.searchresult});
+   _FeedState({this.anomalies,this.searchresult}); 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
     new GlobalKey<RefreshIndicatorState>();
   bool loading = false;
@@ -41,12 +39,11 @@ class _FeedState extends State<FeedScreen> {
   bool searchresult;
   Timer timer;
   Api api = Api();
-  
   @override
     void initState() {
       // TODO: implement initState
       super.initState();
-      
+
         final getReactions = GetUserReactionAction([]);
         final getAnomalies = GetAnomaliesAction([]);
         
@@ -59,6 +56,7 @@ class _FeedState extends State<FeedScreen> {
         ]).then((c)  {
                   
       });
+
       timer = Timer.periodic(Duration(seconds: 10), (Timer t) async  {
         bool changed  = await api.checkNewPosts(MyApp.store);
         if (changed) MyApp.store.dispatch(new SetPostsChanged(changed: changed));
@@ -73,9 +71,10 @@ class _FeedState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context){
-    return StoreConnector<AppState,AppState>(
-      converter: (store) =>  store.state,
-      builder: (context,state) {
+
+    return StoreConnector<AppState, Store<AppState>>(
+      converter: (store) =>  store,
+      builder: (context,store) {
 
         return Scaffold(
         appBar: AppBar(
@@ -96,8 +95,7 @@ class _FeedState extends State<FeedScreen> {
               },
               tooltip: 'Search',
               icon: new Icon(Icons.search),
-            )
-          ],
+            )],
         ),
         
         body: 
@@ -141,6 +139,7 @@ class _FeedState extends State<FeedScreen> {
         
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+
             Navigator.push(context, MaterialPageRoute(builder: (context) => PostScreenWidget()));
           },
           child: Icon(Icons.add),
@@ -150,6 +149,7 @@ class _FeedState extends State<FeedScreen> {
       } 
     );
   }
+
 
   _showMaterialSearch(BuildContext context) {
     Navigator.of(context)
@@ -194,6 +194,7 @@ class _FeedState extends State<FeedScreen> {
       }
     );
   }
+
 
 
 }

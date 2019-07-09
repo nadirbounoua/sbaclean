@@ -1,10 +1,9 @@
 import '../models/anomaly.dart';
+import 'package:learning2/models/reaction.dart';
 import '../projectSettings.dart' as ProjectSettings;
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:async';
-import '../models/comment.dart';
-import '../models/user.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 import 'package:learning2/models/app_state.dart';
@@ -12,33 +11,34 @@ import 'package:redux/redux.dart';
 import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
-
+import 'package:learning2/models/user.dart';
+import 'package:learning2/models/comment.dart';
 class Api {
-  Future getPosts() async {
-    var url = ProjectSettings.apiUrl + "/api/v1/posts/post/";
-    var response = await http.get(url, headers: {
-      HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
-    });
+  Future getPosts() async{
+    var url = ProjectSettings.apiUrl+"/api/v1/posts/post/";
+    var response = await http.get(url,
+    headers: {HttpHeaders.authorizationHeader : "Token "+ProjectSettings.authToken});
     return response.body;
   }
 
   Future createPost(Anomaly anomaly) async {
     var url = ProjectSettings.apiUrl + "/api/v1/posts/post/";
     var response = await http.post(url,
-    body : {'title': anomaly.title,'description': anomaly.description, 'longitude': anomaly.longitude, 'latitude':anomaly.latitude, 'post_owner': "1",'city':'1', 'image':anomaly.imageUrl},
+    body : {'title': anomaly.title,'description': anomaly.description, 
+    'longitude': anomaly.longitude, 'latitude':anomaly.latitude, 
+    'post_owner': "1",'city':'1', 'image':anomaly.imageUrl},    
     headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
     );
 
     return response;
   }
-
-  Future getComments() async {
+Future getComments() async {
     var url = ProjectSettings.apiUrl + "/api/v1/posts/comment";
     var response = await http.get(url, headers: {
       HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
     });
     return response.body;
-
+}
   Future upload(File imageFile) async {    
       // open a bytestream
       var stream = new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
@@ -98,7 +98,7 @@ class Api {
     var url = ProjectSettings.apiUrl + "/api/v1/posts/comment/";
     var response = await http.post(url, body: {
       'comment_owner': "1",
-      'post': "1",
+      'post': "23",
       'description': comment.commentContent
     }, headers: {
       HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
@@ -135,13 +135,54 @@ class Api {
     var response = await http.post(url, headers: {
       HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
     });
+}
+
+  Future setReactionPost(Anomaly anomaly,Reaction reaction) async {
+    print("API" + reaction.toString());
+
+    var url = ProjectSettings.apiUrl + '/api/v1/posts/reaction/';
+    var response = await http.post(url,
+      body: {'post' : reaction.post.toString(), 
+            'reaction_owner': reaction.reactionOwner.toString(), 
+            'is_like': reaction.isLike.toString()
+            },
+      headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+    );
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    return responseJson;
+
   }
 
-  Future getAnomaly(int id) async {
-    var url = ProjectSettings.apiUrl + "/api/v1/posts/post/$id";
-    var response = await http.get(url, headers: {
-      HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
-    });
+  Future deleteReaction(Reaction reaction) async {
+    var url = ProjectSettings.apiUrl + '/api/v1/posts/reaction/'+ reaction.id.toString();
+    var response = await http.delete(url,
+      headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+
+    );
+
+    return response.statusCode;
+  }
+
+  Future updateReaction(Reaction reaction) async {
+    var url = ProjectSettings.apiUrl + '/api/v1/posts/reaction/'+ reaction.id.toString();
+    var response = await http.put(url,
+      body: {'post' : reaction.post.toString(), 
+            'reaction_owner': reaction.reactionOwner.toString(), 
+            'is_like': reaction.isLike.toString()
+            },
+      headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+    );
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    return responseJson;
+  }
+
+  Future getUserReaction(int userId) async {
+    var url = ProjectSettings.apiUrl + '/api/v1/posts/reaction/user/'+ userId.toString();
+    var response = await http.get(url,
+    headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+    
+    );
     return response.body;
   }
 }
+

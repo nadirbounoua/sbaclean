@@ -1,12 +1,17 @@
+ import 'package:learning2/models/reaction.dart';
+ 
  class Anomaly {
+
+  int id;
+  int postOwner;
   String title;
   String description;
   String longitude;
   String latitude;
-
   List<int> reactions = [];
   Reaction userReaction;
-  String imageUrl;
+  String imageUrl; 
+
   Anomaly({this.title, 
            this.description, 
            this.longitude,
@@ -33,6 +38,6 @@
   @override
     String toString() {
       // TODO: implement toString
-      return "Anomaly $reactions";
+      return "Anomaly $id $description $latitude $longitude $title";
     }
 }
