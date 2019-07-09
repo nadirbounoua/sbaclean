@@ -38,7 +38,7 @@ class Api {
       HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
     });
     return response.body;
-
+  }
   Future upload(File imageFile) async {    
       // open a bytestream
       var stream = new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
