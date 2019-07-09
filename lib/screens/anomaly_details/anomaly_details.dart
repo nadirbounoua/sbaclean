@@ -10,7 +10,7 @@ class AnomalyDetails extends StatelessWidget {
   final Anomaly anomaly;
   AnomalyDetails({Key key, this.anomaly}) : super(key: key);     
 
-  
+
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,7 @@ class AnomalyDetails extends StatelessWidget {
                          store.state.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction.isLike 
-                         
+
                          ?  Colors.blue : Colors.grey : Colors.grey),
                       onPressed: () =>
                         store.state.anomalies
@@ -117,18 +117,18 @@ class AnomalyDetails extends StatelessWidget {
                         !store.state.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction.isLike ? 
-                          
+
                         store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.userReaction).updateReaction())
                         :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
                         :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.id, reactionOwner: 1)).setLike())
-                          
-                        
-                     
+
+
+
                     ),
                   ),
                     ),
-                    
-                    
+
+
                   Container(
                     padding: EdgeInsets.all(0),
                     child: StoreConnector<AppState,Store<AppState>>(
@@ -144,7 +144,7 @@ class AnomalyDetails extends StatelessWidget {
                          ! store.state.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction.isLike 
-                         
+
                          ?  Colors.black : Colors.grey : Colors.grey),
                       onPressed: () {
                         store.state.anomalies
@@ -167,9 +167,9 @@ class AnomalyDetails extends StatelessWidget {
         ),
       ),
     )
-  
+
      );
-        
+
       }
 
 }

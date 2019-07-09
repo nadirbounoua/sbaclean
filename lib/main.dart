@@ -5,13 +5,14 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'redux/reducers.dart';
 import 'package:redux_thunk/redux_thunk.dart';
+import 'package:learning2/screens/feed/feed.dart';
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
-  final store = Store<AppState>(appStateReducers,
+  static final  store = Store<AppState>(appStateReducers,
   initialState: AppState(),
   middleware: [thunkMiddleware]
   );
@@ -22,10 +23,8 @@ class MyApp extends StatelessWidget {
         store:store , 
         child:      MaterialApp(
       title: _title,
-      home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
-        body: MyStatelessWidget(),
-      ),
+      home: FeedScreen(),
+      
     )
     );
 

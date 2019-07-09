@@ -18,8 +18,8 @@ import 'package:learning2/models/app_state.dart';
 
 
 /// This is the stateless widget that the main application instantiates.
-class MyStatelessWidget extends StatefulWidget {
-  MyStatelessWidget({Key key}) : super(key: key);
+class PostScreenWidget extends StatefulWidget {
+  PostScreenWidget({Key key}) : super(key: key);
 
 
   @override
@@ -29,7 +29,7 @@ class MyStatelessWidget extends StatefulWidget {
   }
 }
 
-class _MyStatefulWidgetState extends State<MyStatelessWidget> {
+class _MyStatefulWidgetState extends State<PostScreenWidget> {
   bool isLoading=false;
   bool havePosition = false;
   Position position;
@@ -38,7 +38,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
   String title = '' ;
   String latitude;
   String longitude;
-  String imageUrl;
+  String imageUrl; 
   TextEditingController titleController =TextEditingController(text: '');
   TextEditingController descriptionController = TextEditingController(text: '') ;
   ImageChooser imageChooser;
@@ -68,7 +68,11 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, bool>(
+    
+    return Scaffold(
+      appBar: AppBar(title: const Text('Ajouter un post')),
+
+      body:  StoreConnector<AppState, bool>(
       converter: (store) => store.state.isLoading,
       builder: (context, isLoading) => isLoading ? Center(child: CircularProgressIndicator(),) 
       :Center(
@@ -185,7 +189,7 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                   StoreConnector<AppState,OnSaveAnomaly>(
                     converter: (Store<AppState> store) {
                       return (title, description, latitude, longitude, imageUrl) {
-                        store.dispatch(new AddAnomalyAction(Anomaly(title: title,description: description, latitude: latitude, longitude: longitude,imageUrl: imageUrl )).postAnomaly());
+                        store.dispatch(new AddAnomalyAction(Anomaly(title: title,description: description, latitude: latitude, longitude: longitude, imageUrl: imageUrl)).postAnomaly());
                       };
                     },
 
@@ -211,13 +215,12 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                       
                     },
                   ),
-                  StoreConnector<AppState,VoidCallback>(
-                    converter: (store) => () => store.dispatch(new GetAnomaliesAction([]).getAnomalies()),
-                    builder: (context,callback) {
+                  StoreConnector<AppState,Store<AppState>>(
+                    converter: (store) => store,
+                    builder: (context,store) {
                       return FlatButton(
                         child: const Text('Skip'),
-                        onPressed: () async {
-
+                        onPressed: () async  {
                           /*final getReactions = GetUserReactionAction([]);
                           final getAnomalies = GetAnomaliesAction([]);
                           
@@ -228,11 +231,13 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
                             getAnomalies.completer.future,
                             getReactions.completer.future,
                           ]).then((c)  {
-
-                            Navigator.pop(context);
+                           
                           });
-*/                  var result= await api.upload(store.state.image);
-                    print(result);
+*/
+                           var result= await api.upload(store.state.image);
+                            print(result);
+                            //Navigator.pop(context);
+
                     });
                     },)
                   ,
@@ -244,9 +249,11 @@ class _MyStatefulWidgetState extends State<MyStatelessWidget> {
       ),
     )
   ,
-  );
+  )
 
 
+    );
+   
   }
 
 }
