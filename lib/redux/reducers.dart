@@ -1,6 +1,5 @@
 import '../models/app_state.dart';
 import '../models/anomaly.dart';
-import 'package:learning2/models/reaction.dart';
 import 'actions.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
@@ -45,26 +44,6 @@ AppState appStateReducers(AppState state, dynamic action) {
     return setPostImage(state,action);
   }
 
-  if (action is SetPostsChanged){
-    return setPostsChanged(state,action);
-  }
-  
-  if (action is SetReactionAction) {
-    return setReaction(state, action);
-  }
-
-  if (action is DeleteReactionAction) {
-    return deleteReaction(state, action);
-  }
-
-  if (action is UpdateReactionAction) {
-    return updateReaction(state, action);
-  }
-
-  if (action is GetUserReactionAction) {
-    return getUserReactions(state, action);
-  }
-  
   return state;
 }
 
@@ -112,6 +91,9 @@ AppState chooseGallery(AppState state,ChoosePickerGalleryAction action) {
   return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,chooseCamera: action.value);
 }
 
+AppState setPostImage(SetAnomalyImageAction action) {
+  return AppState(image: action.image);
+}
 AppState setPostImage(AppState state,SetAnomalyImageAction action) {
   return AppState(userReactions: state.userReactions,anomalies : state.anomalies, image: action.image);
 }

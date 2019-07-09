@@ -18,8 +18,8 @@ import 'package:learning2/models/app_state.dart';
 
 
 /// This is the stateless widget that the main application instantiates.
-class PostScreenWidget extends StatefulWidget {
-  PostScreenWidget({Key key}) : super(key: key);
+class MyStatelessWidget extends StatefulWidget {
+  MyStatelessWidget({Key key}) : super(key: key);
 
 
   @override
@@ -29,7 +29,7 @@ class PostScreenWidget extends StatefulWidget {
   }
 }
 
-class _MyStatefulWidgetState extends State<PostScreenWidget> {
+class _MyStatefulWidgetState extends State<MyStatelessWidget> {
   bool isLoading=false;
   bool havePosition = false;
   Position position;
@@ -68,11 +68,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
 
   @override
   Widget build(BuildContext context) {
-    
-    return Scaffold(
-      appBar: AppBar(title: const Text('Ajouter un post')),
-
-      body:  StoreConnector<AppState, bool>(
+    return StoreConnector<AppState, bool>(
       converter: (store) => store.state.isLoading,
       builder: (context, isLoading) => isLoading ? Center(child: CircularProgressIndicator(),) 
       :Center(
@@ -215,12 +211,13 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                       
                     },
                   ),
-                  StoreConnector<AppState,Store<AppState>>(
-                    converter: (store) => store,
-                    builder: (context,store) {
+                  StoreConnector<AppState,VoidCallback>(
+                    converter: (store) => () => store.dispatch(new GetAnomaliesAction([]).getAnomalies()),
+                    builder: (context,callback) {
                       return FlatButton(
                         child: const Text('Skip'),
                         onPressed: () async {
+
                           /*final getReactions = GetUserReactionAction([]);
                           final getAnomalies = GetAnomaliesAction([]);
                           
@@ -247,11 +244,9 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
       ),
     )
   ,
-  )
+  );
 
 
-    );
-   
   }
 
 }

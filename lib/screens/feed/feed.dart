@@ -4,6 +4,7 @@ import 'widgets/post_list.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:learning2/models/app_state.dart';
 import 'package:learning2/redux/actions.dart';
+import 'package:learning2/redux/reducers.dart';
 import 'package:redux/redux.dart';
 import 'dart:async';
 import 'package:learning2/main.dart';
@@ -22,12 +23,14 @@ class FeedScreen extends StatefulWidget {
   List<Anomaly> anomalies = [];
   bool searchresult;
 
+
   @override
   _FeedState createState() {
     // TODO: implement createState
     return _FeedState();
   }
 }
+
 
 class _FeedState extends State<FeedScreen> {
   _FeedState({this.anomalies,this.searchresult});
@@ -70,10 +73,9 @@ class _FeedState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context){
-
-    return StoreConnector<AppState, Store<AppState>>(
-      converter: (store) =>  store,
-      builder: (context,store) {
+    return StoreConnector<AppState,AppState>(
+      converter: (store) =>  store.state,
+      builder: (context,state) {
 
         return Scaffold(
         appBar: AppBar(

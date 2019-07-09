@@ -11,6 +11,7 @@ class PostList extends StatelessWidget {
       return ListView.builder(
         itemCount: posts.length,
         itemBuilder: (context, index) {
+
           return GestureDetector(
             onLongPress: () => showDialog(context: context, child: SimpleDialog(children: <Widget>[SimpleDialogOption(child: Text("Signalez la publication"),)],)),
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> AnomalyDetails(anomaly:posts[index]))),

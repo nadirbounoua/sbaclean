@@ -1,13 +1,9 @@
- import 'package:learning2/models/reaction.dart';
- 
  class Anomaly {
-
-  int id;
-  int postOwner;
   String title;
   String description;
   String longitude;
   String latitude;
+
   List<int> reactions = [];
   Reaction userReaction;
   String imageUrl;

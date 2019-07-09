@@ -1,13 +1,13 @@
-import 'package:flutter_redux/flutter_redux.dart';
+
+
 import 'package:flutter/material.dart';
-import 'package:learning2/models/anomaly.dart';
-import 'package:learning2/models/reaction.dart';
-import 'package:learning2/models/app_state.dart';
-import 'package:redux/redux.dart';
-import 'package:learning2/redux/actions.dart';
+import '../../../main.dart';
+import '../../main/main.dart';
+
 class PostPreview extends StatelessWidget {
-  Anomaly anomaly;
-  PostPreview({Key key, this.anomaly}) : super(key: key);     
+  String title;
+  String description;
+  PostPreview({Key key,  this.title, this.description}) : super(key: key);     
 
   
 
@@ -41,13 +41,13 @@ class PostPreview extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    Text(anomaly.title
+                    Text(title
                       ,
                       style: new TextStyle(
                         fontSize: 25,
                       ),
                     ),
-                    Text(anomaly.description),
+                    Text(description),
                   ],
                 )
               ],
@@ -72,90 +72,27 @@ class PostPreview extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                       // Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
                       },
                     ),
                   ),
-                  StoreConnector<AppState,Store<AppState>>(
-                    converter: (store) => store,
-                    builder: (context, store) => 
-                    store.state.anomalies
-                    .firstWhere((e) => e.id == anomaly.id)
-                    .reactions.length >0 ?
-                    Text(
-                      store.state.anomalies
-                    .firstWhere((e) => e.id == anomaly.id)
-                    .reactions.length.toString(),
+                  Text(
+                    "2493",
                     style: TextStyle(color: Colors.blue),
-                    ) : Text("")
                   ),
                   Container(
                     padding: EdgeInsets.all(0),
-                    child: StoreConnector<AppState,Store<AppState>>(
-                      converter: (store) => store,
-                      builder: (context,store) => 
-                      IconButton(
-                      icon: Icon(
-                        Icons.keyboard_arrow_up, 
-                        color: 
-                        store.state.anomalies
-                        .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction != null ?
-                         store.state.anomalies
-                        .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction.isLike 
-                         
-                         ?  Colors.blue : Colors.grey : Colors.grey),
-                      onPressed: () =>
-                        store.state.anomalies
-                        .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction != null ?
-                        !store.state.anomalies
-                        .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction.isLike ? 
-                          
-                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.userReaction).updateReaction())
-                        :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
-                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.id, reactionOwner: 1)).setLike())
-                          
-                        
-                     
+                    child: IconButton(
+                      icon: Icon(Icons.keyboard_arrow_up, color: Colors.blue),
+                      onPressed: () {/* ... */},
                     ),
                   ),
-                    ),
-                    
-                    
                   Container(
                     padding: EdgeInsets.all(0),
-                    child: StoreConnector<AppState,Store<AppState>>(
-                      converter: (store) => store,
-                      builder: (context,store) => 
-                      IconButton(
-                      icon: Icon(
-                        Icons.keyboard_arrow_down, 
-                        color: 
-                        store.state.anomalies
-                        .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction != null ?
-                         ! store.state.anomalies
-                        .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction.isLike 
-                         
-                         ?  Colors.black : Colors.grey : Colors.grey),
-                      onPressed: () {
-                        store.state.anomalies
-                        .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction != null ?
-                        store.state.anomalies
-                        .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction.isLike ?
-                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.userReaction).updateReaction())
-                        :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
-                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.id, reactionOwner: 1)).setLike());
-                      },
+                    child: IconButton(
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      onPressed: () {/* ... */},
                     ),
-                  ),
-
                   )
                 ],
               ),
