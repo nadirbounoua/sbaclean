@@ -16,7 +16,7 @@ class AppState {
   final File image;
   final bool postsChanged;
   final List<Reaction> userReactions;
-
+  final List<Anomaly> userPosts;
   AppState({this.anomalies = const [], 
             this.chooseCamera,
             this.position,
@@ -25,6 +25,7 @@ class AppState {
             this.isLoading = false, 
             this.image, 
             this.postsChanged = false,
-            this.userReactions = const []
+            this.userReactions = const [],
+            this.userPosts = const []
   });
 }
