@@ -202,3 +202,19 @@ class GetUserReactionAction {
     };
   }
 }
+
+class GetUserAnomaliesHistoryAction {
+  List<Anomaly> list;
+  String userId;
+  Completer completer=  new Completer();
+
+  GetUserAnomaliesHistoryAction({this.list,this.userId});
+  ThunkAction<AppState> getPosts(){
+    return (Store<AppState> store) async {
+      final response = await api.getUserAnomaliesHistory(userId);
+      list = parsePost(response);
+      store.dispatch(new GetUserAnomaliesHistoryAction(list: list));
+      completer.complete();
+    };
+  }
+}

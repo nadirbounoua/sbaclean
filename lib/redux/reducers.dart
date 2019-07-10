@@ -65,9 +65,12 @@ AppState appStateReducers(AppState state, dynamic action) {
     return getUserReactions(state, action);
   }
   
+  if (action is GetUserAnomaliesHistoryAction) {
+    return getUserAnomaliesHistory(state, action);
+  }
+
   return state;
 }
-
 
 
 AppState addItem(AppState state, AddAnomalyAction action) {
@@ -88,7 +91,7 @@ AppState getPostion(AppState state, AddPositionAction action){
   return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies, position: state.position);
 }
 
- AppState deletePosition(AppState state, DeletePositionAction action){ 
+AppState deletePosition(AppState state, DeletePositionAction action){ 
   return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,position: action.position,placemark: action.placemark, havePosition: action.havePosition);
 }
 
@@ -112,8 +115,7 @@ AppState chooseGallery(AppState state,ChoosePickerGalleryAction action) {
   return AppState(userReactions: state.userReactions,image: state.image,anomalies: state.anomalies,chooseCamera: action.value);
 }
 
-
- AppState setPostImage(AppState state,SetAnomalyImageAction action) { 
+AppState setPostImage(AppState state,SetAnomalyImageAction action) { 
   return AppState(userReactions: state.userReactions,anomalies : state.anomalies, image: action.image);
 }
 
@@ -172,3 +174,6 @@ AppState getUserReactions(AppState state,GetUserReactionAction action){
   return AppState(userReactions: list);
 }
 
+AppState getUserAnomaliesHistory(AppState state, GetUserAnomaliesHistoryAction action) {
+  return AppState(anomalies:state.anomalies, userPosts: action.list);
+}
