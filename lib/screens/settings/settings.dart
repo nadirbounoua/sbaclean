@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learning2/widgets/drawer/drawer.dart';
 
 void main() => runApp(Settings());
 
@@ -10,6 +11,7 @@ class Settings extends StatelessWidget {
     return MaterialApp(
       title: _title,
       home: Scaffold(
+        drawer: DrawerWidget(actualRoute: "Settings",),
         appBar: AppBar(
           title: const Text(_title),
         ),

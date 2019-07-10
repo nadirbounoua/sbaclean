@@ -15,6 +15,7 @@ import 'package:learning2/backend/api.dart';
 import 'package:learning2/models/anomaly.dart';
 import 'package:learning2/backend/utils.dart';
 import 'package:learning2/screens/anomaly_details/anomaly_details.dart';
+import 'package:learning2/widgets/drawer/drawer.dart';
 //void main() => runApp(Feed());
  
 class FeedScreen extends StatefulWidget {
@@ -97,7 +98,7 @@ class _FeedState extends State<FeedScreen> {
               icon: new Icon(Icons.search),
             )],
         ),
-        
+        drawer: DrawerWidget(actualRoute: "Feed",),
         body: 
           Stack(
             alignment: Alignment.topCenter  ,
