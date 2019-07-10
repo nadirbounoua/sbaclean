@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:learning2/screens/feed/feed.dart';
 import 'package:learning2/screens/settings/settings.dart';
+import 'package:learning2/screens/user-history/user-history.dart';
 
 class DrawerWidget extends StatelessWidget {
 
@@ -24,6 +24,13 @@ class DrawerWidget extends StatelessWidget {
             title: Text("Fil d'actualité"),
             onTap: () {
               navigate(context, actualRoute, "Feed", FeedScreen());
+            },
+          ),
+          ListTile(
+            title: Text("Votre historique"),
+            onTap: () {
+              navigate(context, actualRoute, "History", UserHistoryScreen());
+
             },
           ),
           ListTile(
