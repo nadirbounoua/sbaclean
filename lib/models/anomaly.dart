@@ -3,6 +3,7 @@
  class Anomaly {
 
   int id;
+  int post;
   int postOwner;
   String title;
   String description;
@@ -20,7 +21,8 @@
            this.reactions,
            this.userReaction, 
            this.postOwner,
-           this.imageUrl
+           this.imageUrl,
+           this.post
   });
 
   factory Anomaly.fromJson(Map<String,dynamic> json){
@@ -32,6 +34,7 @@
             postOwner: json['post_owner'] as int,
             reactions: json['reactions'].cast<int>() as List<int>,
             imageUrl: json['image'] as String,
+            post: json['post'] as int
             );
   }
 
