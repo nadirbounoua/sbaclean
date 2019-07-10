@@ -184,5 +184,14 @@ Future getComments() async {
     );
     return response.body;
   }
+
+  Future getUserAnomaliesHistory(String userId) async {
+    var url = ProjectSettings.apiUrl + '/api/v1/posts/post?owner=$userId';
+    var response = await http.get(url,
+      headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+    );
+
+    return response.body;
+  }
 }
 
