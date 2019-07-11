@@ -1,6 +1,6 @@
 import '../models/app_state.dart';
 import '../models/anomaly.dart';
-import 'package:learning2/models/reaction.dart';
+import 'package:sbaclean/models/reaction.dart';
 import 'actions.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';

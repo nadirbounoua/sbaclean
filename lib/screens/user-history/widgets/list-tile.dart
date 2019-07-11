@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:learning2/models/anomaly.dart';
-import 'package:learning2/screens/anomaly_details/anomaly_details.dart';
+import 'package:sbaclean/models/anomaly.dart';
+import 'package:sbaclean/screens/anomaly_details/anomaly_details.dart';
 
 class ListElement extends StatelessWidget {
   final Anomaly anomaly;

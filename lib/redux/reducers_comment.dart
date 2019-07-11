@@ -1,4 +1,4 @@
-import 'package:learning2/models/comment.dart';
+import 'package:sbaclean/models/comment.dart';
 
 import '../models/app_state_comment.dart';
 import '../models/comment.dart';

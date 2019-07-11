@@ -1,18 +1,18 @@
 import '../models/anomaly.dart';
-import 'package:learning2/models/reaction.dart';
+import 'package:sbaclean/models/reaction.dart';
 import '../projectSettings.dart' as ProjectSettings;
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
-import 'package:learning2/models/app_state.dart';
+import 'package:sbaclean/models/app_state.dart';
 import 'package:redux/redux.dart';
 import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
-import 'package:learning2/models/user.dart';
-import 'package:learning2/models/comment.dart';
+import 'package:sbaclean/models/user.dart';
+import 'package:sbaclean/models/comment.dart';
 class Api {
   Future getPosts() async{
     var url = ProjectSettings.apiUrl+"/api/v1/posts/post/";

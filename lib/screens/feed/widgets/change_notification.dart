@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:learning2/models/app_state.dart';
+import 'package:sbaclean/models/app_state.dart';
 import 'package:redux/redux.dart';
-import 'package:learning2/redux/actions.dart';
+import 'package:sbaclean/redux/actions.dart';
 class PostsChangedNotification extends StatelessWidget {
   Store<AppState> store;
   PostsChangedNotification(this.store);

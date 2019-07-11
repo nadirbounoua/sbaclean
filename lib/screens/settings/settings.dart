@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learning2/widgets/drawer/drawer.dart';
+import 'package:sbaclean/widgets/drawer/drawer.dart';
 
 void main() => runApp(Settings());
 

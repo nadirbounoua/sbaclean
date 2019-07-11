@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learning2/screens/post/comment_preview.dart';
-import 'package:learning2/models/comment.dart';
+import 'package:sbaclean/screens/post/comment_preview.dart';
+import 'package:sbaclean/models/comment.dart';
 import '../../redux/actions_user.dart';
 import '../../redux/actions.dart';
 import 'dart:convert';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learning2/models/comment.dart';
+import 'package:sbaclean/models/comment.dart';
 import '../../redux/actions_user.dart';
 import '../../redux/actions_comment.dart';
 import 'dart:convert';

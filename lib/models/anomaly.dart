@@ -1,4 +1,4 @@
- import 'package:learning2/models/reaction.dart';
+ import 'package:sbaclean/models/reaction.dart';
  
  class Anomaly {
 

@@ -1,9 +1,9 @@
-import 'package:learning2/models/comment.dart';
+import 'package:sbaclean/models/comment.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
-import 'package:learning2/models/app_state_comment.dart';
-import 'package:learning2/backend/api.dart';
-import 'package:learning2/backend/utils.dart';
+import 'package:sbaclean/models/app_state_comment.dart';
+import 'package:sbaclean/backend/api.dart';
+import 'package:sbaclean/backend/utils.dart';
 import 'dart:io';
 
 enum Actions { AddCommentAction, GetCommentsAction }

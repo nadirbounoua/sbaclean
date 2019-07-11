@@ -4,13 +4,13 @@ import '../feed/feed.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
-import 'package:learning2/screens/main/widgets/image_chooser.dart';
+import 'package:sbaclean/screens/main/widgets/image_chooser.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:learning2/models/anomaly.dart';
-import 'package:learning2/redux/actions.dart';
-import 'package:learning2/redux/reducers.dart';
-import 'package:learning2/models/app_state.dart';
+import 'package:sbaclean/models/anomaly.dart';
+import 'package:sbaclean/redux/actions.dart';
+import 'package:sbaclean/redux/reducers.dart';
+import 'package:sbaclean/models/app_state.dart';
 
 //void main() => runApp(MyApp());
 

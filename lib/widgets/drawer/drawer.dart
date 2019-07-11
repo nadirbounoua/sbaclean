@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:learning2/screens/feed/feed.dart';
-import 'package:learning2/screens/settings/settings.dart';
-import 'package:learning2/screens/user-history/user-history.dart';
+import 'package:sbaclean/screens/feed/feed.dart';
+import 'package:sbaclean/screens/settings/settings.dart';
+import 'package:sbaclean/screens/user-history/user-history.dart';
 
 class DrawerWidget extends StatelessWidget {
 

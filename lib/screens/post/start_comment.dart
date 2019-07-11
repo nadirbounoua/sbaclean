@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:learning2/models/app_state_comment.dart';
+import 'package:sbaclean/models/app_state_comment.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:learning2/screens/post/post.dart';
+import 'package:sbaclean/screens/post/post.dart';
 import 'package:redux/redux.dart';
 import '../../redux/reducers_comment.dart';
 import 'package:redux_thunk/redux_thunk.dart';

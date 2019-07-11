@@ -1,5 +1,5 @@
 import 'anomaly.dart';
-import 'package:learning2/models/reaction.dart';
+import 'package:sbaclean/models/reaction.dart';
 import 'package:meta/meta.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:io';

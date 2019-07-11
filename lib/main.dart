@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'screens/main/main.dart';
-import 'package:learning2/models/app_state.dart';
+import 'package:sbaclean/models/app_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'redux/reducers.dart';
 import 'package:redux_thunk/redux_thunk.dart';
-import 'package:learning2/screens/feed/feed.dart';
+import 'package:sbaclean/screens/feed/feed.dart';
 void main() {
   runApp(MyApp());
 }

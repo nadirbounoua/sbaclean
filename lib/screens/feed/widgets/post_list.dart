@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'post_preview.dart';
 import '../../../models/anomaly.dart';
-import 'package:learning2/screens/anomaly_details/anomaly_details.dart'; 
+import 'package:sbaclean/screens/anomaly_details/anomaly_details.dart'; 
 class PostList extends StatelessWidget {
   final List<Anomaly> posts;
 

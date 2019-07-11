@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learning2/models/anomaly.dart';
-import 'package:learning2/screens/user-history/widgets/list-tile.dart';
+import 'package:sbaclean/models/anomaly.dart';
+import 'package:sbaclean/screens/user-history/widgets/list-tile.dart';
 
 class EntryItem extends StatelessWidget {
   const EntryItem(this.entry);

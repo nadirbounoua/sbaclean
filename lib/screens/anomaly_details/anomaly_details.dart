@@ -1,10 +1,10 @@
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
-import 'package:learning2/models/anomaly.dart';
-import 'package:learning2/models/reaction.dart';
-import 'package:learning2/models/app_state.dart';
+import 'package:sbaclean/models/anomaly.dart';
+import 'package:sbaclean/models/reaction.dart';
+import 'package:sbaclean/models/app_state.dart';
 import 'package:redux/redux.dart';
-import 'package:learning2/redux/actions.dart';
+import 'package:sbaclean/redux/actions.dart';
 
 class AnomalyDetails extends StatelessWidget {
   final Anomaly anomaly;
