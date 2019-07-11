@@ -8,9 +8,15 @@ import 'package:sbaclean/screens/main/widgets/image_chooser.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/models/anomaly.dart';
-import 'package:sbaclean/redux/actions.dart';
-import 'package:sbaclean/redux/reducers.dart';
-import 'package:sbaclean/models/app_state.dart';
+import 'package:sbaclean/actions/post_feed_actions.dart';
+import 'package:sbaclean/actions/feed_actions.dart';
+import 'package:sbaclean/backend/api.dart';
+
+//import 'package:sbaclean/redux/reducers.dart';
+import 'package:sbaclean/store/app_state.dart';
+
+typedef OnSaveAnomaly = Function(String title, String description, String longitude, String latitude, String imageUrl);
+
 
 //void main() => runApp(MyApp());
 
@@ -44,7 +50,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
   ImageChooser imageChooser;
   final _formKey = GlobalKey<FormState>();
   File _image;
-
+  Api api = Api();
 
   Future getImage(camera) async {
     var image;
@@ -72,10 +78,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
     return Scaffold(
       appBar: AppBar(title: const Text('Ajouter un post')),
 
-      body:  StoreConnector<AppState, bool>(
-      converter: (store) => store.state.isLoading,
-      builder: (context, isLoading) => isLoading ? Center(child: CircularProgressIndicator(),) 
-      :Center(
+      body:Center(
       child: Card(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -85,8 +88,8 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                 converter: (store) => store,
                 builder: (context, store) {
                 return IconButton(
-                  icon: (store.state.image == null) ? Icon(Icons.image) : Image.file(store.state.image,height: 100,width: 100,),
-                  iconSize: (store.state.image != null ) ? 60 : 24,
+                  icon: (store.state.postFeedState.image == null) ? Icon(Icons.image) : Image.file(store.state.postFeedState.image,height: 100,width: 100,),
+                  iconSize: (store.state.postFeedState.image != null ) ? 60 : 24,
                   onPressed:  () async {
 
                     await showDialog(
@@ -108,7 +111,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                   return store.state;
                 },
                 builder: (context, state) => 
-                  state.havePosition ? Text(state.placemark[0].locality + ", "+state.placemark[0].country) 
+                  state.postFeedState.havePosition ? Text(state.postFeedState.placemark[0].locality + ", "+state.postFeedState.placemark[0].country) 
                   : Text("")
                 ,
               )
@@ -156,7 +159,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
               converter: (store1) => store1.state,
               builder: (context, state) =>
                 StoreConnector<AppState,VoidCallback>(
-                  converter: (store) => state.havePosition ? 
+                  converter: (store) => state.postFeedState.havePosition ? 
 
                   () => store.dispatch(new DeletePositionAction(position, placemark, havePosition).deletePosition())
                   : () => store.dispatch(new AddPositionAction(position, placemark, havePosition).getPosition())
@@ -169,10 +172,10 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Icon(Icons.gps_fixed),
-                          state.havePosition ? Text('Supprimer ma position') : Text('Ajouter ma position') 
+                          state.postFeedState.havePosition ? Text('Supprimer ma position') : Text('Ajouter ma position') 
                         ],
                       ),
-                      color:state.havePosition ? Colors.red : Colors.blue,
+                      color:state.postFeedState.havePosition ? Colors.red : Colors.blue,
                       textColor: Colors.white,
                       );
                   },
@@ -189,6 +192,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                   StoreConnector<AppState,OnSaveAnomaly>(
                     converter: (Store<AppState> store) {
                       return (title, description, latitude, longitude, imageUrl) {
+                        print(title);
                         store.dispatch(new AddAnomalyAction(Anomaly(title: title,description: description, latitude: latitude, longitude: longitude, imageUrl: imageUrl)).postAnomaly());
                       };
                     },
@@ -202,9 +206,9 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                               child: const Text('Poster'),
                               onPressed: () async {
                               if (_formKey.currentState.validate()){
-                                var imageurl = await api.upload(state.image);
+                                var imageurl = await api.upload(state.postFeedState.image);
                                 print(imageurl);
-                                onSave(title,description, state.position.latitude.toString(), state.position.longitude.toString(), imageurl);
+                                onSave(title,description, state.postFeedState.position.latitude.toString(), state.postFeedState.position.longitude.toString(), imageurl);
                                 Navigator.pop(context);
                                 }
                               },
@@ -234,7 +238,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                            
                           });
 */
-                           var result= await api.upload(store.state.image);
+                           var result= await api.upload(store.state.postFeedState.image);
                             print(result);
                             //Navigator.pop(context);
 
@@ -249,7 +253,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
       ),
     )
   ,
-  )
+  
 
 
     );

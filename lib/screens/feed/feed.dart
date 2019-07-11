@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../settings/settings.dart';
 import '../../models/anomaly.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:sbaclean/models/app_state.dart';
-import 'package:sbaclean/redux/actions.dart';
+import 'package:sbaclean/store/app_state.dart';
+import 'package:sbaclean/actions/feed_actions.dart';
 import 'package:redux/redux.dart';
 import 'dart:async';
 import 'package:sbaclean/main.dart';
@@ -59,7 +59,7 @@ class _FeedState extends State<FeedScreen> {
       });
 
       timer = Timer.periodic(Duration(seconds: 10), (Timer t) async  {
-        bool changed  = await api.checkNewPosts(MyApp.store);
+        bool changed  = await api.checkNewPosts(MyApp.store.state.feedState);
         if (changed) MyApp.store.dispatch(new SetPostsChanged(changed: changed));
         });
     }
@@ -102,10 +102,10 @@ class _FeedState extends State<FeedScreen> {
         body: 
           Stack(
             alignment: Alignment.topCenter  ,
-            children: store.state.postsChanged ? <Widget>[
+            children: store.state.feedState.postsChanged ? <Widget>[
               RefreshIndicator(
                 key: _refreshIndicatorKey,
-                child:PostList(posts: store.state.anomalies),
+                child:PostList(posts: store.state.feedState.anomalies),
                 color: Colors.blueAccent,
                 onRefresh: () {
                   GetAnomaliesAction action = new GetAnomaliesAction(anomalies);
@@ -118,7 +118,7 @@ class _FeedState extends State<FeedScreen> {
             <Widget>[
               RefreshIndicator(
                 key: _refreshIndicatorKey,
-                child:PostList(posts: store.state.anomalies),
+                child:PostList(posts: store.state.feedState.anomalies),
                 color: Colors.blueAccent,
                 onRefresh: () {
                   final getReactions = GetUserReactionAction([]);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:sbaclean/redux/actions.dart';
-import 'package:sbaclean/models/app_state.dart';
+import 'package:sbaclean/actions/post_feed_actions.dart';
+import 'package:sbaclean/store/app_state.dart';
 final state_key = GlobalKey<ImageChooserState>();
 
 

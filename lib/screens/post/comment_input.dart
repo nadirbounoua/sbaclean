@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sbaclean/models/comment.dart';
-import '../../redux/actions_user.dart';
-import '../../redux/actions_comment.dart';
-import 'dart:convert';
+import 'package:sbaclean/actions/actions_comment.dart';
 import '../../models/app_state_comment.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
-import '../../redux/reducers_comment.dart';
 
 class CommentInput extends StatefulWidget {
   @override

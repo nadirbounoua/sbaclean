@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'screens/main/main.dart';
-import 'package:sbaclean/models/app_state.dart';
+import 'package:sbaclean/store/app_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'redux/reducers.dart';
+import 'package:sbaclean/reducers/reducers.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:sbaclean/screens/feed/feed.dart';
 void main() {
@@ -13,7 +13,7 @@ void main() {
 class MyApp extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
   static final  store = Store<AppState>(appStateReducers,
-  initialState: AppState(),
+  initialState: AppState.newAppState(),
   middleware: [thunkMiddleware]
   );
   @override

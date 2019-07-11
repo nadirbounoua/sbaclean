@@ -6,7 +6,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
-import 'package:sbaclean/models/app_state.dart';
+import 'package:sbaclean/store/feed_state.dart';
 import 'package:redux/redux.dart';
 import 'dart:convert';
 import 'package:path/path.dart';
@@ -82,8 +82,9 @@ Future getComments() async {
 
   }
 
-  Future checkNewPosts(Store<AppState> store) async {
-    String count = store.state.anomalies.length.toString();
+  Future checkNewPosts(FeedState state) async {
+    String count = state.anomalies.length.toString();
+    print(count);
     var url = ProjectSettings.apiUrl + "/api/v1/mobile/check_new_posts/";
     var response = await http.post(url,
     body: {'count':count},

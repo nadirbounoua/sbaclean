@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sbaclean/screens/post/comment_preview.dart';
 import 'package:sbaclean/models/comment.dart';
-import '../../redux/actions_user.dart';
-import '../../redux/actions.dart';
-import 'dart:convert';
-import '../../models/user.dart';
 
 class CommentList extends StatelessWidget {
   final List<Comment> comments;

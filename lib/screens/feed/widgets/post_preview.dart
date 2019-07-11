@@ -2,9 +2,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
-import 'package:sbaclean/models/app_state.dart';
+import 'package:sbaclean/store/app_state.dart';
 import 'package:redux/redux.dart';
-import 'package:sbaclean/redux/actions.dart';
+import 'package:sbaclean/actions/feed_actions.dart';
 
 class PostPreview extends StatelessWidget {
   final Anomaly anomaly;
@@ -81,11 +81,11 @@ class PostPreview extends StatelessWidget {
                   StoreConnector<AppState,Store<AppState>>(
                     converter: (store) => store,
                     builder: (context, store) => 
-                    store.state.anomalies
+                    store.state.feedState.anomalies
                     .firstWhere((e) => e.id == anomaly.id)
                     .reactions.length >0 ?
                     Text(
-                      store.state.anomalies
+                      store.state.feedState.anomalies
                     .firstWhere((e) => e.id == anomaly.id)
                     .reactions.length.toString(),
                     style: TextStyle(color: Colors.blue),
@@ -100,19 +100,19 @@ class PostPreview extends StatelessWidget {
                       icon: Icon(
                         Icons.keyboard_arrow_up, 
                         color: 
-                        store.state.anomalies
+                        store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction != null ?
-                         store.state.anomalies
+                         store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction.isLike 
                          
                          ?  Colors.blue : Colors.grey : Colors.grey),
                       onPressed: () =>
-                        store.state.anomalies
+                        store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction != null ?
-                        !store.state.anomalies
+                        !store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction.isLike ? 
                           
@@ -136,19 +136,19 @@ class PostPreview extends StatelessWidget {
                       icon: Icon(
                         Icons.keyboard_arrow_down, 
                         color: 
-                        store.state.anomalies
+                        store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction != null ?
-                         ! store.state.anomalies
+                         ! store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction.isLike 
                          
                          ?  Colors.black : Colors.grey : Colors.grey),
                       onPressed: () {
-                        store.state.anomalies
+                        store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction != null ?
-                        store.state.anomalies
+                        store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .userReaction.isLike ?
                         store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.userReaction).updateReaction())
