@@ -2,7 +2,7 @@ import 'package:sbaclean/models/comment.dart';
 
 import '../models/app_state_comment.dart';
 import '../models/comment.dart';
-import 'actions_comment.dart';
+import 'package:sbaclean/actions/actions_comment.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
 

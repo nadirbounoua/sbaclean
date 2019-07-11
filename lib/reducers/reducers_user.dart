@@ -1,7 +1,7 @@
 
 import '../models/app_state_user.dart';
 import '../models/user.dart';
-import 'actions_user.dart';
+import 'package:sbaclean/actions/actions_user.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
 import 'package:geolocator/geolocator.dart';
