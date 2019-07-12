@@ -1,8 +1,8 @@
 import 'package:sbaclean/models/comment.dart';
 
-import '../models/app_state_comment.dart';
+import 'package:sbaclean/store/comment_state.dart';
 import '../models/comment.dart';
-import 'package:sbaclean/actions/actions_comment.dart';
+import 'package:sbaclean/actions/comment_actions.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
 

@@ -1,7 +1,7 @@
 import 'package:sbaclean/models/comment.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
-import 'package:sbaclean/models/app_state_comment.dart';
+import 'package:sbaclean/store/comment_state.dart';
 import 'package:sbaclean/backend/api.dart';
 import 'package:sbaclean/backend/utils.dart';
 import 'dart:io';

@@ -1,4 +1,4 @@
-import 'comment.dart';
+import 'package:sbaclean/models/comment.dart';
 import 'package:meta/meta.dart';
 
 @immutable
