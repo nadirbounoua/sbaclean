@@ -193,7 +193,15 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                     converter: (Store<AppState> store) {
                       return (title, description, latitude, longitude, imageUrl) {
                         print(title);
-                        store.dispatch(new AddAnomalyAction(Anomaly(title: title,description: description, latitude: latitude, longitude: longitude, imageUrl: imageUrl)).postAnomaly());
+                        store.dispatch(new AddAnomalyAction(
+                          anomaly: Anomaly(
+                            title: title,
+                            description: description, 
+                            latitude: latitude, 
+                            longitude: longitude, 
+                            imageUrl: imageUrl),
+                          user: store.state.userState.user
+                          ).postAnomaly());
                       };
                     },
 

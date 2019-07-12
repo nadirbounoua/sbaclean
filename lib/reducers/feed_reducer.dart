@@ -77,8 +77,8 @@ FeedState getAnomalies(FeedState state, GetAnomaliesAction action) {
 
 
 FeedState addItem(FeedState state, AddAnomalyAction action) {
-  var list = List.from(state.anomalies)..add(action.item);
+  var list = List.from(state.anomalies)..add(action.anomaly,);
   print(list);
-  return state.copyWith(anomalies: List.from(state.anomalies)..add(action.item));
+  return state.copyWith(anomalies: List.from(state.anomalies)..add(action.anomaly));
 }
 
