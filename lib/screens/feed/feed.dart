@@ -58,8 +58,10 @@ class _FeedState extends State<FeedScreen> {
                   
       });
 
-      timer = Timer.periodic(Duration(seconds: 10), (Timer t) async  {
-        bool changed  = await api.checkNewPosts(MyApp.store.state.feedState);
+      timer = Timer.periodic(Duration(seconds: 45), (Timer t) async  {
+        bool changed = await api.copyWith(MyApp.store.state.userState.user.authToken)
+                                .checkNewPosts(MyApp.store.state.feedState);
+
         if (changed) MyApp.store.dispatch(new SetPostsChanged(changed: changed));
         });
     }

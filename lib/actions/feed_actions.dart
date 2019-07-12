@@ -4,25 +4,25 @@ import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:sbaclean/backend/api.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:sbaclean/backend/utils.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'dart:async';
+import 'package:sbaclean/models/user.dart';
 
 import 'package:sbaclean/store/feed_state.dart';
 
 Api api = Api();
 class AddAnomalyAction {
-  final Anomaly item;
-
-  AddAnomalyAction(this.item);
+  final Anomaly anomaly;
+  final User user;
+  AddAnomalyAction({this.anomaly, this.user});
 
   ThunkAction<AppState> postAnomaly() {
   return (Store<AppState> store) async {
-    final responsePost = await api.createPost(item);
+
+    final responsePost = await api.copyWith(store.state.userState.user.authToken)
+                                  .createPost(anomaly,user);
     //final response = await api.getPosts();
-    store.dispatch(new AddAnomalyAction(item));
+    store.dispatch(new AddAnomalyAction(anomaly: anomaly));
 
     //store.dispatch(new GetAnomaliesAction([]).getAnomalies());
 
@@ -38,7 +38,8 @@ class GetAnomaliesAction {
 
   ThunkAction<AppState> getAnomalies() {
     return (Store<AppState> store) async {
-      final response = await api.getPosts();
+      final response = await api.copyWith(store.state.userState.user.authToken)
+                                .getPosts();
       List<Anomaly> anomalyList = parsePost(response);
       for (var anomaly in anomalyList) {
         for (var reaction in store.state.feedState.userReactions) {
@@ -66,7 +67,8 @@ class SetReactionAction {
   ThunkAction<AppState> setLike() {
     return (Store<AppState> store) async {
       print("Action" + reaction.toString());
-      var response = await api.setReactionPost(anomaly, reaction);
+      var response = await api.copyWith(store.state.userState.user.authToken)
+                              .setReactionPost(anomaly, reaction);
       reaction = Reaction.fromJson(response);
       print(response);
       store.dispatch( new SetReactionAction(anomaly:anomaly, reaction: reaction));
@@ -83,7 +85,8 @@ class DeleteReactionAction {
   ThunkAction<AppState> deleteReaction() {
     return (Store<AppState> store) async {
         reaction = anomaly.userReaction;
-        await api.deleteReaction(reaction);
+        await api.copyWith(store.state.userState.user.authToken)
+                  .deleteReaction(reaction);
         store.dispatch(new DeleteReactionAction(anomaly: anomaly, reaction: reaction));
     };
   }
@@ -115,7 +118,8 @@ class GetUserReactionAction {
 
   ThunkAction<AppState> getReactions() {
     return (Store<AppState> store) async {
-      final response = await api.getUserReaction(1);
+      final response = await api.copyWith(store.state.userState.user.authToken)
+                                .getUserReaction(1);
       list = parseReaction(response);
       store.dispatch(new GetUserReactionAction(list));
       completer.complete();

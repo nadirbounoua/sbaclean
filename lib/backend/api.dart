@@ -13,21 +13,30 @@ import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'package:sbaclean/models/user.dart';
 import 'package:sbaclean/models/comment.dart';
+
 class Api {
+  String token ;
+
+  Api copyWith(String token) {
+    return Api(token: token ?? this.token);
+  }
+  Api({this.token});
+
   Future getPosts() async{
     var url = ProjectSettings.apiUrl+"/api/v1/posts/post/";
     var response = await http.get(url,
-    headers: {HttpHeaders.authorizationHeader : "Token "+ProjectSettings.authToken});
+    headers: {HttpHeaders.authorizationHeader : "Token "+token});
     return response.body;
   }
 
-  Future createPost(Anomaly anomaly) async {
+  Future createPost(Anomaly anomaly, User user) async {
+    print(token);
     var url = ProjectSettings.apiUrl + "/api/v1/posts/post/";
     var response = await http.post(url,
     body : {'title': anomaly.title,'description': anomaly.description, 
     'longitude': anomaly.longitude, 'latitude':anomaly.latitude, 
-    'post_owner': "1",'city':'1', 'image':anomaly.imageUrl},    
-    headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+    'post_owner': user.id,'city':'1', 'image':anomaly.imageUrl},    
+    headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
 
     return response;
@@ -35,7 +44,7 @@ class Api {
 Future getComments() async {
     var url = ProjectSettings.apiUrl + "/api/v1/posts/comment";
     var response = await http.get(url, headers: {
-      HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
+      HttpHeaders.authorizationHeader: "Token " + token
     });
     return response.body;
   }
@@ -77,18 +86,18 @@ Future getComments() async {
   Future queryPosts(String query) async {
     var url = ProjectSettings.apiUrl+"/api/v1/posts/post/?q=$query";
     var response = await http.get(url,
-          headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken});
+          headers: {HttpHeaders.authorizationHeader: "Token "+token});
     return response.body;
 
   }
 
   Future checkNewPosts(FeedState state) async {
     String count = state.anomalies.length.toString();
-    print(count);
+    print("Tokeen $token");
     var url = ProjectSettings.apiUrl + "/api/v1/mobile/check_new_posts/";
     var response = await http.post(url,
     body: {'count':count},
-    headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+    headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
     Map<String, dynamic> responseJson = json.decode(response.body);
     return responseJson['changed'];
@@ -102,7 +111,7 @@ Future getComments() async {
       'post': "23",
       'description': comment.commentContent
     }, headers: {
-      HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
+      HttpHeaders.authorizationHeader: "Token " + token
     });
     return response;
   }
@@ -110,7 +119,7 @@ Future getComments() async {
   Future getUsers() async {
     var url = ProjectSettings.apiUrl + "/api/v1/accounts/";
     var response = await http.get(url, headers: {
-      HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
+      HttpHeaders.authorizationHeader: "Token " + token
     });
     return response.body;
   }
@@ -118,7 +127,7 @@ Future getComments() async {
   Future getComment(int id) async {
     var url = ProjectSettings.apiUrl + "/api/v1/posts/comment/$id";
     var response = await http.get(url, headers: {
-      HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
+      HttpHeaders.authorizationHeader: "Token " + token
     });
     return response.body;
   }
@@ -126,7 +135,7 @@ Future getComments() async {
   Future getUser(int id) async {
     var url = ProjectSettings.apiUrl + "/api/v1/accounts/$id";
     var response = await http.get(url, headers: {
-      HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
+      HttpHeaders.authorizationHeader: "Token " + token
     });
     return response.body;
   }
@@ -134,7 +143,7 @@ Future getComments() async {
   Future createUser(User user) async {
     var url = ProjectSettings.apiUrl + "/api/v1/posts/post/";
     var response = await http.post(url, headers: {
-      HttpHeaders.authorizationHeader: "Token " + ProjectSettings.authToken
+      HttpHeaders.authorizationHeader: "Token " + token
     });
 }
 
@@ -147,7 +156,7 @@ Future getComments() async {
             'reaction_owner': reaction.reactionOwner.toString(), 
             'is_like': reaction.isLike.toString()
             },
-      headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+      headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
     Map<String, dynamic> responseJson = json.decode(response.body);
     return responseJson;
@@ -157,7 +166,7 @@ Future getComments() async {
   Future deleteReaction(Reaction reaction) async {
     var url = ProjectSettings.apiUrl + '/api/v1/posts/reaction/'+ reaction.id.toString();
     var response = await http.delete(url,
-      headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+      headers: {HttpHeaders.authorizationHeader: "Token "+token}
 
     );
 
@@ -171,16 +180,17 @@ Future getComments() async {
             'reaction_owner': reaction.reactionOwner.toString(), 
             'is_like': reaction.isLike.toString()
             },
-      headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+      headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
     Map<String, dynamic> responseJson = json.decode(response.body);
     return responseJson;
   }
 
   Future getUserReaction(int userId) async {
+    print(token);
     var url = ProjectSettings.apiUrl + '/api/v1/posts/reaction/user/'+ userId.toString();
     var response = await http.get(url,
-    headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+    headers: {HttpHeaders.authorizationHeader: "Token "+token}
     
     );
     return response.body;
@@ -189,7 +199,7 @@ Future getComments() async {
   Future getUserAnomaliesHistory(String userId) async {
     var url = ProjectSettings.apiUrl + '/api/v1/posts/post?owner=$userId';
     var response = await http.get(url,
-      headers: {HttpHeaders.authorizationHeader: "Token "+ProjectSettings.authToken}
+      headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
 
     return response.body;
