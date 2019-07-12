@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sbaclean/screens/post/comment_list.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:sbaclean/models/app_state_comment.dart';
+import 'package:sbaclean/store/comment_state.dart';
 import '../post/post.dart';
-import '../../actions/actions_comment.dart';
+import 'package:sbaclean/actions/comment_actions.dart';
 import '../post/start_comment.dart';
 import 'comment_input.dart';
 

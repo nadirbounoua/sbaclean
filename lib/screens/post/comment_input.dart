@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sbaclean/models/comment.dart';
-import 'package:sbaclean/actions/actions_comment.dart';
-import '../../models/app_state_comment.dart';
+import 'package:sbaclean/actions/comment_actions.dart';
+import 'package:sbaclean/store/comment_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class CommentInput extends StatefulWidget {
