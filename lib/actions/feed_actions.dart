@@ -102,7 +102,8 @@ class UpdateReactionAction {
     return (Store<AppState> store) async {
         reaction = anomaly.userReaction;
         reaction.isLike = !reaction.isLike;
-        var response = await api.updateReaction(reaction);
+        var response = await  api.copyWith(store.state.userState.user.authToken)
+                                  .updateReaction(reaction);
         print(reaction);
         reaction = Reaction.fromJson(response);
         store.dispatch( new UpdateReactionAction(anomaly:anomaly, reaction: reaction));
