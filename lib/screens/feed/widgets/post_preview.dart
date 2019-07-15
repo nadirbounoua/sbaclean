@@ -5,6 +5,7 @@ import 'package:sbaclean/models/reaction.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/feed_actions.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class PostPreview extends StatelessWidget {
   final Anomaly anomaly;
@@ -17,27 +18,36 @@ class PostPreview extends StatelessWidget {
     return Center(
       child: Card(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  margin: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-                  decoration: new BoxDecoration(
-                      border: Border(bottom: BorderSide(width: 1))
-                  ),
+                  margin: const EdgeInsets.only( bottom: 20.0),
                   child: anomaly.imageUrl == "/media/images/default.png" ?
                   Icon(
                     Icons.image,
-                    size: 100,
+                    size: 100,              
                   ):
-                  Image.network(anomaly.imageUrl,width: 100, height: 100,)
+                  CachedNetworkImage(
+                    imageUrl: anomaly.imageUrl,
+                    imageBuilder: (context, image) =>
+                    Image(
+                      image: image,
+                      filterQuality: FilterQuality.low,
+                      fit: BoxFit.cover,
+                      height: MediaQuery.of(context).size.height *0.4,
+                      width: MediaQuery.of(context).size.width - 8,
+                      
+                    )
+                      
+                  )
 
 
                 ),
               ],
-            ),
+            ),            
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -87,7 +97,7 @@ class PostPreview extends StatelessWidget {
                     Text(
                       store.state.feedState.anomalies
                     .firstWhere((e) => e.id == anomaly.id)
-                    .reactions.length.toString(),
+                    .reactionsCount.toString(),
                     style: TextStyle(color: Colors.blue),
                     ) : Text("")
                   ),
