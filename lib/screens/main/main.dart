@@ -51,6 +51,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
   final _formKey = GlobalKey<FormState>();
   File _image;
   Api api = Api();
+  String dropdownValue = 'Accident';
 
   Future getImage(camera) async {
     var image;
@@ -120,19 +121,39 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
-                  TextFormField(
-                    controller: titleController,
-                    decoration: InputDecoration(
-                    labelText: 'Title',
-                    labelStyle: TextStyle(color: Colors.blue),
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty){
-                        return 'Please enter some text';
-                      }
-                      title = value;
-                      return null;
+                  Padding(
+                    padding: EdgeInsets.only(left: 0),
+                    child:                  
+                    Row(
+                    
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    verticalDirection: VerticalDirection.up,
+                    children: <Widget>[
+                      Text("Choisissez le type d'anomalie :", textAlign: TextAlign.start,) ,
+                       DropdownButton<String>(
+                         
+                    value: dropdownValue,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        title = newValue;
+                        dropdownValue = newValue;
+                      });
+                      title = newValue;
+
                     },
+                    items: <String>['Accident', 'Panne', "Fuite d'eau", 'Incendie',]
+                      .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      })
+                      .toList(),
+                   ),
+                    ],
+                  ),
+  
                   ),
                   TextFormField(
                     controller: descriptionController,
@@ -192,7 +213,6 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                   StoreConnector<AppState,OnSaveAnomaly>(
                     converter: (Store<AppState> store) {
                       return (title, description, latitude, longitude, imageUrl) {
-                        print(title);
                         store.dispatch(new AddAnomalyAction(
                           anomaly: Anomaly(
                             title: title,
@@ -215,7 +235,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                               onPressed: () async {
                               if (_formKey.currentState.validate()){
                                 var imageurl = await api.upload(state.postFeedState.image);
-                                print(imageurl);
+                                print(title);
                                 onSave(title,description, state.postFeedState.position.latitude.toString(), state.postFeedState.position.longitude.toString(), imageurl);
                                 Navigator.pop(context);
                                 }
