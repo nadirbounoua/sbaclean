@@ -27,7 +27,7 @@ FeedState setReaction(FeedState state, SetReactionAction action) {
   Reaction reaction = action.reaction;
   anomaly.reactions.add(action.reaction.id);
   anomaly.userReaction = reaction;
-  
+  anomaly.userReaction.isLike ? anomaly.reactionsCount++ : anomaly.reactionsCount --;
   return state.copyWith(
     anomalies: List.from(list)
     ..add(anomaly)
@@ -39,6 +39,7 @@ FeedState deleteReaction(FeedState state, DeleteReactionAction action) {
   
   List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
   Anomaly anomaly = action.anomaly;
+  anomaly.userReaction.isLike ? anomaly.reactionsCount -- : anomaly.reactionsCount ++;
   anomaly.userReaction = null;
   anomaly.reactions.removeWhere((id)=> id == action.reaction.id);
   
@@ -57,6 +58,7 @@ FeedState updateReaction(FeedState state, UpdateReactionAction action) {
   anomaly.userReaction = action.reaction;
   anomaly.reactions.removeWhere((id)=> id == action.reaction.id);
   anomaly.reactions..add(anomaly.userReaction.id);
+  anomaly.userReaction.isLike ? anomaly.reactionsCount +=2 : anomaly.reactionsCount -=2;
 
   return state.copyWith(
     anomalies: List.from(list)
