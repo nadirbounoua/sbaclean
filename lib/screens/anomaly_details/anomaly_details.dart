@@ -31,12 +31,12 @@ class AnomalyDetails extends StatelessWidget {
                   decoration: new BoxDecoration(
                       border: Border(bottom: BorderSide(width: 1))
                   ),
-                  child: anomaly.imageUrl == "/media/images/default.png" ?
+                  child: anomaly.post.imageUrl == "/media/images/default.png" ?
                   Icon(
                     Icons.image,
                     size: 100,
                   ):
-                  Image.network(anomaly.imageUrl,width: 100, height: 100,)
+                  Image.network(anomaly.post.imageUrl,width: 100, height: 100,)
                 ),
               ],
             ),
@@ -45,13 +45,13 @@ class AnomalyDetails extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    Text(anomaly.title
+                    Text(anomaly.post.title
                       ,
                       style: new TextStyle(
                         fontSize: 25,
                       ),
                     ),
-                    Text(anomaly.description),
+                    Text(anomaly.post.description),
                   ],
                 )
               ],
@@ -71,7 +71,9 @@ class AnomalyDetails extends StatelessWidget {
                             color: Colors.grey,
                           ),
                           Container(
-                            child: Text('124 Commentaires'),
+                            child: (anomaly.post.comments.length > 0) 
+                                    ? Text(anomaly.post.comments.length.toString()+ ' Commentaires')
+                                    : Text("Pas de commentaires"),
                           ),
                         ],
                       ),
@@ -85,11 +87,11 @@ class AnomalyDetails extends StatelessWidget {
                     builder: (context, store) => 
                     store.state.feedState.anomalies
                     .firstWhere((e) => e.id == anomaly.id)
-                    .reactions.length >0 ?
+                    .post.reactions.length >0 ?
                     Text(
                       store.state.feedState.anomalies
                     .firstWhere((e) => e.id == anomaly.id)
-                    .reactions.length.toString(),
+                    .post.reactionsCount.toString(),
                     style: TextStyle(color: Colors.blue),
                     ) : Text("")
                   ),
@@ -104,23 +106,23 @@ class AnomalyDetails extends StatelessWidget {
                         color: 
                         store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction != null ?
+                        .post.userReaction != null ?
                          store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction.isLike 
+                        .post.userReaction.isLike 
 
                          ?  Colors.blue : Colors.grey : Colors.grey),
                       onPressed: () =>
                         store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction != null ?
+                        .post.userReaction != null ?
                         !store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction.isLike ? 
+                        .post.userReaction.isLike ? 
 
-                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.userReaction).updateReaction())
+                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.post.userReaction).updateReaction())
                         :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
-                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.id, reactionOwner: 1)).setLike())
+                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.post.id, reactionOwner: 1)).setLike())
 
 
 
@@ -140,22 +142,22 @@ class AnomalyDetails extends StatelessWidget {
                         color: 
                         store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction != null ?
+                        .post.userReaction != null ?
                          ! store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction.isLike 
+                        .post.userReaction.isLike 
 
                          ?  Colors.black : Colors.grey : Colors.grey),
                       onPressed: () {
                         store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction != null ?
+                        .post.userReaction != null ?
                         store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
-                        .userReaction.isLike ?
-                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.userReaction).updateReaction())
+                        .post.userReaction.isLike ?
+                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.post.userReaction).updateReaction())
                         :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
-                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.id, reactionOwner: 1)).setLike());
+                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.post.id, reactionOwner: 1)).setLike());
                       },
                     ),
                   ),

@@ -25,12 +25,12 @@ class ListElement extends StatelessWidget {
         verticalDirection: VerticalDirection.down,
         children: <Widget>[
           Padding(padding: EdgeInsets.all(8), ),
-          anomaly.imageUrl == "/media/images/default.png" ?
+          anomaly.post.imageUrl == "/media/images/default.png" ?
           Icon(
             Icons.image,
             size: 100,
           ):
-          Image.network(anomaly.imageUrl,width: 100, height: 100,),
+          Image.network(anomaly.post.imageUrl,width: 100, height: 100,),
           Container(
             margin: EdgeInsets.only(left: 8),
             child : Flex(
@@ -40,7 +40,7 @@ class ListElement extends StatelessWidget {
               verticalDirection: VerticalDirection.down,
               children: <Widget>[
                 Text(
-                  anomaly.title,
+                  anomaly.post.title,
                   style: TextStyle(fontSize: 25),
             ),
               ],

@@ -22,7 +22,7 @@ class GetUserAnomaliesHistoryAction {
     return (Store<AppState> store) async {
       final response = await api.copyWith(store.state.userState.user.authToken)
                                 .getUserAnomaliesHistory(userId);
-      list = parsePost(response);
+      list = parseAnomalies(response);
       store.dispatch(new GetUserAnomaliesHistoryAction(list: list));
       completer.complete();
     };

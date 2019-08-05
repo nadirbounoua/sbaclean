@@ -22,48 +22,48 @@ FeedState setPostsChanged(FeedState state,SetPostsChanged action) {
 
 FeedState setReaction(FeedState state, SetReactionAction action) {
   
-  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.post.id == action.anomaly.post.id);
   Anomaly anomaly = action.anomaly;
   Reaction reaction = action.reaction;
-  anomaly.reactions.add(action.reaction.id);
-  anomaly.userReaction = reaction;
-  anomaly.userReaction.isLike ? anomaly.reactionsCount++ : anomaly.reactionsCount --;
+  anomaly.post.reactions.add(action.reaction.id);
+  anomaly.post.userReaction = reaction;
+  anomaly.post.userReaction.isLike ? anomaly.post.reactionsCount++ : anomaly.post.reactionsCount --;
   return state.copyWith(
     anomalies: List.from(list)
     ..add(anomaly)
-    ..sort((anomaly, anomaly1) => anomaly.id > anomaly1.id ? 1 : -1 )
+    ..sort((anomaly, anomaly1) => anomaly.post.id > anomaly1.id ? 1 : -1 )
   );
 }
 
 FeedState deleteReaction(FeedState state, DeleteReactionAction action) {
   
-  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.post.id == action.anomaly.post.id);
   Anomaly anomaly = action.anomaly;
-  anomaly.userReaction.isLike ? anomaly.reactionsCount -- : anomaly.reactionsCount ++;
-  anomaly.userReaction = null;
-  anomaly.reactions.removeWhere((id)=> id == action.reaction.id);
+  anomaly.post.userReaction.isLike ? anomaly.post.reactionsCount -- : anomaly.post.reactionsCount ++;
+  anomaly.post.userReaction = null;
+  anomaly.post.reactions.removeWhere((id)=> id == action.reaction.id);
   
   return state.copyWith(
     anomalies: List.from(list)
     ..add(anomaly)
-    ..sort((anomaly, anomaly1) => anomaly.id > anomaly1.id ? 1 : -1 )
+    ..sort((anomaly, anomaly1) => anomaly.post.id > anomaly1.id ? 1 : -1 )
   );
 
 }
 
 FeedState updateReaction(FeedState state, UpdateReactionAction action) {
 
-  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.post.id == action.anomaly.post.id);
   Anomaly anomaly = action.anomaly;
-  anomaly.userReaction = action.reaction;
-  anomaly.reactions.removeWhere((id)=> id == action.reaction.id);
-  anomaly.reactions..add(anomaly.userReaction.id);
-  anomaly.userReaction.isLike ? anomaly.reactionsCount +=2 : anomaly.reactionsCount -=2;
+  anomaly.post.userReaction = action.reaction;
+  anomaly.post.reactions.removeWhere((id)=> id == action.reaction.id);
+  anomaly.post.reactions..add(anomaly.post.userReaction.id);
+  anomaly.post.userReaction.isLike ? anomaly.post.reactionsCount +=2 : anomaly.post.reactionsCount -=2;
 
   return state.copyWith(
     anomalies: List.from(list)
     ..add(anomaly)
-    ..sort((anomaly, anomaly1) => anomaly.id > anomaly1.id ? 1 : -1 )
+    ..sort((anomaly, anomaly1) => anomaly.post.id > anomaly1.id ? 1 : -1 )
   );
 
 }

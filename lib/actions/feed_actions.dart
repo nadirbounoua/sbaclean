@@ -7,22 +7,24 @@ import 'package:sbaclean/backend/api.dart';
 import 'package:sbaclean/backend/utils.dart';
 import 'dart:async';
 import 'package:sbaclean/models/user.dart';
-
+import 'package:sbaclean/models/post.dart';
 import 'package:sbaclean/store/feed_state.dart';
 
 Api api = Api();
 class AddAnomalyAction {
-  final Anomaly anomaly;
+  final Post post;
+  Anomaly anomaly;
   final User user;
-  AddAnomalyAction({this.anomaly, this.user});
+  AddAnomalyAction({this.post, this.user, this.anomaly});
 
   ThunkAction<AppState> postAnomaly() {
   return (Store<AppState> store) async {
 
     final responsePost = await api.copyWith(store.state.userState.user.authToken)
-                                  .createPost(anomaly,user);
+                                  .createAnomaly(post,user);
+    anomaly = await parseOneAnomaly(responsePost);
     //final response = await api.getPosts();
-    store.dispatch(new AddAnomalyAction(anomaly: anomaly));
+    store.dispatch(new AddAnomalyAction(post: post, anomaly: anomaly));
 
     //store.dispatch(new GetAnomaliesAction([]).getAnomalies());
 
@@ -39,11 +41,11 @@ class GetAnomaliesAction {
   ThunkAction<AppState> getAnomalies() {
     return (Store<AppState> store) async {
       final response = await api.copyWith(store.state.userState.user.authToken)
-                                .getPosts();
-      List<Anomaly> anomalyList = parsePost(response);
+                                .getAnomalies();
+      List<Anomaly> anomalyList = parseAnomalies(response);
       for (var anomaly in anomalyList) {
         for (var reaction in store.state.feedState.userReactions) {
-          if (anomaly.id == reaction.post) anomaly.userReaction = reaction;
+          if (anomaly.post == reaction.post) anomaly.post.userReaction = reaction;
         }
       }
       store.dispatch(new GetAnomaliesAction(anomalyList));
@@ -84,7 +86,7 @@ class DeleteReactionAction {
 
   ThunkAction<AppState> deleteReaction() {
     return (Store<AppState> store) async {
-        reaction = anomaly.userReaction;
+        reaction = anomaly.post.userReaction;
         await api.copyWith(store.state.userState.user.authToken)
                   .deleteReaction(reaction);
         store.dispatch(new DeleteReactionAction(anomaly: anomaly, reaction: reaction));
@@ -100,7 +102,7 @@ class UpdateReactionAction {
 
   ThunkAction<AppState> updateReaction() {
     return (Store<AppState> store) async {
-        reaction = anomaly.userReaction;
+        reaction = anomaly.post.userReaction;
         reaction.isLike = !reaction.isLike;
         var response = await  api.copyWith(store.state.userState.user.authToken)
                                   .updateReaction(reaction);

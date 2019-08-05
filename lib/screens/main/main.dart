@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:sbaclean/models/anomaly.dart';
+import 'package:sbaclean/models/post.dart';
 import '../feed/feed.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -214,13 +216,14 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                     converter: (Store<AppState> store) {
                       return (title, description, latitude, longitude, imageUrl) {
                         store.dispatch(new AddAnomalyAction(
-                          anomaly: Anomaly(
+                          post: Post(
                             title: title,
                             description: description, 
                             latitude: latitude, 
                             longitude: longitude, 
                             imageUrl: imageUrl),
-                          user: store.state.userState.user
+                          user: store.state.userState.user,
+                          anomaly: Anomaly()
                           ).postAnomaly());
                       };
                     },

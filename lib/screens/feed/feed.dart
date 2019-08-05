@@ -146,14 +146,12 @@ class _FeedState extends State<FeedScreen> {
             Navigator.push(context, MaterialPageRoute(builder: (context) => PostScreenWidget()));
           },
           child: Icon(Icons.add),
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.yellow
         ),
         );
       } 
     );
   }
-
-
   _showMaterialSearch(BuildContext context) {
     Navigator.of(context)
       .push(_buildMaterialSearchPage(context))
@@ -179,12 +177,12 @@ class _FeedState extends State<FeedScreen> {
               } else {
               var list = await api.queryPosts(criteria);
                setState(() {
-                 anomalies = parsePost(list);
+                 anomalies = parseAnomalies(list);
                });
               }
               return anomalies.map((anomaly) => new MaterialSearchResult<dynamic>(
                 value: anomaly, //The value must be of type <String>
-                text: anomaly.title, //String that will be show in the list
+                text: anomaly.post.title, //String that will be show in the list
                 //icon: anomaly.imageUrl == "/media/images/default.png" ? Icons.image : ImageIcon(Image.network(src))
                 //.network(anomaly.imageUrl ,width: 24, height: 24,)
               )).toList();
