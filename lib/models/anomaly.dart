@@ -1,46 +1,34 @@
- import 'package:sbaclean/models/reaction.dart';
- 
+import 'package:sbaclean/models/reaction.dart';
+import 'package:sbaclean/models/post.dart'; 
+import 'dart:convert';
  class Anomaly {
 
   int id;
-  int post;
-  int postOwner;
-  String title;
-  String description;
-  String longitude;
-  String latitude;
-  List<int> reactions = [];
-  Reaction userReaction;
-  String imageUrl; 
-
-  Anomaly({this.title, 
-           this.description, 
-           this.longitude,
-           this.latitude,
+  Post post;
+  
+  Anomaly({
            this.id, 
-           this.reactions,
-           this.userReaction, 
-           this.postOwner,
-           this.imageUrl,
            this.post
   });
 
   factory Anomaly.fromJson(Map<String,dynamic> json){
-    return Anomaly(id:json['id'] as int,
-            description: json['description'] as String,
-            title: json['title'] as String, 
-            longitude: json['longitude'] as String,
-            latitude: json['latitude'] as String,
-            postOwner: json['post_owner'] as int,
-            reactions: json['reactions'].cast<int>() as List<int>,
-            imageUrl: json['image'] as String,
-            post: json['post'] as int
+
+    return Anomaly(
+            id:json['anomaly'][0]['id'] as int,
+
             );
+  }
+
+  Anomaly copyWith({Post post, int id}){
+    return Anomaly(
+      id: id ?? this.id,
+      post: post ?? this.post
+    );
   }
 
   @override
     String toString() {
       // TODO: implement toString
-      return "Anomaly $id $description $latitude $longitude $title";
+      return "Anomaly $id ";
     }
 }

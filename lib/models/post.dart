@@ -11,6 +11,8 @@
   List<int> reactions = [];
   Reaction userReaction;
   String imageUrl; 
+  List<int> comments;
+  int reactionsCount;
 
   Post({this.title, 
            this.description, 
@@ -21,6 +23,9 @@
            this.userReaction, 
            this.postOwner,
            this.imageUrl,
+           this.comments,
+           this.reactionsCount
+
   });
 
   factory Post.fromJson(Map<String,dynamic> json){
@@ -32,6 +37,8 @@
             postOwner: json['post_owner'] as int,
             reactions: json['reactions'].cast<int>() as List<int>,
             imageUrl: json['image'] as String,
+            comments: json['comments'].cast<int>() as List<int>,
+            reactionsCount: json['reactions_count'] as int,
             );
   }
 
