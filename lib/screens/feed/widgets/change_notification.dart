@@ -12,7 +12,10 @@ class PostsChangedNotification extends StatelessWidget {
 
         child:RaisedButton(
           child: Text('Nouvelles publications...'),
-          onPressed: () => store.dispatch(new GetAnomaliesAction([]).getAnomalies()),
+          onPressed: ()  {
+            store.dispatch(new SetPostsChanged(changed: false));
+            store.dispatch(new GetAnomaliesAction([]).getAnomalies());
+          },
           color: Colors.blueAccent,
           elevation: 1.0,
           
