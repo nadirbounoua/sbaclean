@@ -1,3 +1,5 @@
+import 'package:sbaclean/backend/utils.dart';
+
 import '../models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
 import '../projectSettings.dart' as ProjectSettings;
@@ -13,6 +15,7 @@ import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'package:sbaclean/models/user.dart';
 import 'package:sbaclean/models/comment.dart';
+import 'package:sbaclean/models/post.dart';
 
 class Api {
   String token ;
@@ -29,18 +32,38 @@ class Api {
     return response.body;
   }
 
-  Future createPost(Anomaly anomaly, User user) async {
-    print(token);
+  Future createPost(Post post, User user) async {
     var url = ProjectSettings.apiUrl + "/api/v1/posts/post/";
     var response = await http.post(url,
-    body : {'title': anomaly.title,'description': anomaly.description, 
-    'longitude': anomaly.longitude, 'latitude':anomaly.latitude, 
-    'post_owner': user.id,'city':'1', 'image':anomaly.imageUrl},    
+    body : {'title': post.title,'description': post.description, 
+    'longitude': post.longitude, 'latitude':post.latitude, 
+    'post_owner': user.id,'city':'1', 'image':post.imageUrl},    
     headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
+    print(response.body);
+    return response.body;
+}
 
-    return response;
-  }
+Future createAnomaly(Post post, User user) async {
+  String responseBody = await createPost(post, user);
+  Post preAnomaly = parseOnePost(responseBody);
+  print(preAnomaly);
+  var url = ProjectSettings.apiUrl + "/api/v1/anomalys/";
+  var response = await http.post(url,
+    body: {"post": preAnomaly.id.toString()},
+    headers: {HttpHeaders.authorizationHeader: "Token" + token}
+  );
+  print(response.body);
+  return response.body;
+}
+
+Future getAnomalies() async {
+    var url = ProjectSettings.apiUrl+"/api/v1/posts/post/?anomaly";
+    var response = await http.get(url,
+    headers: {HttpHeaders.authorizationHeader : "Token "+token});
+    return response.body;
+}
+
 Future getComments() async {
     var url = ProjectSettings.apiUrl + "/api/v1/posts/comment";
     var response = await http.get(url, headers: {
