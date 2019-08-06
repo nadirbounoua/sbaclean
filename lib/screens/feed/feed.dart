@@ -175,7 +175,8 @@ class _FeedState extends State<FeedScreen> {
                  anomalies = [];
                });
               } else {
-              var list = await api.queryPosts(criteria);
+              var list = await api.copyWith(MyApp.store.state.userState.user.authToken)
+                                  .queryPosts(criteria);
                setState(() {
                  anomalies = parseAnomalies(list);
                });

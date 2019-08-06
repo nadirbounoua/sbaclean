@@ -107,7 +107,7 @@ Future getComments() async {
   }
 
   Future queryPosts(String query) async {
-    var url = ProjectSettings.apiUrl+"/api/v1/posts/post/?q=$query";
+    var url = ProjectSettings.apiUrl+"/api/v1/posts/post/?anomaly=$query";
     var response = await http.get(url,
           headers: {HttpHeaders.authorizationHeader: "Token "+token});
     return response.body;
