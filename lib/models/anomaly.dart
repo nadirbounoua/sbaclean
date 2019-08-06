@@ -19,6 +19,14 @@ import 'dart:convert';
             );
   }
 
+    factory Anomaly.fromJsonPost(Map<String,dynamic> json){
+
+    return Anomaly(
+            id:json['id'] as int,
+
+            );
+  }
+
   Anomaly copyWith({Post post, int id}){
     return Anomaly(
       id: id ?? this.id,

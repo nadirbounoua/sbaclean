@@ -22,10 +22,8 @@ Anomaly createFromJson(dynamic json) {
       return anomaly;
 }
 
-Anomaly createFromJsonPost(dynamic json) {
-  print(json.toString());
-      Post post = Post.fromJson(json);
-      Anomaly anomaly = Anomaly.fromJson(json);
+Anomaly createFromJsonPost(dynamic json, dynamic post) {
+      Anomaly anomaly = Anomaly.fromJsonPost(json);
       anomaly.post = post;
       return anomaly;
 }
@@ -53,10 +51,11 @@ User parseOneUser(String responseBody){
     final parsed = json.decode(responseBody);
     return User.fromJson(parsed);
 }
-Anomaly parseOneAnomaly(String responseBody){
-    final parsed = json.decode(responseBody);
+Anomaly parseOneAnomaly(dynamic responseBody){
+  print(responseBody);
+    final parsed = json.decode(responseBody['response']);
 
-    return createFromJsonPost(parsed);
+    return createFromJsonPost(parsed,responseBody['post']);
 }
 
 Post parseOnePost(String responseBody) {

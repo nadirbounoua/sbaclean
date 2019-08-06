@@ -42,18 +42,19 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
   bool havePosition = false;
   Position position;
   List<Placemark> placemark;
-  String description ='' ;
-  String title = '' ;
+  String description;
+  String title;
   String latitude;
   String longitude;
   String imageUrl; 
+  final anomalyTypes = ['Accident', 'Panne', "Fuite d'eau", 'Incendie',] ;
   TextEditingController titleController =TextEditingController(text: '');
   TextEditingController descriptionController = TextEditingController(text: '') ;
   ImageChooser imageChooser;
   final _formKey = GlobalKey<FormState>();
   File _image;
   Api api = Api();
-  String dropdownValue = 'Accident';
+  String dropdownValue;
 
   Future getImage(camera) async {
     var image;
@@ -64,6 +65,14 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
     setState(() {
       _image = image;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    dropdownValue = anomalyTypes[0];
+    title = anomalyTypes[0];
+    super.initState();
   }
 
   @override
@@ -144,8 +153,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                       title = newValue;
 
                     },
-                    items: <String>['Accident', 'Panne', "Fuite d'eau", 'Incendie',]
-                      .map<DropdownMenuItem<String>>((String value) {
+                    items: anomalyTypes.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),

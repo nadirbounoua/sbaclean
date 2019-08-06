@@ -47,14 +47,12 @@ class Api {
 Future createAnomaly(Post post, User user) async {
   String responseBody = await createPost(post, user);
   Post preAnomaly = parseOnePost(responseBody);
-  print(preAnomaly);
   var url = ProjectSettings.apiUrl + "/api/v1/anomalys/";
   var response = await http.post(url,
     body: {"post": preAnomaly.id.toString()},
     headers: {HttpHeaders.authorizationHeader: "Token" + token}
   );
-  print(response.body);
-  return response.body;
+  return {"response":response.body,"post":preAnomaly};
 }
 
 Future getAnomalies() async {
