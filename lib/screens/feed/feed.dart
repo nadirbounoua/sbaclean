@@ -16,6 +16,7 @@ import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/screens/anomaly_details/anomaly_details.dart';
 import 'package:sbaclean/widgets/drawer/drawer.dart';
+import 'package:unicorndial/unicorndial.dart';
 //void main() => runApp(Feed());
  
 class FeedScreen extends StatefulWidget {
@@ -140,13 +141,39 @@ class _FeedState extends State<FeedScreen> {
             ],
         ),
         
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
+        floatingActionButton:UnicornDialer(
+          parentButton: Icon(Icons.add),
+          childButtons: <UnicornButton>[
+            UnicornButton(
+              hasLabel: true,
+              labelText: "Ajouter une anomalie",
+              labelHasShadow: true,
+              labelBackgroundColor: Colors.grey[400],
+              labelColor: Colors.black54,
+              currentButton: FloatingActionButton(
+                heroTag: 'btn1',
+                mini: true,
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PostScreenWidget())),
+                backgroundColor: Colors.orange[400],
+                child: Icon(Icons.warning),
+              ),
+            ),
+            UnicornButton(
+              hasLabel: true,
+              labelText: "Ajouter un événement",
+              labelHasShadow: true,
+              labelBackgroundColor: Colors.grey[400],
+              labelColor: Colors.black54,
+              currentButton: FloatingActionButton(
+                heroTag: 'btn2',
+                mini: true,
+                onPressed: () => {},
+                backgroundColor: Colors.red[400],
+                child: Icon(Icons.event),
+              ),
+            )
 
-            Navigator.push(context, MaterialPageRoute(builder: (context) => PostScreenWidget()));
-          },
-          child: Icon(Icons.add),
-          backgroundColor: Colors.yellow
+          ],
         ),
         );
       } 
