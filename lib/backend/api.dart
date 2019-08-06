@@ -220,7 +220,7 @@ Future getComments() async {
   }
 
   Future getUserAnomaliesHistory(String userId) async {
-    var url = ProjectSettings.apiUrl + '/api/v1/posts/post?owner=$userId';
+    var url = ProjectSettings.apiUrl + '/api/v1/posts/post/?anomalyOwner=$userId';
     var response = await http.get(url,
       headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
