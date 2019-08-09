@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sbaclean/screens/post/comment_preview.dart';
+import 'package:sbaclean/screens/anomaly_details/widgets/comment_preview.dart';
 import 'package:sbaclean/models/comment.dart';
 
-class CommentList extends StatelessWidget {
+class CommentsList extends StatelessWidget {
   final List<Comment> comments;
 
-  CommentList({Key key, this.comments}) : super(key: key);
+  CommentsList({Key key, this.comments}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

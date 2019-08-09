@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:sbaclean/screens/post/comment_list.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:sbaclean/store/comment_state.dart';
@@ -21,7 +21,7 @@ class Comments extends StatelessWidget {
             FlatButton(
             child: const Text('All comments'),
             onPressed: () async {
-              callback();
+              await callback();
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Post()));
             }),
@@ -32,3 +32,4 @@ class Comments extends StatelessWidget {
     );
   }
 }
+*/

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:sbaclean/models/comment.dart';
-import 'package:sbaclean/actions/comment_actions.dart';
-import 'package:sbaclean/store/comment_state.dart';
+import 'package:sbaclean/actions/anomaly_details_actions.dart';
+import 'package:sbaclean/store/anomaly_details_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class CommentInput extends StatefulWidget {
+  int commentOwner;
+  int commentPost;
+
+  CommentInput({this.commentOwner,this.commentPost});
+
   @override
   CommentInputState createState() => CommentInputState();
 }
@@ -13,11 +18,13 @@ class CommentInputState extends State<CommentInput> {
   int commentOwner;
   int commentPost;
   String commentContent;
-
   final TextEditingController controller = TextEditingController();
+
+  CommentInputState({this.commentOwner, this.commentPost});
+
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppStateComment, _ViewModel>(
+    return StoreConnector<AnomalyDetailsState, _ViewModel>(
       converter: (store) => _ViewModel(
             addItemToList: (commentowner,commentpost,text) => store.dispatch(new AddCommentAction(
                     Comment(
@@ -30,7 +37,7 @@ class CommentInputState extends State<CommentInput> {
           decoration: InputDecoration(hintText: "Enter a comment"),
           controller: controller,
           onSubmitted: (text) {
-            viewModel.addItemToList(1,1,text);
+            viewModel.addItemToList(commentOwner,commentPost,text);
             controller.text = "";
           }),
     );

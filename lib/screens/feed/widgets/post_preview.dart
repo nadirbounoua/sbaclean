@@ -51,22 +51,6 @@ class PostPreview extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text(anomaly.post.title
-                      ,
-                      style: new TextStyle(
-                        fontSize: 25,
-                      ),
-                    ),
-                    Text(anomaly.post.description),
-                  ],
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
                   Expanded(
                     child: FlatButton(
                       padding: EdgeInsets.only(left: 10),
@@ -79,7 +63,7 @@ class PostPreview extends StatelessWidget {
                             color: Colors.grey,
                           ),
                           Container(
-                            child: Text('124 Commentaires'),
+                            child: Text(anomaly.post.comments.length.toString()),
                           ),
                         ],
                       ),

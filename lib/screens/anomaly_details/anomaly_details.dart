@@ -1,20 +1,45 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
+import 'package:sbaclean/actions/anomaly_details_actions.dart';
 import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
+import 'package:sbaclean/screens/anomaly_details/widgets/comment_input.dart';
+import 'package:sbaclean/screens/anomaly_details/widgets/comment_list.dart';
+import 'package:sbaclean/store/anomaly_details_state.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/feed_actions.dart';
+import 'package:sbaclean/main.dart';
 
-class AnomalyDetails extends StatelessWidget {
+class AnomalyDetails extends StatefulWidget {
   final Anomaly anomaly;
-  AnomalyDetails({Key key, this.anomaly}) : super(key: key);     
+  AnomalyDetails({Key key, this.anomaly}) : super(key: key);
+
+  @override
+  AnomalyDetailsScreenState createState() => AnomalyDetailsScreenState(anomaly: anomaly);
 
 
+}
+
+class AnomalyDetailsScreenState extends State<AnomalyDetails> {
+   Anomaly anomaly;
+
+  AnomalyDetailsScreenState({this.anomaly});
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    MyApp.store.dispatch(new GetCommentsAction(list: [],postId: anomaly.post.id.toString()));
+    super.initState();
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    // TODO: implement build
+    return Scaffold(
         appBar: AppBar(
           title: Text('Details'),
         ),
@@ -36,7 +61,19 @@ class AnomalyDetails extends StatelessWidget {
                     Icons.image,
                     size: 100,
                   ):
-                  Image.network(anomaly.post.imageUrl,width: 100, height: 100,)
+                  CachedNetworkImage(
+                    imageUrl: anomaly.post.imageUrl,
+                    imageBuilder: (context, image) =>
+                    Image(
+                      image: image,
+                      filterQuality: FilterQuality.low,
+                      fit: BoxFit.cover,
+                      height: MediaQuery.of(context).size.height *0.4,
+                      width: MediaQuery.of(context).size.width - 8,
+                      
+                    )
+                      
+                  )
                 ),
               ],
             ),
@@ -129,8 +166,6 @@ class AnomalyDetails extends StatelessWidget {
                     ),
                   ),
                     ),
-
-
                   Container(
                     padding: EdgeInsets.all(0),
                     child: StoreConnector<AppState,Store<AppState>>(
@@ -165,6 +200,25 @@ class AnomalyDetails extends StatelessWidget {
                   )
                 ],
               ),
+
+            Row(
+              children: <Widget>[
+                StoreConnector<AppState,Store<AppState>>(
+                  converter: (store) => store,
+                  builder: (context, store) => CommentsList(
+                    comments: store.state.anomalyDetailsState.comments,
+                ),
+                ),
+                StoreConnector<AppState,Store<AppState>>(
+                  converter: (store) => store,
+                  builder: (context,store) => CommentInput(
+                    commentOwner: int.parse(store.state.userState.user.id),
+                    commentPost: anomaly.post.id,
+                  ),
+                )
+                
+              ],
+            )
           ],
         ),
       ),
@@ -172,6 +226,7 @@ class AnomalyDetails extends StatelessWidget {
 
      );
 
-      }
-
+;
+  }
+  
 }

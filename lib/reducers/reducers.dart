@@ -9,7 +9,8 @@ AppState appStateReducers(AppState state, dynamic action) {
           feedState: feedReducer(state.feedState, action),
           postFeedState: postFeedReducer(state.postFeedState, action),
           userHistoryState: userHistoryReducer(state.userHistoryState, action),
-          userState: userStateReducers(state.userState, action)
+          userState: userStateReducers(state.userState, action),
+          anomalyDetailsState: null
     );
 }
 
