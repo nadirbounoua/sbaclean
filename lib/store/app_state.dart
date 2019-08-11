@@ -30,7 +30,7 @@ class AppState {
       postFeedState: postFeedState ?? PostFeedState(),
       userHistoryState : userHistoryState ?? UserHistoryState(),
       userState: userState ?? UserState(user: User()),
-      anomalyDetailsState: anomalyDetailsState ?? AnomalyDetailsState( comments: [])
+      anomalyDetailsState: anomalyDetailsState ?? AnomalyDetailsState()
     );
   }
 

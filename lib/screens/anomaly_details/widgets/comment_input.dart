@@ -3,6 +3,7 @@ import 'package:sbaclean/models/comment.dart';
 import 'package:sbaclean/actions/anomaly_details_actions.dart';
 import 'package:sbaclean/store/anomaly_details_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:sbaclean/store/app_state.dart';
 
 class CommentInput extends StatefulWidget {
   int commentOwner;
@@ -11,7 +12,7 @@ class CommentInput extends StatefulWidget {
   CommentInput({this.commentOwner,this.commentPost});
 
   @override
-  CommentInputState createState() => CommentInputState();
+  CommentInputState createState() => CommentInputState(commentOwner: commentOwner, commentPost: commentPost);
 }
 
 class CommentInputState extends State<CommentInput> {
@@ -24,7 +25,7 @@ class CommentInputState extends State<CommentInput> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AnomalyDetailsState, _ViewModel>(
+    return StoreConnector<AppState, _ViewModel>(
       converter: (store) => _ViewModel(
             addItemToList: (commentowner,commentpost,text) => store.dispatch(new AddCommentAction(
                     Comment(

@@ -30,7 +30,7 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
   @override
   void initState() {
     // TODO: implement initState
-    MyApp.store.dispatch(new GetCommentsAction(list: [],postId: anomaly.post.id.toString()));
+    MyApp.store.dispatch(new GetCommentsAction(list: [],postId: anomaly.post.id.toString()).getComments());
     super.initState();
 
 
@@ -200,10 +200,7 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
                   )
                 ],
               ),
-
-            Row(
-              children: <Widget>[
-                StoreConnector<AppState,Store<AppState>>(
+           StoreConnector<AppState,Store<AppState>>(
                   converter: (store) => store,
                   builder: (context, store) => CommentsList(
                     comments: store.state.anomalyDetailsState.comments,
@@ -217,8 +214,8 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
                   ),
                 )
                 
-              ],
-            )
+              
+            
           ],
         ),
       ),
