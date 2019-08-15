@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   flutter_redux: ^0.5.3
   redux_thunk: '0.2.1'
+  redux: ^3.0.0
   http: 0.12.0+2
   image_picker:
   material_search: ^0.2.8

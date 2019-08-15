@@ -8,7 +8,8 @@ class CommentsList extends StatelessWidget {
   CommentsList({Key key, this.comments}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return Expanded(
+      child: ListView.builder(
       itemCount: comments.length,
       itemBuilder: (context, index) {
         return CommentPreview(
@@ -16,7 +17,7 @@ class CommentsList extends StatelessWidget {
             created_at: comments[index].created_at.toString(),
             commentContent: comments[index].commentContent);
       },
-    );
+    ));
   }
 }
 

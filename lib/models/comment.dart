@@ -12,7 +12,7 @@ class Comment {
 
   Comment({this.commentOwner,this.commentPost,this.created_at, this.commentContent});
   factory Comment.fromJson(Map<String, dynamic> json) {
-    return Comment(commentOwner: json['comment_owner'],commentPost:json['post'],created_at: json['created_at'],commentContent: json['description'] as String);
+    return Comment(commentOwner: json['comment_owner'] as int ,commentPost:json['post'] as int ,created_at: json['created_at'],commentContent: json['description'] as String);
   }
 }
 

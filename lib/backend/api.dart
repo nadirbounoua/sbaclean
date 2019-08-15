@@ -128,9 +128,10 @@ Future getComments(String postId) async {
   Future createComment(Comment comment) async {
     var url = ProjectSettings.apiUrl + "/api/v1/posts/comment/";
     var response = await http.post(url, body: {
-      'comment_owner': "1",
-      'post': "23",
-      'description': comment.commentContent
+      'comment_owner': comment.commentOwner.toString(),
+      'post': comment.commentPost.toString(),
+      'description': comment.commentContent,
+      
     }, headers: {
       HttpHeaders.authorizationHeader: "Token " + token
     });

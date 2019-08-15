@@ -31,7 +31,7 @@ class GetCommentsAction {
     return (Store<AppState> store) async {
       final response = await api.copyWith(store.state.userState.user.authToken).getComments(postId);
       List<Comment> commentList = parseComment(response);
-      store.dispatch(new GetCommentsAction(list: commentList).getComments());
+      store.dispatch(new GetCommentsAction(list: commentList));
     };
   }
 }

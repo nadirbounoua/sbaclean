@@ -39,7 +39,9 @@ class CommentPreview extends StatelessWidget {
                     padding: EdgeInsets.only(left: 5),
                   ),
                   Text(
-                    created_at,
+                    //DateTime.parse(created_at).subtract(DateTime.now().)
+                    "Il ya " +DateTime.parse(created_at).difference(DateTime.now()).abs().inMinutes.toString() + " minutes."
+                    ,
                     style: TextStyle(
                       color: Colors.grey,
                     ),

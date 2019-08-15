@@ -1,11 +1,12 @@
 import 'package:sbaclean/models/comment.dart';
 import 'package:meta/meta.dart';
 
+@immutable
 class AnomalyDetailsState {
 
-  List<Comment> comments;
+  final List<Comment> comments;
 
-  AnomalyDetailsState({this.comments});
+  AnomalyDetailsState({this.comments = const []});
 
   AnomalyDetailsState copyWith({List<Comment> comments}) {
     return AnomalyDetailsState(
