@@ -82,17 +82,8 @@ class _FeedState extends State<FeedScreen> {
 
         return Scaffold(
         appBar: AppBar(
-          title: Text('Signalements'),
+          title: Text('Anomalies'),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.settings,
-                semanticLabel: 'settings',
-              ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
-              },
-            ),
             IconButton(
               onPressed: () {
                 _showMaterialSearch(context);
@@ -101,9 +92,8 @@ class _FeedState extends State<FeedScreen> {
               icon: new Icon(Icons.search),
             )],
         ),
-        drawer: DrawerWidget(actualRoute: "Feed",),
-        body: 
-          Stack(
+      /*  drawer: DrawerWidget(actualRoute: "Feed",),
+        */body: Stack(
             alignment: Alignment.topCenter  ,
             children: store.state.feedState.postsChanged ? <Widget>[
               RefreshIndicator(
