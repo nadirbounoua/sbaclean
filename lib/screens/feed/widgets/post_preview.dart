@@ -16,10 +16,58 @@ class PostPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
+      child: Padding(
+      padding: EdgeInsets.only(
+        bottom: 8),
       child: Card(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image.asset(
+                     "assets/dopeman0x.jpeg",
+                     width: 50,
+                     height: 50,
+                     ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: 12
+                      ),
+                      child: Text(
+                        "dopeman",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold
+                        ),
+                        )
+                    ), 
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(
+                        right: 8
+                      ),
+                      child: Text("22 minutes")
+                  ),               
+                  PopupMenuButton(
+                    icon: Icon(Icons.more_vert),
+                    
+                    itemBuilder: (context) => <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        child: Text("Signalez"),
+                      )
+                    ],
+                  )
+                ],
+              ),
+
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -158,6 +206,8 @@ class PostPreview extends StatelessWidget {
           ],
         ),
       ),
+
+    )
     );
   }
 
