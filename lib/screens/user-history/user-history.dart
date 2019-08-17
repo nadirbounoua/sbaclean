@@ -51,7 +51,7 @@ class _UserHistoryState extends State<UserHistoryScreen> {
       converter: (store) => store,
       builder: (context, store) {
         return Scaffold(
-          drawer: DrawerWidget(actualRoute: "History",),
+          //drawer: DrawerWidget(actualRoute: "History",),
           appBar: AppBar(
             title: const Text('Votre historique'),
           ),

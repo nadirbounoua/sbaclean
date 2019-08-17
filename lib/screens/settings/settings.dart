@@ -11,7 +11,7 @@ class Settings extends StatelessWidget {
     return MaterialApp(
       title: _title,
       home: Scaffold(
-        drawer: DrawerWidget(actualRoute: "Settings",),
+        //drawer: DrawerWidget(actualRoute: "Settings",),
         appBar: AppBar(
           title: const Text(_title),
         ),
