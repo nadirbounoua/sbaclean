@@ -63,7 +63,7 @@ Future getAnomalies() async {
 }
 
 Future getComments(String postId) async {
-    var url = ProjectSettings.apiUrl + "/api/v1/posts/comment?$postId";
+    var url = ProjectSettings.apiUrl + "/api/v1/posts/comment?post=$postId";
     var response = await http.get(url, headers: {
       HttpHeaders.authorizationHeader: "Token " + token
     });
