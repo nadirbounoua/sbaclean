@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sbaclean/backend/utils.dart';
+import 'package:sbaclean/models/comment.dart';
 
 class CommentPreview extends StatelessWidget {
-  String commentOwner;
-  String created_at;
-  String commentContent;
-  CommentPreview({Key key,  this.commentOwner, this.created_at, this.commentContent}) : super(key: key);     
+  Comment comment;
+  CommentPreview({Key key,  this.comment}) : super(key: key);     
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class CommentPreview extends StatelessWidget {
                     padding: EdgeInsets.only(left: 10),
                   ),
                   Text(
-                    commentOwner,
+                    comment.owner.username,
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.w800,
@@ -40,7 +40,7 @@ class CommentPreview extends StatelessWidget {
                   ),
                   Text(
                     //DateTime.parse(created_at).subtract(DateTime.now().)
-                    "Il ya " +DateTime.parse(created_at).difference(DateTime.now()).abs().inMinutes.toString() + " minutes."
+                    calculateTime(comment.created_at)
                     ,
                     style: TextStyle(
                       color: Colors.grey,
@@ -66,7 +66,7 @@ class CommentPreview extends StatelessWidget {
                           padding: EdgeInsets.only(top: 6),
                         ),
                         Text(
-                          commentContent,
+                          comment.commentContent,
                           textAlign: TextAlign.justify,
                         ),
                       ],
