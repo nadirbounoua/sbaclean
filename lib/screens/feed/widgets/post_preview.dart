@@ -1,8 +1,12 @@
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
+import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
+import 'package:sbaclean/models/user.dart';
 import 'package:sbaclean/store/app_state.dart';
+import 'package:sbaclean/store/user_state.dart';
+
 import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/feed_actions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -41,19 +45,22 @@ class PostPreview extends StatelessWidget {
                       padding: EdgeInsets.only(
                         left: 12
                       ),
-                      child: Text(
-                        "dopeman",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold
+                      child: 
+                        Text(
+                          anomaly.post.owner.username,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold
+                          ),
                         ),
-                        )
-                    ), 
+                      ), 
                   ),
                   Padding(
                       padding: EdgeInsets.only(
                         right: 8
                       ),
-                      child: Text("22 minutes")
+                      child: Text(
+                        calculateTime(anomaly.post.createdAt)
+                      )
                   ),               
                   PopupMenuButton(
                     icon: Icon(Icons.more_vert),
