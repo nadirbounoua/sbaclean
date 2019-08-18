@@ -10,7 +10,9 @@ Reducer<PostFeedState> postFeedReducer = combineReducers([
   new TypedReducer<PostFeedState, DeletePositionAction>(deletePosition),
   new TypedReducer<PostFeedState, ChoosePickerCameraAction>(chooseCamera),
   new TypedReducer<PostFeedState, ChoosePickerGalleryAction>(chooseGallery),
-  new TypedReducer<PostFeedState, SetAnomalyImageAction>(setPostImage)
+  new TypedReducer<PostFeedState, SetAnomalyImageAction>(setPostImage),
+  new TypedReducer<PostFeedState, DeleteAnomalyImageAction>(deletePostImage)
+
 ]);
 
 
@@ -23,7 +25,7 @@ PostFeedState getPostion(PostFeedState state, AddPositionAction action){
 }
 
 PostFeedState deletePosition(PostFeedState state, DeletePositionAction action){ 
-  return state.copyWith(position: action.position,placemark: action.placemark, havePosition: action.havePosition);
+  return PostFeedState();
 }
 
 PostFeedState chooseCamera(PostFeedState state,ChoosePickerCameraAction action) {
@@ -41,3 +43,7 @@ PostFeedState setPostImage(PostFeedState state,SetAnomalyImageAction action) {
   return state.copyWith(image: action.image);
 }
 
+PostFeedState deletePostImage(PostFeedState state, DeleteAnomalyImageAction action) {
+  print(action.image);
+  return PostFeedState();
+}

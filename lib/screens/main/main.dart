@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:sbaclean/main.dart';
 import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/models/post.dart';
 import '../feed/feed.dart';
@@ -81,6 +82,15 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
     // widget tree.
     titleController.dispose();
     descriptionController.dispose();
+    final  deleteAnomalyImageAction = DeleteAnomalyImageAction(image: null);
+    final deletePositionAction = DeletePositionAction(null, null, false) ;
+
+    MyApp.store.dispatch(deleteAnomalyImageAction.setImage());
+    MyApp.store.dispatch(deletePositionAction.deletePosition());
+    Future.wait([
+      deleteAnomalyImageAction.completer.future,
+      deletePositionAction.completer.future
+    ]);
     super.dispose();
   }
 
@@ -248,6 +258,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                                 var imageurl = await api.upload(state.postFeedState.image);
                                 print(title);
                                 onSave(title,description, state.postFeedState.position.latitude.toString(), state.postFeedState.position.longitude.toString(), imageurl);
+                                _formKey.currentState.reset();
                                 Navigator.pop(context);
                                 }
                               },

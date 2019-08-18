@@ -47,14 +47,13 @@ class DeletePositionAction {
   final bool havePosition;
   final Position position;
   final List<Placemark> placemark;
+  Completer completer = Completer();
   DeletePositionAction(this.position, this.placemark, this.havePosition);
 
     ThunkAction<AppState> deletePosition() {
       return (Store<AppState> store) async {
-        final myPosition =  null;
-        final myLocation = null;
-        print('k');
-        store.dispatch(new DeletePositionAction(myPosition, myLocation, false));
+        store.dispatch(new DeletePositionAction(null, null, false));
+        completer.complete();
         //final placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
 
   };
@@ -94,3 +93,19 @@ class SetAnomalyImageAction {
     
   }
 }
+
+class DeleteAnomalyImageAction {
+  final File image;
+  Completer completer = Completer();
+  DeleteAnomalyImageAction({this.image});
+
+  ThunkAction<AppState> setImage() {
+    return (Store<AppState> store) async {
+    
+    store.dispatch(new DeleteAnomalyImageAction(image: null));
+    completer.complete();
+    };
+    
+  }
+}
+
