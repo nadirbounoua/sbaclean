@@ -6,11 +6,12 @@ import 'dart:async';
 
 class Comment {
   int commentOwner;
+  User owner;
   int commentPost;
   String created_at;
   String commentContent;
 
-  Comment({this.commentOwner,this.commentPost,this.created_at, this.commentContent});
+  Comment({this.commentOwner,this.commentPost,this.created_at, this.commentContent, this.owner});
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(commentOwner: json['comment_owner'] as int ,commentPost:json['post'] as int ,created_at: json['created_at'],commentContent: json['description'] as String);
   }
