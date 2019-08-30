@@ -23,7 +23,34 @@ class FinishAddAnomalyAction{
   FinishAddAnomalyAction({this.anomaly});
 }
 
+class FinishGetUserReactionAction{
+  List<Reaction> list;
+  FinishGetUserReactionAction({this.list});
+}
 
+class FinishSetReactionAction {
+  Anomaly anomaly;
+  Reaction reaction;
+  final bool isLike; 
+  FinishSetReactionAction({this.anomaly, this.reaction, this.isLike});
+
+}
+
+
+
+class FinishDeleteReactionAction {
+  Anomaly anomaly;
+  Reaction reaction;
+  FinishDeleteReactionAction({this.anomaly, this.reaction});
+
+}
+
+class FinishUpdateReactionAction {
+  Anomaly anomaly;
+  Reaction reaction;
+  FinishUpdateReactionAction({this.anomaly, this.reaction});
+
+}
 class AddAnomalyAction {
   final Post post;
   Anomaly anomaly;
@@ -51,7 +78,6 @@ class GetAnomaliesAction {
   ThunkAction<AppState> getAnomalies() {
     return (Store<AppState> store) async {
       
-      completer.complete();
     };
   }
 }
@@ -109,9 +135,7 @@ class UpdateReactionAction {
         var response = await  api.copyWith(store.state.userState.user.authToken)
                                   .updateReaction(reaction);
         print(reaction);
-        reaction = Reaction.fromJson(response);
-        store.dispatch( new UpdateReactionAction(anomaly:anomaly, reaction: reaction));
-
+        
     };
   }
 }
@@ -123,11 +147,7 @@ class GetUserReactionAction {
 
   ThunkAction<AppState> getReactions() {
     return (Store<AppState> store) async {
-      final response = await api.copyWith(store.state.userState.user.authToken)
-                                .getUserReaction(int.parse(store.state.userState.user.id));
-      list = parseReaction(response);
-      store.dispatch(new GetUserReactionAction(list));
-      completer.complete();
+    
     };
   }
 }

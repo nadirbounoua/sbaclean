@@ -6,6 +6,7 @@ import 'package:sbaclean/backend/api.dart';
 import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/middlewares/feed_helper.dart';
 import 'package:sbaclean/models/anomaly.dart';
+import 'package:sbaclean/models/reaction.dart';
 import 'package:sbaclean/store/app_state.dart';
 
 Api api = Api();
@@ -14,14 +15,20 @@ List<Anomaly> anomalyList;
 List<Middleware<AppState>> feedMiddleware() {
   return [
     TypedMiddleware<AppState, GetAnomaliesAction>(loadAnomalies()),
-    TypedMiddleware<AppState, AddAnomalyAction>(addAnomaly())
+    TypedMiddleware<AppState, AddAnomalyAction>(addAnomaly()),
+    TypedMiddleware<AppState, GetUserReactionAction>(getReactions()),
+    TypedMiddleware<AppState, SetReactionAction>(setReaction()),
+    TypedMiddleware<AppState, DeleteReactionAction>(deleteReaction()),
+    TypedMiddleware<AppState, UpdateReactionAction>(updateReaction()),
+
+
   ];
 }
 
 loadAnomalies() {
-  return (Store<AppState> store, GetAnomaliesAction action, NextDispatcher next) {
+  return (Store<AppState> store, GetAnomaliesAction action, NextDispatcher next) async {
     next(action);
-    api.copyWith(store.state.userState.user.authToken)
+    await api.copyWith(store.state.userState.user.authToken)
         .getAnomalies()
           .then((anomalies) => {
               getAnomalies(store, anomalies)
@@ -30,12 +37,60 @@ loadAnomalies() {
 }
 
 addAnomaly() {
-  return (Store<AppState> store, AddAnomalyAction action, NextDispatcher next) {
+  return (Store<AppState> store, AddAnomalyAction action, NextDispatcher next) async {
     next(action);
-    api.copyWith(store.state.userState.user.authToken)
+    await api.copyWith(store.state.userState.user.authToken)
         .createAnomaly(action.post, action.user)
           .then((response) => {
               addAnomalyHelper(store, response, action.post)
           });
+  };
+}
+
+getReactions() {
+  return (Store<AppState> store, GetUserReactionAction action, NextDispatcher next) async {
+    next(action);
+    await api.copyWith(store.state.userState.user.authToken)
+        .getUserReaction(int.parse(store.state.userState.user.id))
+          .then((response) => getReactionsHelper(store, response)
+    );
+  };
+}
+
+setReaction() {
+  return (Store<AppState> store, SetReactionAction action, NextDispatcher next) async {
+    next(action);
+    await api.copyWith(store.state.userState.user.authToken)
+              .setReactionPost(action.anomaly, action.reaction)
+                .then((response) {
+                  setReactionHelper(store, response, action.anomaly);
+    });
+  };
+}
+
+deleteReaction() {
+  return (Store<AppState> store, DeleteReactionAction action, NextDispatcher next) async {
+    next(action);
+    Reaction reaction = action.anomaly.post.userReaction;
+    print(reaction);
+    await api.copyWith(store.state.userState.user.authToken)
+                  .deleteReaction(reaction)
+                    .then((onValue) {
+                      deleteReactionHelper(store, action.anomaly, reaction);
+                    });
+  };
+}
+
+updateReaction() {
+  return (Store<AppState> store, UpdateReactionAction action, NextDispatcher next) async {
+    next(action);
+  
+  Reaction reaction = action.anomaly.post.userReaction;
+        reaction.isLike = !reaction.isLike;
+        await  api.copyWith(store.state.userState.user.authToken)
+                  .updateReaction(reaction)
+                    .then((response) {
+                      updateReactionHelper(store, response, action.anomaly, action.reaction);
+                    });
   };
 }
