@@ -174,8 +174,9 @@ class _FeedState extends State<FeedScreen> {
         ),
         );
       },
-      onInit: (store) => {
-        store.dispatch(GetAnomaliesAction([])),
+      onInit: (store)  {
+        store.dispatch(GetUserReactionAction([]));
+        store.dispatch(GetAnomaliesAction([]));
        // store.dispatch(action)
       },
     );
