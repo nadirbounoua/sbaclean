@@ -7,12 +7,17 @@ import 'package:sbaclean/actions/feed_actions.dart';
 
 Reducer<FeedState> feedReducer = combineReducers([
   new TypedReducer<FeedState, SetPostsChanged>(setPostsChanged),
-  new TypedReducer<FeedState, SetReactionAction>(setReaction),
-  new TypedReducer<FeedState, DeleteReactionAction>(deleteReaction),
-  new TypedReducer<FeedState, UpdateReactionAction>(updateReaction),
+  //new TypedReducer<FeedState, SetReactionAction>(setReaction),
+  new TypedReducer<FeedState, FinishSetReactionAction>(finishSetReaction),
+  new TypedReducer<FeedState, FinishUpdateReactionAction>(finishUpdateReaction),
+
+  new TypedReducer<FeedState, FinishDeleteReactionAction>(deleteReaction),
+  //new TypedReducer<FeedState, UpdateReactionAction>(updateReaction),
   new TypedReducer<FeedState, GetAnomaliesAction>(load),
 
   new TypedReducer<FeedState, GetUserReactionAction>(getUserReactions),
+  new TypedReducer<FeedState, FinishGetUserReactionAction>(finishGetUserReaction),
+
   new TypedReducer<FeedState, GetAnomaliesAction>(getAnomalies),
   new TypedReducer<FeedState, AddAnomalyAction>(loadAddAnomaly),
   new TypedReducer<FeedState, FinishAddAnomalyAction>(finishAddAnomaly),
@@ -28,22 +33,10 @@ FeedState setPostsChanged(FeedState state,SetPostsChanged action) {
   return state.copyWith(postsChanged: action.changed);
 }
 
-FeedState setReaction(FeedState state, SetReactionAction action) {
-  
-  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.post.id == action.anomaly.post.id);
-  Anomaly anomaly = action.anomaly;
-  Reaction reaction = action.reaction;
-  anomaly.post.reactions.add(action.reaction.id);
-  anomaly.post.userReaction = reaction;
-  anomaly.post.userReaction.isLike ? anomaly.post.reactionsCount++ : anomaly.post.reactionsCount --;
-  return state.copyWith(
-    anomalies: List.from(list)
-    ..add(anomaly)
-    ..sort((anomaly, anomaly1) => anomaly.post.id > anomaly1.id ? 1 : -1 )
-  );
-}
 
-FeedState deleteReaction(FeedState state, DeleteReactionAction action) {
+
+
+FeedState deleteReaction(FeedState state, FinishDeleteReactionAction action) {
   
   List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.post.id == action.anomaly.post.id);
   Anomaly anomaly = action.anomaly;
@@ -59,7 +52,7 @@ FeedState deleteReaction(FeedState state, DeleteReactionAction action) {
 
 }
 
-FeedState updateReaction(FeedState state, UpdateReactionAction action) {
+FeedState finishUpdateReaction(FeedState state, FinishUpdateReactionAction action) {
 
   List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.post.id == action.anomaly.post.id);
   Anomaly anomaly = action.anomaly;
@@ -122,3 +115,20 @@ FeedState finishAddAnomalyContent(FeedState state, FinishAddAnomalyAction action
   return state.copyWith(anomalies: List.from(state.anomalies)..add(action.anomaly));
 }
 
+FeedState finishGetUserReaction(FeedState state, FinishGetUserReactionAction action) {
+  return state.copyWith(userReactions: action.list);
+}
+
+FeedState finishSetReaction(FeedState state, FinishSetReactionAction action) {
+  List<Anomaly> list = List.from(state.anomalies)..removeWhere((anomaly) => anomaly.post.id == action.anomaly.post.id);
+  Anomaly anomaly = action.anomaly;
+  Reaction reaction = action.reaction;
+  anomaly.post.reactions.add(action.reaction.id);
+  anomaly.post.userReaction = reaction;
+  anomaly.post.userReaction.isLike ? anomaly.post.reactionsCount++ : anomaly.post.reactionsCount --;
+  return state.copyWith(
+    anomalies: List.from(list)
+    ..add(anomaly)
+    ..sort((anomaly, anomaly1) => anomaly.post.id > anomaly1.id ? 1 : -1 )
+  );
+}
