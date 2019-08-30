@@ -10,9 +10,17 @@ Reducer<FeedState> feedReducer = combineReducers([
   new TypedReducer<FeedState, SetReactionAction>(setReaction),
   new TypedReducer<FeedState, DeleteReactionAction>(deleteReaction),
   new TypedReducer<FeedState, UpdateReactionAction>(updateReaction),
+  new TypedReducer<FeedState, GetAnomaliesAction>(load),
+
   new TypedReducer<FeedState, GetUserReactionAction>(getUserReactions),
   new TypedReducer<FeedState, GetAnomaliesAction>(getAnomalies),
+  new TypedReducer<FeedState, AddAnomalyAction>(loadAddAnomaly),
+  new TypedReducer<FeedState, FinishAddAnomalyAction>(finishAddAnomaly),
+  new TypedReducer<FeedState, FinishAddAnomalyAction>(finishAddAnomalyContent),
+
   new TypedReducer<FeedState, AddAnomalyAction>(addItem),
+  new TypedReducer<FeedState, FinishGetAnomaliesAction>(finishLoadAnomalies),
+  new TypedReducer<FeedState, FinishGetAnomaliesAction>(finishLoad),
 
 ]);
 
@@ -74,13 +82,43 @@ FeedState getUserReactions(FeedState state,GetUserReactionAction action){
 }
 
 FeedState getAnomalies(FeedState state, GetAnomaliesAction action) {
+  print('feed reducer: getAnomalies');
+
   return state.copyWith(anomalies: List.from(action.list));
+}
+
+FeedState finishLoadAnomalies(FeedState state, FinishGetAnomaliesAction action) {
+
+  return state.copyWith(anomalies: List.from(action.anomalies));
 }
 
 
 FeedState addItem(FeedState state, AddAnomalyAction action) {
   var list = List.from(state.anomalies)..add(action.anomaly,);
   print(list);
+  return state.copyWith(anomalies: List.from(state.anomalies)..add(action.anomaly));
+}
+
+FeedState load(FeedState state, GetAnomaliesAction action) {
+  print("isloading reducer: getAnomalies: load");
+  return state.copyWith(isAnomaliesLoading: true);
+}
+
+FeedState finishLoad(FeedState state, FinishGetAnomaliesAction action) {
+  print("isloading reducer: getAnomalies: false");
+
+  return state.copyWith(isAnomaliesLoading: false);
+}
+
+FeedState loadAddAnomaly(FeedState state, AddAnomalyAction action) {
+  return state.copyWith(isAnomaliesLoading: true);
+}
+
+FeedState finishAddAnomaly(FeedState state, FinishAddAnomalyAction action) {
+  return state.copyWith(isAnomaliesLoading: false);
+}
+
+FeedState finishAddAnomalyContent(FeedState state, FinishAddAnomalyAction action) {
   return state.copyWith(anomalies: List.from(state.anomalies)..add(action.anomaly));
 }
 
