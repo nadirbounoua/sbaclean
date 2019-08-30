@@ -168,9 +168,9 @@ class PostPreview extends StatelessWidget {
                         .firstWhere((e) => e.id == anomaly.id)
                         .post.userReaction.isLike ? 
                           
-                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.post.userReaction).updateReaction())
-                        :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
-                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.post.id, reactionOwner: 1)).setLike())
+                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.post.userReaction))
+                        :store.dispatch( new DeleteReactionAction(anomaly: anomaly))
+                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.post.id, reactionOwner: int.parse(store.state.userState.user.id))))
                           
                         
                      
@@ -203,9 +203,9 @@ class PostPreview extends StatelessWidget {
                         store.state.feedState.anomalies
                         .firstWhere((e) => e.id == anomaly.id)
                         .post.userReaction.isLike ?
-                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.post.userReaction).updateReaction())
-                        :store.dispatch( new DeleteReactionAction(anomaly: anomaly).deleteReaction())
-                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.post.id, reactionOwner: 1)).setLike());
+                        store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.post.userReaction))
+                        :store.dispatch( new DeleteReactionAction(anomaly: anomaly))
+                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.post.id, reactionOwner: int.parse(store.state.userState.user.id))));
                       },
                     ),
                   ),
