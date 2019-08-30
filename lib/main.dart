@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sbaclean/middlewares/feed_middleware.dart';
 import 'screens/main/main.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -8,7 +9,7 @@ import 'package:redux_thunk/redux_thunk.dart';
 import 'package:sbaclean/screens/feed/feed.dart';
 import 'package:sbaclean/screens/user-history/user-history.dart';
 import 'package:sbaclean/screens/settings/settings.dart';
-
+//import 'package:sbaclean/store/middleware.dart';
 void main() {
   runApp(MyApp());
 }
@@ -16,7 +17,7 @@ void main() {
 class MyApp extends StatefulWidget{
   static final  store = Store<AppState>(appStateReducers,
   initialState: AppState.newAppState(),
-  middleware: [thunkMiddleware]
+  middleware: feedMiddleware()
   );
   @override
   State<StatefulWidget> createState() => MyAppState(store: store);
