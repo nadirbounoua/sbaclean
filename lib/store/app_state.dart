@@ -15,7 +15,8 @@ class AppState {
   final UserHistoryState userHistoryState;
   final UserState userState;
   final AnomalyDetailsState anomalyDetailsState;
-  AppState({this.feedState,this.postFeedState, this.userHistoryState, this.userState, this.anomalyDetailsState});
+  final bool isLoading;
+  AppState({this.feedState,this.postFeedState, this.userHistoryState, this.userState, this.anomalyDetailsState, this.isLoading});
 
 
   static AppState newAppState({
@@ -23,14 +24,17 @@ class AppState {
       PostFeedState postFeedState, 
       UserHistoryState userHistoryState, 
       UserState userState,
-      AnomalyDetailsState anomalyDetailsState}){
+      AnomalyDetailsState anomalyDetailsState,
+      bool isLoading
+      }){
 
     return new AppState(
       feedState: feedState ?? new FeedState(),
       postFeedState: postFeedState ?? PostFeedState(),
       userHistoryState : userHistoryState ?? UserHistoryState(),
       userState: userState ?? UserState(user: User()),
-      anomalyDetailsState: anomalyDetailsState ?? AnomalyDetailsState()
+      anomalyDetailsState: anomalyDetailsState ?? AnomalyDetailsState(),
+      isLoading: isLoading ?? false
     );
   }
 

@@ -11,6 +11,19 @@ import 'package:sbaclean/models/post.dart';
 import 'package:sbaclean/store/feed_state.dart';
 
 Api api = Api();
+class LoadAction{}
+
+class FinishGetAnomaliesAction{
+  List<Anomaly> anomalies;
+  FinishGetAnomaliesAction({this.anomalies});
+}
+
+class FinishAddAnomalyAction{
+  Anomaly anomaly;
+  FinishAddAnomalyAction({this.anomaly});
+}
+
+
 class AddAnomalyAction {
   final Post post;
   Anomaly anomaly;
@@ -22,9 +35,6 @@ class AddAnomalyAction {
 
     final responsePost = await api.copyWith(store.state.userState.user.authToken)
                                   .createAnomaly(post,user);
-    anomaly = await parseOneAnomaly(responsePost);
-    //final response = await api.getPosts();
-    store.dispatch(new AddAnomalyAction(post: post, anomaly: anomaly));
 
     //store.dispatch(new GetAnomaliesAction([]).getAnomalies());
 
@@ -40,15 +50,7 @@ class GetAnomaliesAction {
 
   ThunkAction<AppState> getAnomalies() {
     return (Store<AppState> store) async {
-      final response = await api.copyWith(store.state.userState.user.authToken)
-                                .getAnomalies();
-      List<Anomaly> anomalyList = parseAnomalies(response);
-      for (var anomaly in anomalyList) {
-        for (var reaction in store.state.feedState.userReactions) {
-          if (anomaly.post == reaction.post) anomaly.post.userReaction = reaction;
-        }
-      }
-      store.dispatch(new GetAnomaliesAction(anomalyList));
+      
       completer.complete();
     };
   }
@@ -122,7 +124,7 @@ class GetUserReactionAction {
   ThunkAction<AppState> getReactions() {
     return (Store<AppState> store) async {
       final response = await api.copyWith(store.state.userState.user.authToken)
-                                .getUserReaction(1);
+                                .getUserReaction(int.parse(store.state.userState.user.id));
       list = parseReaction(response);
       store.dispatch(new GetUserReactionAction(list));
       completer.complete();
