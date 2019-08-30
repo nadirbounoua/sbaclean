@@ -18,6 +18,7 @@ import 'package:sbaclean/screens/anomaly_details/anomaly_details.dart';
 import 'package:sbaclean/widgets/drawer/drawer.dart';
 import 'package:unicorndial/unicorndial.dart';
 //void main() => runApp(Feed());
+import 'package:sbaclean/screens/feed/widgets/post_loading.dart';
  
 class FeedScreen extends StatefulWidget {
   FeedScreen({Key key, this.anomalies, this.searchresult}) : super(key: key);
@@ -46,7 +47,7 @@ class _FeedState extends State<FeedScreen> {
       // TODO: implement initState
       super.initState();
 
-        final getReactions = GetUserReactionAction([]);
+        /*final getReactions = GetUserReactionAction([]);
         final getAnomalies = GetAnomaliesAction([]);
         
         MyApp.store.dispatch(getReactions.getReactions());
@@ -56,15 +57,15 @@ class _FeedState extends State<FeedScreen> {
           getAnomalies.completer.future,
           getReactions.completer.future,
         ]).then((c)  {
-                  
+              
       });
-
+*//*
       timer = Timer.periodic(Duration(seconds: 45), (Timer t) async  {
         bool changed = await api.copyWith(MyApp.store.state.userState.user.authToken)
                                 .checkNewPosts(MyApp.store.state.feedState);
 
         if (changed) MyApp.store.dispatch(new SetPostsChanged(changed: changed));
-        });
+        });*/
     }
 
   @override
@@ -79,7 +80,6 @@ class _FeedState extends State<FeedScreen> {
     return StoreConnector<AppState, Store<AppState>>(
       converter: (store) =>  store,
       builder: (context,store) {
-
         return Scaffold(
         appBar: AppBar(
           title: Text('Anomalies'),
@@ -111,7 +111,14 @@ class _FeedState extends State<FeedScreen> {
             <Widget>[
               RefreshIndicator(
                 key: _refreshIndicatorKey,
-                child:PostList(posts: store.state.feedState.anomalies),
+                child: store.state.feedState.isAnomaliesLoading ?
+                  ListView(children: <Widget>[
+                    PostLoading(),
+                    PostLoading(),
+                    PostLoading()
+                  ],)
+                  : 
+                  PostList(posts: store.state.feedState.anomalies),
                 color: Colors.blueAccent,
                 onRefresh: () {
                   final getReactions = GetUserReactionAction([]);
@@ -166,7 +173,11 @@ class _FeedState extends State<FeedScreen> {
           ],
         ),
         );
-      } 
+      },
+      onInit: (store) => {
+        store.dispatch(GetAnomaliesAction([])),
+       // store.dispatch(action)
+      },
     );
   }
   _showMaterialSearch(BuildContext context) {

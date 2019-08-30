@@ -79,13 +79,16 @@ class PostPreview extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  margin: const EdgeInsets.only( bottom: 20.0),
                   child: anomaly.post.imageUrl == "/media/images/default.png" ?
                   Icon(
                     Icons.image,
                     size: 100,              
                   ):
                   CachedNetworkImage(
+                    placeholder: (context, string) => 
+                      Container(color: Colors.grey[200],
+                        height: MediaQuery.of(context).size.height *0.4,
+                        width: MediaQuery.of(context).size.width -8,),
                     imageUrl: anomaly.post.imageUrl,
                     imageBuilder: (context, image) =>
                     Image(
