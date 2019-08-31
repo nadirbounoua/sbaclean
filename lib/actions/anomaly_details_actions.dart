@@ -14,12 +14,6 @@ class AddCommentAction {
 
   AddCommentAction(this.item);
 
-  ThunkAction<AppState> addComment() {
-    return (Store<AppState> store) async {
-      final responseComment = await api.copyWith(store.state.userState.user.authToken).createComment(item);
-      store.dispatch(new AddCommentAction(item));
-    };
-  }
 }
 
 class GetCommentsAction {
@@ -27,11 +21,15 @@ class GetCommentsAction {
   String postId;
   GetCommentsAction({this.list, this.postId});
 
-  ThunkAction<AppState> getComments() {
-    return (Store<AppState> store) async {
-      final response = await api.copyWith(store.state.userState.user.authToken).getComments(postId);
-      List<Comment> commentList = parseComment(response);
-      store.dispatch(new GetCommentsAction(list: commentList));
-    };
-  }
+}
+
+class FinishGetCommentsAction {
+  List<Comment> list ;
+  String postId;
+  FinishGetCommentsAction({this.list, this.postId});
+}
+
+class FinishAddCommentsAction {
+  final Comment item;
+  FinishAddCommentsAction({this.item });
 }

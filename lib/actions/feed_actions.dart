@@ -58,17 +58,6 @@ class AddAnomalyAction {
   final User user;
   AddAnomalyAction({this.post, this.user, this.anomaly});
 
-  ThunkAction<AppState> postAnomaly() {
-  return (Store<AppState> store) async {
-
-    final responsePost = await api.copyWith(store.state.userState.user.authToken)
-                                  .createAnomaly(post,user);
-
-    //store.dispatch(new GetAnomaliesAction([]).getAnomalies());
-
-  };
-
-}
 }
 
 class GetAnomaliesAction {
