@@ -10,14 +10,16 @@ class PostFeedState {
   final bool havePosition;
   final List<Placemark> placemark;
   final File image;
-  final bool isLoading;
+  final bool isGpsLoading;
+  final bool isPosting;
   PostFeedState({
             this.chooseCamera,
             this.position,
             this.placemark,
             this.havePosition = false,
             this.image,
-            this.isLoading
+            this.isGpsLoading = false,
+            this.isPosting = false
   });
 
   PostFeedState copyWith({
@@ -25,14 +27,19 @@ class PostFeedState {
       Position position,
       bool havePosition,
       List<Placemark> placemark,
-      File image
+      File image,
+      bool isGpsLoading,
+      bool isPosting
+
   }) {
       return PostFeedState(
         chooseCamera: chooseCamera ?? this.chooseCamera,
         position: position ?? this.position,
         havePosition: havePosition ?? this.havePosition,
         placemark: placemark ?? this.placemark,
-        image: image ?? this.image
+        image: image ?? this.image,
+        isGpsLoading: isGpsLoading ?? this.isGpsLoading,
+        isPosting: isPosting ?? this.isPosting
       );
   }
 }

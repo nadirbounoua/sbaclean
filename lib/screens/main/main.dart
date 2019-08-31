@@ -86,7 +86,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
     final deletePositionAction = DeletePositionAction(null, null, false) ;
 
     MyApp.store.dispatch(deleteAnomalyImageAction.setImage());
-    MyApp.store.dispatch(deletePositionAction.deletePosition());
+    //MyApp.store.dispatch(deletePositionAction.deletePosition());
     Future.wait([
       deleteAnomalyImageAction.completer.future,
       deletePositionAction.completer.future
@@ -147,12 +147,19 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                     child:                  
                     Row(
                     
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     verticalDirection: VerticalDirection.up,
                     children: <Widget>[
-                      Text("Choisissez le type d'anomalie :", textAlign: TextAlign.start,) ,
-                       DropdownButton<String>(
+                      Text("Choisissez le type d'anomalie :", 
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 16
+                                ),
+                        ) ,
+                      Padding(padding: EdgeInsets.all(8),),
+                      DropdownButton<String>(
                          
                     value: dropdownValue,
                     onChanged: (String newValue) {
@@ -199,21 +206,36 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
             StoreConnector<AppState, AppState>(
               converter: (store1) => store1.state,
               builder: (context, state) =>
-                StoreConnector<AppState,VoidCallback>(
-                  converter: (store) => state.postFeedState.havePosition ? 
-
-                  () => store.dispatch(new DeletePositionAction(position, placemark, havePosition).deletePosition())
-                  : () => store.dispatch(new AddPositionAction(position, placemark, havePosition).getPosition())
-                  ,
-                  builder: (context, callback) {
+                StoreConnector<AppState,Store<AppState>>(
+                  converter: (store) => store, 
+                  builder: (context, store) {
                     return MaterialButton(
-                      onPressed: callback,
+                      
+                      onPressed:() {
+                        state.postFeedState.havePosition ? 
+                        store.dispatch(new DeletePositionAction(null, null, false)) 
+                        : store.dispatch(new AddPositionAction(position, placemark, havePosition));
+                        },
                       child:
                       Row(
                         mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Icon(Icons.gps_fixed),
-                          state.postFeedState.havePosition ? Text('Supprimer ma position') : Text('Ajouter ma position') 
+                          !state.postFeedState.havePosition ?
+                           state.postFeedState.isGpsLoading ? 
+                            SizedBox(
+                              child:CircularProgressIndicator(
+                                strokeWidth: 2.5, 
+                                backgroundColor: Colors.white,
+                                ),
+                              height: 20,
+                              width: 20,
+                              )
+                          : Icon(Icons.gps_fixed)
+                          : Icon(Icons.delete),
+                          Padding(padding: EdgeInsets.all(8),),
+                          !state.postFeedState.havePosition ?
+                           state.postFeedState.isGpsLoading ? Text('Loacalisation GPS ..') : Text('Ajouter ma position') : Text("Supprimer ma position") 
                         ],
                       ),
                       color:state.postFeedState.havePosition ? Colors.red : Colors.blue,
@@ -269,32 +291,6 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                       
                     },
                   ),
-                  StoreConnector<AppState,Store<AppState>>(
-                    converter: (store) => store,
-                    builder: (context,store) {
-                      return FlatButton(
-                        child: const Text('Skip'),
-                        onPressed: () async  {
-                          /*final getReactions = GetUserReactionAction([]);
-                          final getAnomalies = GetAnomaliesAction([]);
-                          
-                          store.dispatch(getReactions.getReactions());
-                          store.dispatch(getAnomalies.getAnomalies());
-                          
-                          Future.wait([
-                            getAnomalies.completer.future,
-                            getReactions.completer.future,
-                          ]).then((c)  {
-                           
-                          });
-*/
-                           var result= await api.upload(store.state.postFeedState.image);
-                            print(result);
-                            //Navigator.pop(context);
-
-                    });
-                    },)
-                  ,
                 ],
               ),
             ),

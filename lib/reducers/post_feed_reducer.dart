@@ -7,16 +7,19 @@ import 'package:sbaclean/actions/post_feed_actions.dart';
 
 Reducer<PostFeedState> postFeedReducer = combineReducers([
   new TypedReducer<PostFeedState, AddPositionAction>(getPostion),
-  new TypedReducer<PostFeedState, DeletePositionAction>(deletePosition),
+  new TypedReducer<PostFeedState, FinishDeletePostionAction>(deletePosition),
   new TypedReducer<PostFeedState, ChoosePickerCameraAction>(chooseCamera),
   new TypedReducer<PostFeedState, ChoosePickerGalleryAction>(chooseGallery),
   new TypedReducer<PostFeedState, SetAnomalyImageAction>(setPostImage),
-  new TypedReducer<PostFeedState, DeleteAnomalyImageAction>(deletePostImage)
+  new TypedReducer<PostFeedState, DeleteAnomalyImageAction>(deletePostImage),
+
+  new TypedReducer<PostFeedState, FinishAddPositionAction>(finishGetPostion),
+  new TypedReducer<PostFeedState, FinishAddPositionAction>(finishGetPostionContent),
+
 
 ]);
 
-
-PostFeedState getPostion(PostFeedState state, AddPositionAction action){
+PostFeedState finishGetPostionContent(PostFeedState state, FinishAddPositionAction action){
 
   if (action.position != null)   
     return state.copyWith(position: action.position,placemark: action.placemark, havePosition: action.havePosition);
@@ -24,7 +27,18 @@ PostFeedState getPostion(PostFeedState state, AddPositionAction action){
   return state.copyWith();
 }
 
-PostFeedState deletePosition(PostFeedState state, DeletePositionAction action){ 
+PostFeedState getPostion(PostFeedState state, AddPositionAction action){
+
+  return state.copyWith(isGpsLoading: true);
+}
+
+PostFeedState finishGetPostion(PostFeedState state, FinishAddPositionAction action){
+
+  return state.copyWith(isGpsLoading: false);
+}
+
+PostFeedState deletePosition(PostFeedState state, FinishDeletePostionAction action){ 
+  print("k");
   return PostFeedState();
 }
 

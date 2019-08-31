@@ -23,6 +23,12 @@ class RemoveLoadingAction {
   RemoveLoadingAction(this.isLoading);
 }
 
+class FinishAddPositionAction {
+  final bool havePosition;
+  final Position position;
+  final List<Placemark> placemark;
+  FinishAddPositionAction(this.position, this.placemark, this.havePosition);
+}
 
 class AddPositionAction {
   final bool havePosition;
@@ -30,17 +36,6 @@ class AddPositionAction {
   final List<Placemark> placemark;
   AddPositionAction(this.position, this.placemark, this.havePosition);
 
-    ThunkAction<AppState> getPosition() {
-      return (Store<AppState> store) async {        
-        final myPosition =  await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        final myLocation = await Geolocator().placemarkFromCoordinates(myPosition.latitude, myPosition.longitude);
-        final havePosition = true;
-        store.dispatch(new AddPositionAction(myPosition, myLocation, havePosition));
-
-        //final placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
-
-  };
-}
 }
 
 class DeletePositionAction {
@@ -50,16 +45,11 @@ class DeletePositionAction {
   Completer completer = Completer();
   DeletePositionAction(this.position, this.placemark, this.havePosition);
 
-    ThunkAction<AppState> deletePosition() {
-      return (Store<AppState> store) async {
-        store.dispatch(new DeletePositionAction(null, null, false));
-        completer.complete();
-        //final placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
-
-  };
-}
 }
 
+class FinishDeletePostionAction{
+  
+}
 
 class ChoosePickerCameraAction {
   final bool value;
