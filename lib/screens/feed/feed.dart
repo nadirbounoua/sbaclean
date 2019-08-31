@@ -42,31 +42,7 @@ class _FeedState extends State<FeedScreen> {
   bool searchresult;
   Timer timer;
   Api api = Api();
-  @override
-    void initState() {
-      // TODO: implement initState
-      super.initState();
 
-        /*final getReactions = GetUserReactionAction([]);
-        final getAnomalies = GetAnomaliesAction([]);
-        
-        MyApp.store.dispatch(getReactions.getReactions());
-        MyApp.store.dispatch(getAnomalies.getAnomalies());
-        
-        Future.wait([
-          getAnomalies.completer.future,
-          getReactions.completer.future,
-        ]).then((c)  {
-              
-      });
-*//*
-      timer = Timer.periodic(Duration(seconds: 45), (Timer t) async  {
-        bool changed = await api.copyWith(MyApp.store.state.userState.user.authToken)
-                                .checkNewPosts(MyApp.store.state.feedState);
-
-        if (changed) MyApp.store.dispatch(new SetPostsChanged(changed: changed));
-        });*/
-    }
 
   @override
   void dispose() {
@@ -101,9 +77,14 @@ class _FeedState extends State<FeedScreen> {
                 child:PostList(posts: store.state.feedState.anomalies),
                 color: Colors.blueAccent,
                 onRefresh: () {
-                  GetAnomaliesAction action = new GetAnomaliesAction(anomalies);
-                  store.dispatch(action.getAnomalies());
-                  return action.completer.future;
+                  final getReactions = GetUserReactionAction([]);
+                  final getAnomalies = RefreshAnomaliesAction([]);
+                  FinishRefreshAnomaliesAction.completer = Completer();
+                  store.dispatch(getReactions);
+                  store.dispatch(getAnomalies);
+                  
+                  
+                return FinishRefreshAnomaliesAction.completer.future;
                 }),
               PostsChangedNotification(store),
               
@@ -122,18 +103,13 @@ class _FeedState extends State<FeedScreen> {
                 color: Colors.blueAccent,
                 onRefresh: () {
                   final getReactions = GetUserReactionAction([]);
-                  final getAnomalies = GetAnomaliesAction([]);
+                  final getAnomalies = RefreshAnomaliesAction([]);
+                  FinishRefreshAnomaliesAction.completer = Completer();
+                  store.dispatch(getReactions);
+                  store.dispatch(getAnomalies);
                   
-                  store.dispatch(getReactions.getReactions());
-                  store.dispatch(getAnomalies.getAnomalies());
                   
-                  Future.wait([
-                    getAnomalies.completer.future,
-                    getReactions.completer.future,
-                  ]).then((c)  {
-                            
-                });
-                return getReactions.completer.future;
+                return FinishRefreshAnomaliesAction.completer.future;
                 }),              
             ],
         ),
@@ -177,6 +153,12 @@ class _FeedState extends State<FeedScreen> {
       onInit: (store)  {
         store.dispatch(GetUserReactionAction([]));
         store.dispatch(GetAnomaliesAction([]));
+        timer = Timer.periodic(Duration(seconds: 45), (Timer t) async  {
+        bool changed = await api.copyWith(MyApp.store.state.userState.user.authToken)
+                                .checkNewPosts(MyApp.store.state.feedState);
+
+        if (changed) store.dispatch(new SetPostsChanged(changed: changed));
+        });
        // store.dispatch(action)
       },
     );

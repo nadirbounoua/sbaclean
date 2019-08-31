@@ -15,7 +15,8 @@ class LoadAction{}
 
 class FinishGetAnomaliesAction{
   List<Anomaly> anomalies;
-  FinishGetAnomaliesAction({this.anomalies});
+  static Completer completer = Completer();
+  FinishGetAnomaliesAction({this.anomalies}) {completer.complete();}
 }
 
 class FinishAddAnomalyAction{
@@ -75,13 +76,19 @@ class GetAnomaliesAction {
   Completer completer=  new Completer();
   GetAnomaliesAction(this.list);
 
-  ThunkAction<AppState> getAnomalies() {
-    return (Store<AppState> store) async {
-      
-    };
-  }
 }
 
+class RefreshAnomaliesAction {
+  final List<Anomaly> list;
+  Completer completer=  new Completer();
+  RefreshAnomaliesAction(this.list);
+}
+
+class FinishRefreshAnomaliesAction {
+  final List<Anomaly> list;
+  static Completer completer=  new Completer();
+  FinishRefreshAnomaliesAction(this.list);
+}
 
 class SetPostsChanged {
   final bool changed;
@@ -94,16 +101,7 @@ class SetReactionAction {
   final bool isLike; 
   SetReactionAction({this.isLike, this.anomaly, this.reaction});
 
-  ThunkAction<AppState> setLike() {
-    return (Store<AppState> store) async {
-      print("Action" + reaction.toString());
-      var response = await api.copyWith(store.state.userState.user.authToken)
-                              .setReactionPost(anomaly, reaction);
-      reaction = Reaction.fromJson(response);
-      print(response);
-      store.dispatch( new SetReactionAction(anomaly:anomaly, reaction: reaction));
-    };
-  }
+
 }
 
 class DeleteReactionAction {
@@ -112,14 +110,6 @@ class DeleteReactionAction {
 
   DeleteReactionAction({this.anomaly, this.reaction});
 
-  ThunkAction<AppState> deleteReaction() {
-    return (Store<AppState> store) async {
-        reaction = anomaly.post.userReaction;
-        await api.copyWith(store.state.userState.user.authToken)
-                  .deleteReaction(reaction);
-        store.dispatch(new DeleteReactionAction(anomaly: anomaly, reaction: reaction));
-    };
-  }
 }
 
 class UpdateReactionAction {
@@ -128,16 +118,6 @@ class UpdateReactionAction {
 
   UpdateReactionAction({this.anomaly, this.reaction});
 
-  ThunkAction<AppState> updateReaction() {
-    return (Store<AppState> store) async {
-        reaction = anomaly.post.userReaction;
-        reaction.isLike = !reaction.isLike;
-        var response = await  api.copyWith(store.state.userState.user.authToken)
-                                  .updateReaction(reaction);
-        print(reaction);
-        
-    };
-  }
 }
 
 class GetUserReactionAction {
@@ -145,10 +125,5 @@ class GetUserReactionAction {
   Completer completer=  new Completer();
   GetUserReactionAction(this.list);
 
-  ThunkAction<AppState> getReactions() {
-    return (Store<AppState> store) async {
-    
-    };
-  }
 }
 

@@ -45,5 +45,15 @@ deleteReactionHelper(Store<AppState> store, Anomaly anomaly, Reaction reaction) 
 updateReactionHelper(Store<AppState> store, dynamic response, Anomaly anomaly, Reaction reaction) {
         reaction = Reaction.fromJson(response);
         store.dispatch( new FinishUpdateReactionAction(anomaly:anomaly, reaction: reaction));
+}
 
+refreshAnomaliesHelper(Store<AppState> store, String response ) async{
+  List<Anomaly> anomalyList = await parseAnomalies(response);
+      for (var anomaly in anomalyList) {
+        for (var reaction in store.state.feedState.userReactions) {
+          print(reaction);
+          if (anomaly.post.id == reaction.post) anomaly.post.userReaction = reaction;
+        }
+      }
+    Future.delayed(Duration(seconds: 3),()=>store.dispatch(FinishRefreshAnomaliesAction(anomalyList)));
 }

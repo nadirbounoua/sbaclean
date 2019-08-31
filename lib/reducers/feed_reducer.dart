@@ -27,6 +27,13 @@ Reducer<FeedState> feedReducer = combineReducers([
   new TypedReducer<FeedState, FinishGetAnomaliesAction>(finishLoadAnomalies),
   new TypedReducer<FeedState, FinishGetAnomaliesAction>(finishLoad),
 
+  new TypedReducer<FeedState, RefreshAnomaliesAction>(refreshAnomalies),
+  
+  new TypedReducer<FeedState, FinishRefreshAnomaliesAction>(finishRefreshAnomalies),
+  new TypedReducer<FeedState, FinishRefreshAnomaliesAction>(finishRefreshAnomaliesContent),
+
+
+
 ]);
 
 FeedState setPostsChanged(FeedState state,SetPostsChanged action) {
@@ -131,4 +138,17 @@ FeedState finishSetReaction(FeedState state, FinishSetReactionAction action) {
     ..add(anomaly)
     ..sort((anomaly, anomaly1) => anomaly.post.id > anomaly1.id ? 1 : -1 )
   );
+}
+
+FeedState finishRefreshAnomaliesContent(FeedState state, FinishRefreshAnomaliesAction action) {
+  FinishRefreshAnomaliesAction.completer.complete();
+  return state.copyWith(anomalies: List.from(action.list));
+}
+
+FeedState refreshAnomalies(FeedState state, RefreshAnomaliesAction action) {
+  return state.copyWith(isAnomaliesLoading: true);
+}
+
+FeedState finishRefreshAnomalies(FeedState state, FinishRefreshAnomaliesAction action) {
+  return state.copyWith(isAnomaliesLoading: false);
 }

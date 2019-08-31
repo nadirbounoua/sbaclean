@@ -10,7 +10,6 @@ import 'package:sbaclean/models/reaction.dart';
 import 'package:sbaclean/store/app_state.dart';
 
 Api api = Api();
-List<Anomaly> anomalyList;
 
 List<Middleware<AppState>> feedMiddleware() {
   return [
@@ -20,6 +19,8 @@ List<Middleware<AppState>> feedMiddleware() {
     TypedMiddleware<AppState, SetReactionAction>(setReaction()),
     TypedMiddleware<AppState, DeleteReactionAction>(deleteReaction()),
     TypedMiddleware<AppState, UpdateReactionAction>(updateReaction()),
+    TypedMiddleware<AppState, RefreshAnomaliesAction>(refreshAnomalies()),
+
 
 
   ];
@@ -92,5 +93,16 @@ updateReaction() {
                     .then((response) {
                       updateReactionHelper(store, response, action.anomaly, action.reaction);
                     });
+  };
+}
+
+refreshAnomalies() {
+    return (Store<AppState> store, RefreshAnomaliesAction action, NextDispatcher next) async {
+    next(action);
+    await api.copyWith(store.state.userState.user.authToken)
+        .getAnomalies()
+          .then((anomalies) => {
+              refreshAnomaliesHelper(store, anomalies)
+          });
   };
 }
