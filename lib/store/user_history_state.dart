@@ -6,15 +6,19 @@ import 'package:meta/meta.dart';
 class UserHistoryState {
 
   final List<Anomaly> userPosts;
+  final bool isLoading;
   UserHistoryState({
-            this.userPosts = const []
+            this.userPosts = const [],
+            this.isLoading = false
   });
 
   UserHistoryState copyWith({
-      List<Anomaly> userPosts
+      List<Anomaly> userPosts,
+      bool isLoading
   }) {
       return UserHistoryState(
-        userPosts: userPosts ?? this.userPosts
+        userPosts: userPosts ?? this.userPosts,
+        isLoading: isLoading ?? this.isLoading
       );
   }
 }
