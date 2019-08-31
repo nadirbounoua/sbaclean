@@ -16,7 +16,7 @@ class LoadAction{}
 class FinishGetAnomaliesAction{
   List<Anomaly> anomalies;
   static Completer completer = Completer();
-  FinishGetAnomaliesAction({this.anomalies}) {completer.complete();}
+  FinishGetAnomaliesAction({this.anomalies});
 }
 
 class FinishAddAnomalyAction{
