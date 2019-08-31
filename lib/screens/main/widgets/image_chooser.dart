@@ -26,7 +26,7 @@ class ImageChooserState extends State<ImageChooser> {
           children: <Widget>[
             StoreConnector<AppState, VoidCallback>(
              converter: (store) {
-            return () => store.dispatch(new ChoosePickerCameraAction().chooseCamera());
+            return () => store.dispatch(new ChoosePickerCameraAction(value: true));
              },
   
            builder: (context,callback) {

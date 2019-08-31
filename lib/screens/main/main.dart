@@ -18,7 +18,7 @@ import 'package:sbaclean/backend/api.dart';
 //import 'package:sbaclean/redux/reducers.dart';
 import 'package:sbaclean/store/app_state.dart';
 
-typedef OnSaveAnomaly = Function(String title, String description, String longitude, String latitude, String imageUrl);
+typedef OnSaveAnomaly = Function(String title, String description, String longitude, String latitude);
 
 
 //void main() => runApp(MyApp());
@@ -57,17 +57,6 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
   Api api = Api();
   String dropdownValue;
 
-  Future getImage(camera) async {
-    var image;
-    if (camera)
-      image = await ImagePicker.pickImage(source: ImageSource.camera);
-    else 
-      image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image;
-    });
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -85,7 +74,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
     final  deleteAnomalyImageAction = DeleteAnomalyImageAction(image: null);
     final deletePositionAction = DeletePositionAction(null, null, false) ;
 
-    MyApp.store.dispatch(deleteAnomalyImageAction.setImage());
+    //MyApp.store.dispatch(deleteAnomalyImageAction.setImage());
     //MyApp.store.dispatch(deletePositionAction.deletePosition());
     Future.wait([
       deleteAnomalyImageAction.completer.future,
@@ -120,13 +109,17 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                         return ImageChooser();
                       });
 
-                    store.dispatch(new SetAnomalyImageAction().setImage());
+                    store.dispatch(new SetAnomalyImageAction());
 
                 },
               );
                 },
+                onDispose: (store) {
+                  store.dispatch(DeletePositionAction(null,null,false));
+                  store.dispatch(DeleteAnomalyImageAction());
+                },
               ),
-              title: Text('Accident de voiture'),
+              title: Text(title),
               subtitle: 
               StoreConnector<AppState,AppState>(
                 converter: (store) {
@@ -254,17 +247,16 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                   ),
                   StoreConnector<AppState,OnSaveAnomaly>(
                     converter: (Store<AppState> store) {
-                      return (title, description, latitude, longitude, imageUrl) {
+                      return (title, description, latitude, longitude) {
                         store.dispatch(new AddAnomalyAction(
                           post: Post(
                             title: title,
                             description: description, 
                             latitude: latitude, 
-                            longitude: longitude, 
-                            imageUrl: imageUrl),
+                            longitude: longitude),
                           user: store.state.userState.user,
                           anomaly: Anomaly()
-                          ).postAnomaly());
+                          ));
                       };
                     },
 
@@ -274,12 +266,15 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                           converter: (store) => store.state,
                           builder: (context, state) =>
                             FlatButton(
-                              child: const Text('Poster'),
-                              onPressed: () async {
+                              child: state.feedState.isAddAnomalyLoading ? 
+                                Text('En train de poster ...', style: TextStyle(color: Colors.grey[400]),): Text("Poster"),
+                              onPressed: state.feedState.isAddAnomalyLoading ?
+                               () {} 
+                              : () async {
+                              
                               if (_formKey.currentState.validate()){
-                                var imageurl = await api.upload(state.postFeedState.image);
                                 print(title);
-                                onSave(title,description, state.postFeedState.position.latitude.toString(), state.postFeedState.position.longitude.toString(), imageurl);
+                                onSave(title,description, state.postFeedState.position.latitude.toString(), state.postFeedState.position.longitude.toString());
                                 _formKey.currentState.reset();
                                 Navigator.pop(context);
                                 }
