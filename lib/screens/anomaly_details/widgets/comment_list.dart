@@ -4,19 +4,16 @@ import 'package:sbaclean/models/comment.dart';
 
 class CommentsList extends StatelessWidget {
   final List<Comment> comments;
+  var list = <CommentPreview>[] ;
+
 
   CommentsList({Key key, this.comments}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-      itemCount: comments.length,
-      itemBuilder: (context, index) {
-        return CommentPreview(
-            comment: comments[index]
-        );
-      },
-    ));
+    comments.forEach((comment) => list.add(CommentPreview(comment: comment,)));
+    return Column(
+      children: list,
+    );
   }
 }
 

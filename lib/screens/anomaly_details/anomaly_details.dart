@@ -6,6 +6,7 @@ import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
 import 'package:sbaclean/screens/anomaly_details/widgets/comment_input.dart';
 import 'package:sbaclean/screens/anomaly_details/widgets/comment_list.dart';
+import 'package:sbaclean/screens/anomaly_details/widgets/comment_loading.dart';
 import 'package:sbaclean/store/anomaly_details_state.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:redux/redux.dart';
@@ -29,8 +30,6 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    MyApp.store.dispatch(new GetCommentsAction(list: [],postId: anomaly.post.id.toString()).getComments());
     super.initState();
 
 
@@ -44,17 +43,15 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
           title: Text('Details'),
         ),
         body:Center(
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Card(
+        child: ListView(
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  margin: const EdgeInsets.only(top: 30.0, bottom: 30.0),
+                  margin: const EdgeInsets.only(bottom: 8.0),
                   decoration: new BoxDecoration(
-                      border: Border(bottom: BorderSide(width: 1))
                   ),
                   child: anomaly.post.imageUrl == "/media/images/default.png" ?
                   Icon(
@@ -207,7 +204,18 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
               ),
            StoreConnector<AppState,Store<AppState>>(
                   converter: (store) => store,
-                  builder: (context, store) => CommentsList(
+                  onInit: (store) {
+                    store.dispatch(GetCommentsAction(list: [],postId: anomaly.post.id.toString()));
+
+                  },
+                  builder: (context, store) =>
+                  store.state.anomalyDetailsState.isCommentsLoading ?
+                    Column(children: <Widget>[
+                      CommentLoading(),
+                      CommentLoading(),
+                      CommentLoading()
+                    ],):
+                   CommentsList(
                     comments: store.state.anomalyDetailsState.comments,
                 ),
                 ),
@@ -217,10 +225,7 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
                     commentOwner: int.parse(store.state.userState.user.id),
                     commentPost: anomaly.post.id,
                   ),
-                )
-                
-              
-            
+                ), 
           ],
         ),
       ),

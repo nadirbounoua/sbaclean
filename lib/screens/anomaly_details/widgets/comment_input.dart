@@ -31,12 +31,13 @@ class CommentInputState extends State<CommentInput> {
                     Comment(
                         commentOwner: commentowner,
                         commentPost: commentpost,
-                        commentContent: text))
-                .addComment()),
+                        commentContent: text))),
           ),
       builder: (context, viewModel) => TextField(
+          keyboardType: TextInputType.text,
           decoration: InputDecoration(hintText: "Enter a comment"),
           controller: controller,
+          
           onSubmitted: (text) {
             viewModel.addItemToList(commentOwner,commentPost,text);
             controller.text = "";
