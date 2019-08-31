@@ -45,7 +45,16 @@ Comment createCommentFromJson(dynamic json) {
     return comment;
 }
 
+Comment createCommentFromJsonPost(dynamic responseBody) {
+    final parsed = json.decode(responseBody);
+    Comment comment = Comment.fromJson(parsed);
+    User user = User.fromJson(parsed['user']);
+    comment.owner = user;      
+    return comment;
+}
+
 List<Comment> parseComment(String responseBody){
+  print(responseBody);
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
 
     return parsed.map<Comment>((json) => createCommentFromJson(json)).toList();
