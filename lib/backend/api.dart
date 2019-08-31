@@ -135,7 +135,7 @@ Future getComments(String postId) async {
     }, headers: {
       HttpHeaders.authorizationHeader: "Token " + token
     });
-    return response;
+    return response.body;
   }
 
   Future getUsers() async {
