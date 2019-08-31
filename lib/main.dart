@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sbaclean/middlewares/feed_middleware.dart';
+import 'package:sbaclean/middlewares/middlewares.dart';
 import 'screens/main/main.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -17,7 +17,7 @@ void main() {
 class MyApp extends StatefulWidget{
   static final  store = Store<AppState>(appStateReducers,
   initialState: AppState.newAppState(),
-  middleware: feedMiddleware()
+  middleware: middlewares()
   );
   @override
   State<StatefulWidget> createState() => MyAppState(store: store);
