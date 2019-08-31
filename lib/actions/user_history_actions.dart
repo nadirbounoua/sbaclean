@@ -28,3 +28,9 @@ class GetUserAnomaliesHistoryAction {
     };
   }
 }
+
+class FinishGetUserAnomaliesHistoryAction{
+  List<Anomaly> list;
+  FinishGetUserAnomaliesHistoryAction({this.list});
+
+}

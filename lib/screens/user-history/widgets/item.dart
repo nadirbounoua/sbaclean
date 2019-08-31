@@ -8,14 +8,14 @@ class EntryItem extends StatelessWidget {
   final Entry entry;
 
   Widget _buildTiles(Entry root) {
-    if (root.children.isEmpty) return ListTile(title: Text(root.title));
+    if (root.children.isEmpty) return ListTile(title: root.title);
     return ExpansionTile(
       onExpansionChanged: (expanded) {
         
       },
       leading: Icon(Icons.keyboard_arrow_right),
       key: PageStorageKey<Entry>(root),
-      title: Text(root.title),
+      title: root.title,
       children: root.children.map((anomaly) => ListElement(anomaly: anomaly,)).toList(),
       trailing: Text(''),
     );
@@ -31,6 +31,6 @@ class EntryItem extends StatelessWidget {
 class Entry {
   Entry({this.title, this.children = const []});
 
-  String title;
+  Widget title;
   List<Anomaly> children;
 }

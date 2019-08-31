@@ -19,37 +19,34 @@ class UserHistoryScreen extends StatefulWidget {
 }
 
 class _UserHistoryState extends State<UserHistoryScreen> {
-
-
-  List<Entry> data = <Entry>[
-    Entry(
-      title: 'Anomalies',
-      children: <Anomaly> [
-        
-      ]
-      )
-];
-
-@override
-  void initState() {
-    super.initState();
-
-    final getUserAnomaliesHistoryAction = new GetUserAnomaliesHistoryAction(userId: "1", list: []);
-    MyApp.store.dispatch(getUserAnomaliesHistoryAction.getPosts());
-    
-    Future.wait([getUserAnomaliesHistoryAction.completer.future])
-    .then((onValue) {
-      data[0].children = MyApp.store.state.userHistoryState.userPosts;
-
-    });
-
-  }
+List<Entry> data = [];
 
 @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState,Store<AppState>>(
       converter: (store) => store,
       builder: (context, store) {
+
+        data = <Entry>[
+          Entry(
+            title: store.state.userHistoryState.isLoading ? 
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    child:CircularProgressIndicator(
+                      strokeWidth: 2.5, 
+                      backgroundColor: Colors.white,
+                      ),
+                    height: 20,
+                    width: 20,
+                    ),Padding(padding: EdgeInsets.all(8),),Text('Anomalies')],) 
+                : Text('Anomalies'),
+            children: <Anomaly> [
+
+            ]
+            )
+        ];
+        data[0].children = store.state.userHistoryState.userPosts;
         return Scaffold(
           //drawer: DrawerWidget(actualRoute: "History",),
           appBar: AppBar(
@@ -61,6 +58,14 @@ class _UserHistoryState extends State<UserHistoryScreen> {
             itemCount: data.length,
           ),
       );
+      },
+      onDidChange: (store) {
+      
+      },
+      onInit: (store) {
+        store.dispatch(GetUserAnomaliesHistoryAction(list: []));
+
+
       },
     );
       

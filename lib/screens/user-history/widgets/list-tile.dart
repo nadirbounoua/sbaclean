@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sbaclean/models/anomaly.dart';
@@ -30,7 +31,23 @@ class ListElement extends StatelessWidget {
             Icons.image,
             size: 100,
           ):
-          Image.network(anomaly.post.imageUrl,width: 100, height: 100,),
+          CachedNetworkImage(
+                    placeholder: (context, string) => 
+                      Container(color: Colors.grey[200],
+                        height: 100,
+                        width: 100,),
+                    imageUrl: anomaly.post.imageUrl,
+                    imageBuilder: (context, image) =>
+                    Image(
+                      image: image,
+                      filterQuality: FilterQuality.low,
+                      fit: BoxFit.cover,
+                      height: 100,
+                      width: 100,
+                      
+                    )
+                      
+                  ),
           Container(
             margin: EdgeInsets.only(left: 8),
             child : Flex(
