@@ -19,9 +19,9 @@ Reducer<FeedState> feedReducer = combineReducers([
   new TypedReducer<FeedState, FinishGetUserReactionAction>(finishGetUserReaction),
 
   new TypedReducer<FeedState, GetAnomaliesAction>(getAnomalies),
-  new TypedReducer<FeedState, AddAnomalyAction>(loadAddAnomaly),
-  new TypedReducer<FeedState, FinishAddAnomalyAction>(finishAddAnomaly),
-  new TypedReducer<FeedState, FinishAddAnomalyAction>(finishAddAnomalyContent),
+  new TypedReducer<FeedState, AddAnomalyAction>(addItem),
+  new TypedReducer<FeedState, FinishAddAnomalyAction>(finishAddItem),
+  new TypedReducer<FeedState, FinishAddAnomalyAction>(finishAddItemContent),
 
   new TypedReducer<FeedState, AddAnomalyAction>(addItem),
   new TypedReducer<FeedState, FinishGetAnomaliesAction>(finishLoadAnomalies),
@@ -93,11 +93,7 @@ FeedState finishLoadAnomalies(FeedState state, FinishGetAnomaliesAction action) 
 }
 
 
-FeedState addItem(FeedState state, AddAnomalyAction action) {
-  var list = List.from(state.anomalies)..add(action.anomaly,);
-  print(list);
-  return state.copyWith(anomalies: List.from(state.anomalies)..add(action.anomaly));
-}
+
 
 FeedState load(FeedState state, GetAnomaliesAction action) {
   print("isloading reducer: getAnomalies: load");
@@ -108,18 +104,6 @@ FeedState finishLoad(FeedState state, FinishGetAnomaliesAction action) {
   print("isloading reducer: getAnomalies: false");
 
   return state.copyWith(isAnomaliesLoading: false);
-}
-
-FeedState loadAddAnomaly(FeedState state, AddAnomalyAction action) {
-  return state.copyWith(isAnomaliesLoading: true);
-}
-
-FeedState finishAddAnomaly(FeedState state, FinishAddAnomalyAction action) {
-  return state.copyWith(isAnomaliesLoading: false);
-}
-
-FeedState finishAddAnomalyContent(FeedState state, FinishAddAnomalyAction action) {
-  return state.copyWith(anomalies: List.from(state.anomalies)..add(action.anomaly));
 }
 
 FeedState finishGetUserReaction(FeedState state, FinishGetUserReactionAction action) {
@@ -151,4 +135,20 @@ FeedState refreshAnomalies(FeedState state, RefreshAnomaliesAction action) {
 
 FeedState finishRefreshAnomalies(FeedState state, FinishRefreshAnomaliesAction action) {
   return state.copyWith(isAnomaliesLoading: false);
+}
+
+FeedState finishAddItemContent(FeedState state, FinishAddAnomalyAction action) {
+  var list = List.from(state.anomalies)..add(action.anomaly,);
+  print(list);
+  return state.copyWith(anomalies: List.from(state.anomalies)..add(action.anomaly));
+}
+
+FeedState finishAddItem(FeedState state, FinishAddAnomalyAction action) {
+  
+  return state.copyWith(isAddAnomalyLoading: false);
+}
+
+FeedState addItem(FeedState state, AddAnomalyAction action) {
+  
+  return state.copyWith(isAddAnomalyLoading: true);
 }

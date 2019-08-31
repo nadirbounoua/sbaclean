@@ -19,10 +19,11 @@ getAnomalies(Store<AppState> store, String response ) async {
 
 }
 
-addAnomalyHelper(Store<AppState> store, String response, Post post) async{
+addAnomalyHelper(Store<AppState> store, dynamic response, Post post) async{
     Anomaly anomaly = await parseOneAnomaly(response);
     //final response = await api.getPosts();
-    store.dispatch(new AddAnomalyAction(post: post, anomaly: anomaly));
+    anomaly.post.owner = store.state.userState.user;
+    store.dispatch(new FinishAddAnomalyAction(anomaly: anomaly));
 }
 
 getReactionsHelper(Store<AppState> store, String response) async{

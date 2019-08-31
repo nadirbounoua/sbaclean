@@ -39,11 +39,15 @@ loadAnomalies() {
 
 addAnomaly() {
   return (Store<AppState> store, AddAnomalyAction action, NextDispatcher next) async {
+
     next(action);
+    var imageurl = await api.upload(store.state.postFeedState.image);
+    action.post.imageUrl = imageurl;
     await api.copyWith(store.state.userState.user.authToken)
         .createAnomaly(action.post, action.user)
-          .then((response) => {
-              addAnomalyHelper(store, response, action.post)
+          .then((response)  {
+              print(response);
+              addAnomalyHelper(store, response, action.post);
           });
   };
 }
