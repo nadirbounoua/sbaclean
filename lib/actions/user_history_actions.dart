@@ -18,15 +18,7 @@ class GetUserAnomaliesHistoryAction {
   Completer completer=  new Completer();
 
   GetUserAnomaliesHistoryAction({this.list,this.userId});
-  ThunkAction<AppState> getPosts(){
-    return (Store<AppState> store) async {
-      final response = await api.copyWith(store.state.userState.user.authToken)
-                                .getUserAnomaliesHistory(userId);
-      list = parseAnomalies(response);
-      store.dispatch(new GetUserAnomaliesHistoryAction(list: list));
-      completer.complete();
-    };
-  }
+
 }
 
 class FinishGetUserAnomaliesHistoryAction{
