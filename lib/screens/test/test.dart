@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/feed_actions.dart';
+import 'package:sbaclean/screens/anomaly_details/widgets/comment_loading.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:sbaclean/widgets/drawer/drawer.dart';
 import 'package:sbaclean/reducers/reducers.dart';
@@ -42,8 +43,8 @@ class TestState extends State<Test> {
         return Container(color: Colors.amber, width: MediaQuery.of(context).size.width,
         child: Column(
           children: <Widget>[
-            store.state.isLoading ? CircularProgressIndicator() : Text("done"),
-         
+            Padding(padding: EdgeInsets.all(50),),
+            CommentLoading()
           ],
         ),
         );

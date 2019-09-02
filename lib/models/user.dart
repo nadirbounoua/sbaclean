@@ -11,8 +11,8 @@ class User {
 
 
   
-  User({this.id= '1' , this.username = "dopeman" , this.email, this.first_name, this.last_name, this.phone_number, this.address, this.city,
-       this.authToken = "485d5e2f79512be1280a9f82b8b95c3ecb934bf4"});
+  User({this.id= '4' , this.username = "dopeman" , this.email, this.first_name, this.last_name, this.phone_number, this.address, this.city,
+       this.authToken = "7d4ddc5324f0ebd45f72c127eb43a2be09ffdc29"});
   
   factory User.fromJson(Map<String,dynamic> json){
     //print(json['username']);
