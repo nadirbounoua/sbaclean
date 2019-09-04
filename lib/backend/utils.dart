@@ -1,3 +1,5 @@
+import 'package:sbaclean/models/event.dart';
+
 import '../models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
 import '../projectSettings.dart' as ProjectSettings;
@@ -15,6 +17,7 @@ List<Anomaly> parseAnomalies(String responseBody){
       return createFromJson(json);
       }).toList();
 }
+
 Anomaly createFromJson(dynamic json) {
       Post post = Post.fromJson(json);
       User user = User.fromJson(json['user']);
@@ -93,4 +96,41 @@ String calculateTime(dynamic date){
 
   return time;
 
+}
+
+//--------------------------------------------------------
+
+Event createFromJsonPostE(dynamic json, dynamic post) {
+  Event event = Event.fromJson(json);
+  event.post = post;
+  return event;
+}
+
+Event parseOneEvent(dynamic responseBody){
+  print(responseBody);
+  final parsed = json.decode(responseBody['response']);
+  return createFromJsonPostE(parsed,responseBody['post']);
+}
+
+Event createFromJsonEvent(dynamic json) {
+      Post post = Post.fromJson(json);
+      User user = User.fromJson(json['user']);
+      Event event = Event.fromJson(json);
+      post.owner = user;
+      print(post);
+      event.post = post;
+      
+      return event;
+}
+
+List<Event> parseEvents(String responseBody){
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<Event>((json) => createFromJsonEvent(json)).toList();
+}
+
+
+User parseProfile(String responseBody){
+  List<dynamic> list = json.decode(responseBody);
+  return User.fromJson(list[0]);
 }
