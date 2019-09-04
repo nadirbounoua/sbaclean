@@ -26,7 +26,7 @@ List<Middleware<AppState>> userHistoryMiddleware() {
 getUserAnomaliesHistory(){
     return (Store<AppState> store, GetUserAnomaliesHistoryAction action, NextDispatcher next) async {
       next(action);
-      await api.copyWith(store.state.userState.user.authToken)
+      await api.copyWith(store.state.auth.user.authToken)
                 .getUserAnomaliesHistory(store.state.userState.user.id)
                   .then((response) {
                     getUserAnomaliesHistoryHelper(store, response);

@@ -24,7 +24,7 @@ List<Middleware<AppState>> anomalyDetailsMiddleware() {
 getComments() {
   return (Store<AppState> store, GetCommentsAction action, NextDispatcher next) async {
     next(action);
-    await api.copyWith(store.state.userState.user.authToken)
+    await api.copyWith(store.state.auth.user.authToken)
           .getComments(action.postId)
             .then((response) {
                 getCommentsHelper(store, response);
@@ -35,7 +35,7 @@ getComments() {
 addComment() {
   return (Store<AppState> store, AddCommentAction action, NextDispatcher next) async {
     next(action);
-    await api.copyWith(store.state.userState.user.authToken)
+    await api.copyWith(store.state.auth.user.authToken)
               .createComment(action.item)
                 .then((response) {
                   print(response);
