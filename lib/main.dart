@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sbaclean/middlewares/middlewares.dart';
+import 'package:sbaclean/screens/login/login_screen.dart';
+import 'package:sbaclean/screens/main_screen.dart';
 import 'screens/main/main.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -40,7 +42,18 @@ class MyAppState extends State<MyApp> {
         store:store , 
         child: MaterialApp(
       title: _title,
-      home: Scaffold(
+      routes: <String, WidgetBuilder>{
+                '/': (BuildContext context) =>
+                    new StoreConnector<AppState, dynamic>(
+                        converter: (store) => store.state.auth.isAuthenticated,
+                        builder: (BuildContext context, isAuthenticated) =>
+                            isAuthenticated
+                                ? new MainScreen()
+                                : new LoginScreen()),
+                '/login': (BuildContext context) => new LoginScreen(),
+                '/main': (BuildContext context) => new MainScreen(),
+      },
+     /* home: Scaffold(
         body: PageView(
           physics: NeverScrollableScrollPhysics(),
           controller: _pageController,
@@ -54,8 +67,8 @@ class MyAppState extends State<MyApp> {
             FeedScreen(),
 
           ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
+        ),*/
+       /* bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
 
           items: <BottomNavigationBarItem>[
@@ -84,7 +97,7 @@ class MyAppState extends State<MyApp> {
           currentIndex: _page,
 
         ),
-      )
+      )*/
 
     )
     );
