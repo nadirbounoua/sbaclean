@@ -32,6 +32,8 @@ dependencies:
   material_search: ^0.2.8
   cached_network_image: ^1.1.0
   unicorndial: ^1.1.5
+  datetime_picker_formfield: ^0.1.8
+
 
 dev_dependencies:
   flutter_test:
