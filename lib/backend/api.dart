@@ -226,5 +226,98 @@ Future getComments(String postId) async {
 
     return response.body;
   }
+
+
+//--------------------------------------------------------------------------------
+  Future getToken(String username,String password) async {
+    var map = new Map<String, dynamic>();
+    map["username"] = username;
+    map["password"] = password;
+    var url = ProjectSettings.apiUrl + "/api-token-auth/";
+    var response = await http.post(url,body: map);
+    return response.body;
+  }
+
+  Future addUser(String username,String phone_number,String address, String city, String password) async {
+    print("$username--$phone_number---$address--$city---$password");
+    var map = new Map<String, dynamic>();
+    map["username"] = username;
+    map["password"] = password;
+    map["phone_number"] = phone_number;
+    map["address"] = address;
+    map["city"] = '1';
+    map["email"] = 'bouaninba.yahia@gmail.com';
+    map["first_name"] = 'yaya';
+    map["last_name"] = 'yyyy';
+    map["is_staff"] = '0';
+
+    var url = ProjectSettings.apiUrl + "/api/v1/accounts/register/";
+    var response = await http.post(url,body: map);
+    return response.body;
+  }
+
+  Future getProfile(String username, String token) async {
+    var url = ProjectSettings.apiUrl + '/api/v1/accounts?username='+ username;
+    var response = await http.get(url,
+        headers: {HttpHeaders.authorizationHeader: "Token "+ token}
+    );
+    return response.body;
+  }
+
+  Future modifyProfile(String id,String token,String username,String phone_number,String address, String city) async {
+    var map = new Map<String, dynamic>();
+    map["username"] = username;
+    map["phone_number"] = phone_number;
+    map["address"] = address;
+    map["city"] = city;
+    var url = ProjectSettings.apiUrl + "/api/v1/accounts/$id";
+    var response = await http.patch(url,body: map, headers: {HttpHeaders.authorizationHeader: "Token "+ token });
+    return response.body;
+  }
+
+  Future createPostE(String token,String title,String description, String user) async {
+    var url = ProjectSettings.apiUrl + "/api/v1/posts/post/";
+    var response = await http.post(url,
+        body : {'title': title,'description': description,
+          'longitude': "2.3488", 'latitude':"48.8534",
+          'post_owner': user,'city':'1'},
+        headers: {HttpHeaders.authorizationHeader: "Token "+token}
+    );
+    print(response.body);
+    return response.body;
+  }
+
+
+
+  Future createEvent(String token,String title,String description,String user,String max,starts_at) async {
+    String responseBody = await createPostE(token,title,description,user);
+    Post preEvent = parseOnePost(responseBody);
+    var map = new Map<String, dynamic>();
+    map["post"] = preEvent.id.toString();
+    map["max_participants"] = max;
+    map["starts_at"] = starts_at;
+    var url = ProjectSettings.apiUrl + "/api/v1/events/";
+    var response = await http.post(url,body: map,headers: {HttpHeaders.authorizationHeader: "Token "+ token}
+    );
+    return response.body;
+  }
+
+  Future getEvents() async {
+
+    var url = ProjectSettings.apiUrl+"/api/v1/posts/post/?event";
+    var response = await http.get(url,
+        headers: {HttpHeaders.authorizationHeader : "Token "+ token});
+    return response.body;
+  }
+
+  Future getPost(int id) async {
+    var url = ProjectSettings.apiUrl + '/api/v1/posts/post/$id';
+    var response = await http.get(url,
+        headers: {HttpHeaders.authorizationHeader: "Token " + token}
+    );
+    return response.body;
+  }
+
+
 }
 
