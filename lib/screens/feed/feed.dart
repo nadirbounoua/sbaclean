@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sbaclean/screens/event/widgets/add_event_screen.dart';
 import '../settings/settings.dart';
 import '../../models/anomaly.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -140,7 +141,7 @@ class _FeedState extends State<FeedScreen> {
               currentButton: FloatingActionButton(
                 heroTag: 'btn2',
                 mini: true,
-                onPressed: () => {},
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AddEventScreen())),
                 backgroundColor: Colors.red[400],
                 child: Icon(Icons.event),
               ),
@@ -154,7 +155,7 @@ class _FeedState extends State<FeedScreen> {
         store.dispatch(GetUserReactionAction([]));
         store.dispatch(GetAnomaliesAction([]));
         timer = Timer.periodic(Duration(seconds: 45), (Timer t) async  {
-        bool changed = await api.copyWith(MyApp.store.state.userState.user.authToken)
+        bool changed = await api.copyWith(MyApp.store.state.auth.user.authToken)
                                 .checkNewPosts(MyApp.store.state.feedState);
 
         if (changed) store.dispatch(new SetPostsChanged(changed: changed));
@@ -186,7 +187,7 @@ class _FeedState extends State<FeedScreen> {
                  anomalies = [];
                });
               } else {
-              var list = await api.copyWith(MyApp.store.state.userState.user.authToken)
+              var list = await api.copyWith(MyApp.store.state.auth.user.authToken)
                                   .queryPosts(criteria);
                setState(() {
                  anomalies = parseAnomalies(list);
