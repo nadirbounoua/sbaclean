@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/models/event.dart';
 import '../../../styles/colors.dart';
 
@@ -8,9 +11,121 @@ class EventPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime dateTime = DateTime.parse(event.starts_at).toLocal();
+    String date = dateTime.year.toString() + "/"+ dateTime.month.toString()+'/'+ dateTime.day.toString();
 
     // TODO: implement build
-    return new Column(
+    return Card(
+      child:    Card(
+      child:IntrinsicHeight(
+        child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Image.network(
+                     event.post.imageUrl,
+                     width: MediaQuery.of(context).size.width/3,
+                     height: MediaQuery.of(context).size.width/3,
+                     fit: BoxFit.fill,
+                     ),
+        Expanded(
+            child: Column(
+            children: [
+              Container(
+                height: 2*MediaQuery.of(context).size.width/9,
+                width: 2*MediaQuery.of(context).size.width/3,
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child:
+                  Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              event.post.title,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 20,
+                                
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                            ),
+                            Container(
+                              child: Text(
+                                event.post.description,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 16
+                              ),
+                            ),
+                            )
+                          ],
+                        ),
+                         
+                        Text(date,textAlign: TextAlign.end,
+                          style: TextStyle(
+                            fontSize: 16
+                          ),
+                        ),
+        ],
+      ),
+    ),
+  ),          
+              Container(
+                margin: EdgeInsets.all(8),
+                height: MediaQuery.of(context).size.width/9,
+                  child:Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    child: Row(
+                      children: <Widget>[
+                        Text(event.max_participants.toString(),
+                          style: TextStyle(
+                            fontSize: 16
+                          ),),
+                        Padding(
+                          padding: EdgeInsets.all(2),
+                        ),
+                        Icon(Icons.person,
+                          size: 30, 
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  FlatButton(
+                    onPressed: () => print("participate"),
+                    color: Colors.blue,
+                    child: Row(
+                      children: <Widget>[
+                        Text("Participer", style: TextStyle(color: Colors.white),),
+                        Padding(padding: EdgeInsets.all(2),),
+                        Icon(Icons.person_add,color: Colors.white,)
+                      ],
+                    ),
+                  )
+                  
+                ],
+              ),
+                ),
+            
+            ]),
+          ),
+        ]),
+      ),
+    ),
+    );
+  }
+}
+
+/*Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Row(
@@ -134,6 +249,4 @@ class EventPreview extends StatelessWidget {
           color: Colors.grey,
         ),
       ],
-    );
-  }
-}
+    );*/
