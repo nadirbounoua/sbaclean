@@ -1,4 +1,5 @@
 import 'package:redux_thunk/redux_thunk.dart';
+import 'package:sbaclean/middlewares/event_middleware.dart';
 import 'package:sbaclean/middlewares/user_history_middleware.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:redux/redux.dart';
@@ -12,6 +13,7 @@ List<Middleware<AppState>> middlewares() {
             ..addAll(postFeedMiddleware())
             ..addAll(userHistoryMiddleware())
             ..addAll(anomalyDetailsMiddleware())
+            ..addAll(eventMiddleware())
             ..add(thunkMiddleware)
             ;
 }
