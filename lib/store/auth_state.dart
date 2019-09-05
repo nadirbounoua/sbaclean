@@ -10,13 +10,14 @@ class AuthState {
     final bool isAuthenticating;
     final User user;
     final String error;
-
+     final List<User> ranks; 
     // constructor with default
     AuthState({
         this.isAuthenticated = false,
         this.isAuthenticating = false,
         this.user,
         this.error,
+        this.ranks = const []
     });
 
     // allows to modify AuthState parameters while cloning previous ones
@@ -25,13 +26,14 @@ class AuthState {
         bool isAuthenticating,
         String error,
         User user,
+        List<User> ranks,
     }) {
         return new AuthState(
             isAuthenticated: isAuthenticated ?? this.isAuthenticated,
             isAuthenticating: isAuthenticating ?? this.isAuthenticating,
             error: error ?? this.error,
             user: user ?? this.user,
-
+            ranks: ranks ?? this.ranks
         );
     }
 
