@@ -58,19 +58,7 @@ class _FeedState extends State<FeedScreen> {
       converter: (store) =>  store,
       builder: (context,store) {
         return Scaffold(
-        appBar: AppBar(
-          title: Text('Anomalies'),
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                _showMaterialSearch(context);
-              },
-              tooltip: 'Search',
-              icon: new Icon(Icons.search),
-            )],
-        ),
-      /*  drawer: DrawerWidget(actualRoute: "Feed",),
-        */body: Stack(
+          body: Stack(
             alignment: Alignment.topCenter  ,
             children: store.state.feedState.postsChanged ? <Widget>[
               RefreshIndicator(
@@ -98,7 +86,9 @@ class _FeedState extends State<FeedScreen> {
                     PostLoading(),
                     PostLoading(),
                     PostLoading()
-                  ],)
+                  ],
+                  physics: NeverScrollableScrollPhysics(),
+                  )
                   : 
                   PostList(posts: store.state.feedState.anomalies),
                 color: Colors.blueAccent,
@@ -151,6 +141,7 @@ class _FeedState extends State<FeedScreen> {
         ),
         );
       },
+      onDispose: (store) => timer.cancel(),
       onInit: (store)  {
         store.dispatch(GetUserReactionAction([]));
         store.dispatch(GetAnomaliesAction([]));
@@ -164,52 +155,6 @@ class _FeedState extends State<FeedScreen> {
       },
     );
   }
-  _showMaterialSearch(BuildContext context) {
-    Navigator.of(context)
-      .push(_buildMaterialSearchPage(context))
-      .then((dynamic value) {
-      });
-  }
-
-   _buildMaterialSearchPage(BuildContext context) {
-    return new MaterialPageRoute<dynamic>(
-      settings: new RouteSettings(
-        name: 'material_search',
-        isInitialRoute: false,
-      ),
-      builder: (BuildContext context) {
-        return new Material(
-          child: new MaterialSearch<dynamic>(
-            placeholder: 'Search',
-            getResults: (String criteria) async {
-              if (criteria.isEmpty) {
-                setState(() {
-                 anomalies = [];
-               });
-              } else {
-              var list = await api.copyWith(MyApp.store.state.auth.user.authToken)
-                                  .queryPosts(criteria);
-               setState(() {
-                 anomalies = parseAnomalies(list);
-               });
-              }
-              return anomalies.map((anomaly) => new MaterialSearchResult<dynamic>(
-                value: anomaly, //The value must be of type <String>
-                text: anomaly.post.title, //String that will be show in the list
-                //icon: anomaly.imageUrl == "/media/images/default.png" ? Icons.image : ImageIcon(Image.network(src))
-                //.network(anomaly.imageUrl ,width: 24, height: 24,)
-              )).toList();
-            },
-
-            onSelect: (dynamic value) => Navigator.push(context, MaterialPageRoute(builder: (context) => AnomalyDetails(anomaly: value,))),
-            onSubmit: (dynamic value) => Navigator.push(context, MaterialPageRoute(builder: (context) => AnomalyDetails(anomaly: value,))),
-          ),
-        );
-      }
-    );
-  }
-
-
 
 }
 

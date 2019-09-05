@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:material_search/material_search.dart';
+import 'package:sbaclean/actions/actions.dart';
+import 'package:sbaclean/backend/utils.dart';
+import 'package:sbaclean/main.dart';
+import 'package:sbaclean/models/anomaly.dart';
 
 import 'package:sbaclean/presentation/platform_adaptive.dart';
 import 'package:sbaclean/screens/user-history/user-history.dart';
@@ -8,6 +13,7 @@ import 'package:sbaclean/screens/main_tabs/events_tab.dart';
 import 'package:sbaclean/screens/main_tabs/posts_tab.dart';
 import 'package:sbaclean/screens/main_drawer.dart';
 
+import 'anomaly_details/anomaly_details.dart';
 import 'feed/feed.dart';
 import 'settings/settings.dart';
 
@@ -24,6 +30,7 @@ class MainScreenState extends State<MainScreen> {
     PageController _tabController;
     String _title;
     int _index;
+    List<Anomaly> anomalies = [];
 
     @override
     void initState() {
@@ -37,10 +44,18 @@ class MainScreenState extends State<MainScreen> {
     Widget build(BuildContext context) {
         return new Scaffold(
             
-            appBar: new PlatformAdaptiveAppBar(
-                title: new Text(_title),
-                platform: Theme.of(context).platform
-            ),
+            appBar: AppBar(
+              title:Text(_title,),
+              actions: (_index ==0) ? <Widget>[
+                IconButton(
+                  onPressed: () {
+                    _showMaterialSearch(context);
+                  },
+                  tooltip: 'Search',
+                  icon: new Icon(Icons.search),
+                )] : null,
+              ),
+            
             
             bottomNavigationBar: new PlatformAdaptiveBottomBar(
                 currentIndex: _index,
@@ -83,6 +98,50 @@ class MainScreenState extends State<MainScreen> {
         this._title = TabItems[tab].title;
     }
 
+      _showMaterialSearch(BuildContext context) {
+    Navigator.of(context)
+      .push(_buildMaterialSearchPage(context))
+      .then((dynamic value) {
+      });
+  }
+
+   _buildMaterialSearchPage(BuildContext context) {
+    return new MaterialPageRoute<dynamic>(
+      settings: new RouteSettings(
+        name: 'material_search',
+        isInitialRoute: false,
+      ),
+      builder: (BuildContext context) {
+        return new Material(
+          child: new MaterialSearch<dynamic>(
+            placeholder: 'Search',
+            getResults: (String criteria) async {
+              if (criteria.isEmpty) {
+                setState(() {
+                 anomalies = [];
+               });
+              } else {
+              var list = await api.copyWith(MyApp.store.state.auth.user.authToken)
+                                  .queryPosts(criteria);
+               setState(() {
+                 anomalies = parseAnomalies(list);
+               });
+              }
+              return anomalies.map((anomaly) => new MaterialSearchResult<dynamic>(
+                value: anomaly, //The value must be of type <String>
+                text: anomaly.post.title, //String that will be show in the list
+                //icon: anomaly.imageUrl == "/media/images/default.png" ? Icons.image : ImageIcon(Image.network(src))
+                //.network(anomaly.imageUrl ,width: 24, height: 24,)
+              )).toList();
+            },
+
+            onSelect: (dynamic value) => Navigator.push(context, MaterialPageRoute(builder: (context) => AnomalyDetails(anomaly: value,))),
+            onSubmit: (dynamic value) => Navigator.push(context, MaterialPageRoute(builder: (context) => AnomalyDetails(anomaly: value,))),
+          ),
+        );
+      }
+    );
+  }
 }
 
 class TabItem {
@@ -93,7 +152,8 @@ class TabItem {
 }
 
 const List<TabItem> TabItems = const <TabItem>[
-    const TabItem(title: 'Anomalies', icon: Icons.broken_image),
-    const TabItem(title: 'Events', icon: Icons.calendar_today),
-    const TabItem(title: 'FeedTab', icon: Icons.group_work)
+    const TabItem(title: 'Anomalies', icon: Icons.warning),
+    const TabItem(title: 'Evénements', icon: Icons.calendar_today),
+    const TabItem(title: 'Statistiques', icon: Icons.graphic_eq)
 ];
+
