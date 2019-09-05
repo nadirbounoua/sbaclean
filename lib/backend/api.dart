@@ -264,6 +264,14 @@ Future getComments(String postId) async {
     return response.body;
   }
 
+  Future getUserByEmail(String email) async {
+    var url = ProjectSettings.apiUrl + '/api/v1/accounts?email='+ email;
+    var response = await http.get(url,
+        
+    );
+    return response.body;
+  }
+
   Future modifyProfile(String id,String token,String username,String phone_number,String address, String city) async {
     var map = new Map<String, dynamic>();
     map["username"] = username;
@@ -315,6 +323,14 @@ Future getComments(String postId) async {
     var response = await http.get(url,
         headers: {HttpHeaders.authorizationHeader: "Token " + token}
     );
+    return response.body;
+  }
+
+  Future getRanking(String cityId) async {
+    print(cityId);
+    var url = ProjectSettings.apiUrl+"/api/v1/accounts/ranking/?limit=5&city=$cityId";
+    var response = await http.get(url,
+        headers: {HttpHeaders.authorizationHeader : "Token "+ token});
     return response.body;
   }
 

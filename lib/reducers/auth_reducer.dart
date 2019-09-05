@@ -8,7 +8,18 @@ Reducer<AuthState> authReducer = combineReducers([
     new TypedReducer<AuthState, UserLoginSuccess>(userLoginSuccessReducer),
     new TypedReducer<AuthState, UserLoginFailure>(userLoginFailureReducer),
     new TypedReducer<AuthState, UserLogout>(userLogoutReducer),
+    new TypedReducer<AuthState, GetUserRankingAction>(getUserRanking), 
+    new TypedReducer<AuthState, GetUserByEmailAction>(getUserByEmail), 
+
 ]);
+
+AuthState getUserByEmail(AuthState authState, GetUserByEmailAction action){
+    return authState.copyWith(
+      user: action.user
+    );
+}
+  
+
 
 AuthState userLoginRequestReducer(AuthState auth, UserLoginRequest action) {
     return auth.copyWith(
@@ -37,4 +48,9 @@ AuthState userLoginFailureReducer(AuthState auth, UserLoginFailure action) {
 
 AuthState userLogoutReducer(AuthState auth, UserLogout action) {
     return new AuthState();
+}
+
+AuthState getUserRanking(AuthState state, GetUserRankingAction action) {
+    print('k');
+    return state.copyWith(ranks: action.ranks);
 }

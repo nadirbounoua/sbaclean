@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:redux_thunk/redux_thunk.dart';
+import 'package:sbaclean/store/auth_state.dart';
 import '../models/event.dart';
 import 'package:redux/redux.dart';
 
@@ -68,4 +70,37 @@ final Function logout = (BuildContext context) {
 };
 
 
+class GetUserRankingAction {
+    final List<User> ranks;
 
+    GetUserRankingAction(this.ranks);
+    
+    ThunkAction<AppState> getRanking() {
+    return (Store<AppState> store) async {
+      print('kk');
+      final response3 = await api.copyWith(store.state.auth.user.authToken)
+                                .getRanking(store.state.auth.user.city);
+      print(response3);
+      List<User> ranks = parseUsers(response3);
+          store.dispatch(new GetUserRankingAction(ranks)); 
+    };
+  }
+        
+}
+
+class GetUserByEmailAction {
+    final User user;
+    final String email;
+    GetUserByEmailAction({this.user, this.email});
+    
+    ThunkAction<AppState> getUser() {
+    return (Store<AppState> store) async {
+      print('kk');
+      final response3 = await api.getUserByEmail(email);
+      print("response" +response3);
+      List<User> user= parseUsers(response3);
+          store.dispatch(new GetUserByEmailAction(user: user[0])); 
+    };
+  }
+        
+}
