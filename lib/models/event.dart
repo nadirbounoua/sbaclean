@@ -9,8 +9,6 @@ class Event {
   int id;
   String approved_at;
   int max_participants;
-  String description;
-  String title;
   String starts_at;
   int approved_by;
   Post post;
@@ -20,8 +18,7 @@ class Event {
     this.approved_at,
     this.starts_at,
     this.post,
-    this.description,
-    this.title,
+
     this.max_participants,
     this.approved_by
   });
@@ -61,7 +58,7 @@ class Event {
   @override
   String toString() {
     // TODO: implement toString
-    return "Event $description $title $max_participants";
+    return "Event $post $max_participants";
   }
 
 }
