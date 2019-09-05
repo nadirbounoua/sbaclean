@@ -10,6 +10,7 @@ import 'settings/settings.dart';
 import '../models/user.dart';
 import '../screens/event/event_screen.dart';
 import '../actions/event_actions.dart';
+import 'user_ranking/user_ranking_screen.dart'; 
 class MainDrawer extends StatelessWidget {
 
     MainDrawer({Key key}): super(key: key);
@@ -52,7 +53,12 @@ class MainDrawer extends StatelessWidget {
                       new ListTile(
                           leading: new Icon(Icons.grade),
                           title: new Text('Ranking'),
-                          onTap: () => print('you pressed about')
+                          onTap: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => UserRankingScreen()),
+                            )
+                          }
                       ),
                     new ListTile(
                         leading: new Icon(Icons.build),
