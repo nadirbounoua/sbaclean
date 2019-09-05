@@ -24,15 +24,22 @@ class GetEventsAction {
 
   GetEventsAction({this.events});
 
+
+}
+
+class FinishGetEventsAction {
+  final List<Event> events;
+
+  FinishGetEventsAction({this.events});
+
   
   ThunkAction<AppState> getEvents() {
   return (Store<AppState> store) async {
-
     final response = await api.copyWith(store.state.auth.user.authToken)
                                   .getEvents();
     List<Event> eventList = await parseEvents(response);
     //final response = await api.getPosts();
-    store.dispatch(new GetEventsAction(events: eventList));
+   Future.delayed(Duration(seconds: 3),() =>store.dispatch(new FinishGetEventsAction(events: eventList))) ;
 
     //store.dispatch(new GetAnomaliesAction([]).getAnomalies());
 
