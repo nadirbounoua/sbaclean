@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:redux_persist/redux_persist.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:sbaclean/store/auth_state.dart';
 import '../models/event.dart';
@@ -10,6 +15,7 @@ import '../backend/api.dart';
 import '../backend/utils.dart';
 import '../models/profile.dart';
 import 'event_actions.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 
@@ -39,10 +45,15 @@ final Function login = (BuildContext context, String username, String password) 
         final profile = await api.getProfile(username, token);
         User pro = parseProfile(profile);
         if (condition) {
-            store.dispatch(new UserLoginSuccess(new User(authToken: token,id: pro.id,
+            final directory = await getApplicationDocumentsDirectory();
+            File persist = File(directory.path +'/loginFile.json');
+            User finalUser =User(authToken: token,id: pro.id,
                 username: pro.username,first_name: pro.first_name,
                 last_name: pro.last_name,address: pro.address,city: pro.city,
-            email: pro.email,phone_number: pro.phone_number)));
+            email: pro.email,phone_number: pro.phone_number);
+            persist.writeAsStringSync(json.encode(finalUser.toJSON()));
+
+            store.dispatch(new UserLoginSuccess(finalUser));
             Navigator.of(context).pushNamedAndRemoveUntil('/main', (_) => false);
         } else {
             store.dispatch(new UserLoginFailure('Username or password were incorrect.'));
@@ -63,7 +74,12 @@ final Function modify = (BuildContext context,String id,String token,String user
 };
 
 final Function logout = (BuildContext context) {
-    return (Store<AppState> store) {
+    return (Store<AppState> store) async {
+        final directory = await getApplicationDocumentsDirectory();
+        File persist;
+        File(directory.path +'/loginFile.json').existsSync() ? null : File(directory.path +'/loginFile.json').createSync();
+        persist = File(directory.path +'/loginFile.json');
+        await persist.delete();
         store.dispatch(new UserLogout());
         Navigator.of(context).pushNamedAndRemoveUntil('/login', (_) => false);
     };
@@ -100,6 +116,20 @@ class GetUserByEmailAction {
       print("response" +response3);
       List<User> user= parseUsers(response3);
           store.dispatch(new GetUserByEmailAction(user: user[0])); 
+    };
+  }
+        
+}
+
+class GetUserPositionAction {
+    final Position position;
+    GetUserPositionAction({this.position});
+    
+    ThunkAction<AppState> getUserPosition() {
+    return (Store<AppState> store) async {
+      final myPosition =  await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+      store.dispatch(new GetUserPositionAction(position: myPosition)); 
     };
   }
         
