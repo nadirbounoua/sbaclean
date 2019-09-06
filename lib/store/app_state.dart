@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:sbaclean/screens/anomaly_details/anomaly_details.dart';
 import 'package:sbaclean/store/anomaly_details_state.dart';
 import 'package:sbaclean/store/auth_state.dart';
 
@@ -10,13 +11,11 @@ import 'package:sbaclean/models/user.dart';
 
 import 'event_state.dart';
 
-@immutable
 class AppState {
 
   final FeedState feedState;
   final PostFeedState postFeedState;
   final UserHistoryState userHistoryState;
-  final UserState userState;
   final AnomalyDetailsState anomalyDetailsState;
   final bool isLoading;
   final EventState eventState;
@@ -24,7 +23,6 @@ class AppState {
   AppState({this.feedState,
             this.postFeedState, 
             this.userHistoryState, 
-            this.userState, 
             this.anomalyDetailsState,
             this.isLoading,
             this.eventState,
@@ -36,7 +34,6 @@ class AppState {
       FeedState feedState,
       PostFeedState postFeedState, 
       UserHistoryState userHistoryState, 
-      UserState userState,
       AnomalyDetailsState anomalyDetailsState,
       bool isLoading,
       EventState eventState,
@@ -47,7 +44,6 @@ class AppState {
       feedState: feedState ?? new FeedState(),
       postFeedState: postFeedState ?? PostFeedState(),
       userHistoryState : userHistoryState ?? UserHistoryState(),
-      userState: userState ?? UserState(user: User()),
       anomalyDetailsState: anomalyDetailsState ?? AnomalyDetailsState(),
       isLoading: isLoading ?? false,
       eventState: eventState ?? EventState(),
@@ -55,4 +51,27 @@ class AppState {
     );
   }
 
+
+  static AppState fromJSON(dynamic json) {
+    print(json);
+
+    return new AppState(
+        auth: json== null ? AuthState() : json['auth'] as AuthState,
+        feedState: json== null ? FeedState() : json['feed'] as FeedState,
+        postFeedState: json== null ? PostFeedState() : json['postFeed'] as PostFeedState,
+        userHistoryState : json== null ? UserHistoryState() : json['userHistory'] as UserHistoryState,
+        anomalyDetailsState: json== null ? AnomalyDetailsState() : json['anomalyDetails'] as AnomalyDetailsState,
+        eventState: json== null ? EventState() : json['eventState'] as EventState,
+    );
+  } 
+
+  Map<String, dynamic> toJSON() => <String, dynamic>{
+        'auth': this.auth,
+        'postFeed': this.postFeedState,
+        'userHistory': this.userHistoryState,
+        'anomalyDetails': this.anomalyDetailsState,
+        'eventState': this.eventState,
+        'feed': this.feedState,
+
+    };
 }

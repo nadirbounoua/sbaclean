@@ -33,4 +33,23 @@ class FeedState {
       isAddAnomalyLoading: isAddAnomalyLoading ?? this.isAddAnomalyLoading
     );
   }
+
+    factory FeedState.fromJSON(Map<String, dynamic> json) => new FeedState(
+        anomalies: json['anomalies'],
+        userReactions: json['userReactions'],
+        postsChanged: json['postChanged'],
+        isAddAnomalyLoading: json['isAddAnomalyLoading'],
+        isAnomaliesLoading: json['isAnomaliesLoading']
+    );
+
+    Map<String, dynamic> toJSON() => <String, dynamic>{
+        'anomalies': this.anomalies,
+        'userReactions': this.userReactions,
+        'postChanged': this.postsChanged,
+        'isAddAnomalyLoading': this.isAddAnomalyLoading,
+        'isAnomaliesLoading': this.isAnomaliesLoading,
+
+    };
+
+
 }

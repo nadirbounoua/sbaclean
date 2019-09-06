@@ -23,10 +23,14 @@ class EventState {
   }
 
   factory EventState.fromJSON(Map<String, dynamic> json) => new EventState(
-    events: json['events'],
+    events: json['events'] == null ? [] : json['events'] as List<Event>,
+    isEventsLoading: json['isEventsLoading'] == null ? false : json['isEventsLoading'] as bool,
+
   );
 
   Map<String, dynamic> toJSON() => <String, dynamic>{
-    'events': this.events
+    'events': this.events,
+    'isEventsLoading' : this.isEventsLoading
+
   };
 }

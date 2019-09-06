@@ -37,7 +37,7 @@ class AuthState {
         );
     }
 
-    factory AuthState.fromJSON(Map<String, dynamic> json) => new AuthState(
+  factory AuthState.fromJSON(Map<String, dynamic> json) => new AuthState(
         isAuthenticated: json['isAuthenticated'],
         isAuthenticating: json['isAuthenticating'],
         error: json['error'],
