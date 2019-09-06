@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:sbaclean/screens/user-history/widgets/item.dart';
@@ -26,37 +26,11 @@ List<Entry> data = [];
     return StoreConnector<AppState,Store<AppState>>(
       converter: (store) => store,
       builder: (context, store) {
-
-        data = <Entry>[
-          Entry(
-            title: store.state.userHistoryState.isLoading ? 
-              Row(
-                children: <Widget>[
-                  SizedBox(
-                    child:CircularProgressIndicator(
-                      strokeWidth: 2.5, 
-                      backgroundColor: Colors.white,
-                      ),
-                    height: 20,
-                    width: 20,
-                    ),Padding(padding: EdgeInsets.all(8),),Text('Anomalies')],) 
-                : Text('Anomalies'),
-            children: <Anomaly> [
-
-            ]
-            )
-        ];
-        data[0].children = store.state.userHistoryState.userPosts;
-        return Scaffold(
-          //drawer: DrawerWidget(actualRoute: "History",),
-          appBar: AppBar(
-            title: const Text('Votre historique'),
-          ),
-          body: ListView.builder(
+        return ListView.builder(
             itemBuilder: (BuildContext context, int index) =>
                 EntryItem(data[index]),
             itemCount: data.length,
-          ),
+          
       );
       },
       onDidChange: (store) {
@@ -85,3 +59,4 @@ List<Entry> data = [];
 void main() {
   runApp(UserHistoryScreen());
 }
+*/

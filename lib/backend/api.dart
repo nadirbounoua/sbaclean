@@ -318,6 +318,14 @@ Future getComments(String postId) async {
     return response.body;
   }
 
+  Future getUserEvents(String userId) async {
+
+    var url = ProjectSettings.apiUrl+"/api/v1/posts/post/?eventOwner=$userId";
+    var response = await http.get(url,
+        headers: {HttpHeaders.authorizationHeader : "Token "+ token});
+    return response.body;
+  }
+
   Future getPost(int id) async {
     var url = ProjectSettings.apiUrl + '/api/v1/posts/post/$id';
     var response = await http.get(url,

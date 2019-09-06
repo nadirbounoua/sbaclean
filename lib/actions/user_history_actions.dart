@@ -1,4 +1,5 @@
 import 'package:sbaclean/models/anomaly.dart';
+import 'package:sbaclean/models/event.dart';
 import 'package:sbaclean/models/reaction.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
@@ -25,4 +26,40 @@ class FinishGetUserAnomaliesHistoryAction{
   List<Anomaly> list;
   FinishGetUserAnomaliesHistoryAction({this.list});
 
+}
+
+class ShowEventAction{
+
+}
+
+class ShowAnomalyAction{
+  
+}
+
+
+class GetUserEventHistoryAction {
+  String userId;
+  Completer completer=  new Completer();
+
+  GetUserEventHistoryAction({this.userId});
+
+}
+
+class FinishGetUserEventHistoryAction {
+  List<Event> list;
+  String userId;
+  Completer completer=  new Completer();
+
+  FinishGetUserEventHistoryAction({this.list,this.userId});
+
+  ThunkAction<AppState> getEvents() {
+  return (Store<AppState> store) async {
+    final response = await api.copyWith(store.state.auth.user.authToken)
+                                  .getUserEvents(userId);
+    List<Event> eventList = await parseEvents(response);
+   Future.delayed(Duration(seconds: 3),() =>store.dispatch(new FinishGetUserEventHistoryAction(list: eventList))) ;
+
+
+  };
+  }
 }
