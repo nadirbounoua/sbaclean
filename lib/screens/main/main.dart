@@ -254,7 +254,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                             description: description, 
                             latitude: latitude, 
                             longitude: longitude),
-                          user: store.state.userState.user,
+                          user: store.state.auth.user,
                           anomaly: Anomaly()
                           ));
                       };

@@ -22,7 +22,7 @@ getAnomalies(Store<AppState> store, String response ) async {
 addAnomalyHelper(Store<AppState> store, dynamic response, Post post) async{
     Anomaly anomaly = await parseOneAnomaly(response);
     //final response = await api.getPosts();
-    anomaly.post.owner = store.state.userState.user;
+    anomaly.post.owner = store.state.auth.user;
     store.dispatch(new FinishAddAnomalyAction(anomaly: anomaly));
 }
 
