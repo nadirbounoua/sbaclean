@@ -27,13 +27,6 @@ class DrawerWidget extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text("Votre historique"),
-            onTap: () {
-              navigate(context, actualRoute, "History", UserHistoryScreen());
-
-            },
-          ),
-          ListTile(
             title: Text("Paramétres"),
             onTap: () {
               navigate(context, actualRoute, "Settings", Settings());
