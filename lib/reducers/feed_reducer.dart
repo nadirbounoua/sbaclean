@@ -54,7 +54,7 @@ FeedState deleteReaction(FeedState state, FinishDeleteReactionAction action) {
   return state.copyWith(
     anomalies: List.from(list)
     ..add(anomaly)
-    ..sort((anomaly, anomaly1) => anomaly.post.id > anomaly1.id ? 1 : -1 )
+    ..sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id) )
   );
 
 }
@@ -71,7 +71,7 @@ FeedState finishUpdateReaction(FeedState state, FinishUpdateReactionAction actio
   return state.copyWith(
     anomalies: List.from(list)
     ..add(anomaly)
-    ..sort((anomaly, anomaly1) => anomaly.post.id > anomaly1.id ? 1 : -1 )
+    ..sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id) )
   );
 
 }
@@ -84,12 +84,16 @@ FeedState getUserReactions(FeedState state,GetUserReactionAction action){
 FeedState getAnomalies(FeedState state, GetAnomaliesAction action) {
   print('feed reducer: getAnomalies');
 
-  return state.copyWith(anomalies: List.from(action.list));
+  return state.copyWith(anomalies: List.from(action.list)
+    ..sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id) )
+  );
 }
 
 FeedState finishLoadAnomalies(FeedState state, FinishGetAnomaliesAction action) {
 
-  return state.copyWith(anomalies: List.from(action.anomalies));
+  return state.copyWith(anomalies: List.from(action.anomalies)
+    ..sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id) )
+  );
 }
 
 
@@ -120,13 +124,15 @@ FeedState finishSetReaction(FeedState state, FinishSetReactionAction action) {
   return state.copyWith(
     anomalies: List.from(list)
     ..add(anomaly)
-    ..sort((anomaly, anomaly1) => anomaly.post.id > anomaly1.id ? 1 : -1 )
+    ..sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id) )
   );
 }
 
 FeedState finishRefreshAnomaliesContent(FeedState state, FinishRefreshAnomaliesAction action) {
   FinishRefreshAnomaliesAction.completer.complete();
-  return state.copyWith(anomalies: List.from(action.list));
+  return state.copyWith(anomalies: List.from(action.list)
+    ..sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id) )
+  );
 }
 
 FeedState refreshAnomalies(FeedState state, RefreshAnomaliesAction action) {
@@ -140,7 +146,9 @@ FeedState finishRefreshAnomalies(FeedState state, FinishRefreshAnomaliesAction a
 FeedState finishAddItemContent(FeedState state, FinishAddAnomalyAction action) {
   var list = List.from(state.anomalies)..add(action.anomaly,);
   print(list);
-  return state.copyWith(anomalies: List.from(state.anomalies)..add(action.anomaly));
+  return state.copyWith(anomalies: List.from(state.anomalies)..add(action.anomaly)
+    ..sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id) )
+  );
 }
 
 FeedState finishAddItem(FeedState state, FinishAddAnomalyAction action) {
