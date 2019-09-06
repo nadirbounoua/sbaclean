@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:material_search/material_search.dart';
+import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/actions.dart';
+import 'package:sbaclean/actions/auth_actions.dart';
 import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/main.dart';
 import 'package:sbaclean/models/anomaly.dart';
-
+import 'package:sbaclean/main.dart';
 import 'package:sbaclean/presentation/platform_adaptive.dart';
+import 'package:sbaclean/screens/maps/maps.dart';
 import 'package:sbaclean/screens/user-history/user-history.dart';
+import 'package:sbaclean/store/app_state.dart';
 import 'package:sbaclean/styles/texts.dart';
 import 'package:sbaclean/screens/main_tabs/anomalies_tab.dart';
 import 'package:sbaclean/screens/main_tabs/events_tab.dart';
@@ -71,15 +76,21 @@ class MainScreenState extends State<MainScreen> {
                 }).toList(),
             ),
 
-            body: new PageView(
+            body: StoreConnector<AppState,Store<AppState>>(
+              converter: (store) => store,
+              onInit: (store) {
+                store.dispatch(GetUserPositionAction().getUserPosition());
+              },
+              builder:(context,store) => PageView(
+                physics: NeverScrollableScrollPhysics(),
                 controller: _tabController,
                 onPageChanged: onTabChanged,
                 children: <Widget>[
                     FeedScreen(),
                     EventsTab(),
-                    UserHistoryScreen(),
-
+                    MapSample()
                 ],
+            ), 
             ),
 
             drawer: new MainDrawer(),
