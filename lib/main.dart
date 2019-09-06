@@ -1,29 +1,50 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sbaclean/middlewares/middlewares.dart';
+import 'package:sbaclean/models/user.dart';
 import 'package:sbaclean/screens/login/login_screen.dart';
 import 'package:sbaclean/screens/main_screen.dart';
-import 'screens/main/main.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/reducers/reducers.dart';
-import 'package:redux_thunk/redux_thunk.dart';
-import 'package:sbaclean/screens/feed/feed.dart';
-import 'package:sbaclean/screens/user-history/user-history.dart';
-import 'package:sbaclean/screens/settings/settings.dart';
+import 'package:redux/redux.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sbaclean/store/auth_state.dart';
 //import 'package:sbaclean/store/middleware.dart';
-void main() {
-  runApp(MyApp());
+void main() async {
+  final directory = await getApplicationDocumentsDirectory();
+
+  
+  File persist;
+  File(directory.path +'/loginFile.json').existsSync() ? null : File(directory.path +'/loginFile.json').createSync();
+  persist = File(directory.path +'/loginFile.json');
+  String content = persist.readAsStringSync();
+  User user;
+  content.length >0 ? user = User.fromJson(json.decode(content)) : null;
+  print(user);
+  AppState appState;
+  user == null ? appState = AppState.newAppState() : appState =AppState.newAppState(auth: AuthState(isAuthenticated: true, user: user));
+  final store = Store<AppState>(
+    appStateReducers,
+    initialState: appState,
+    middleware: middlewares,
+  );
+  runApp(MyApp(store1: store,));
+  // ...
 }
 
 class MyApp extends StatefulWidget{
-  static final  store = Store<AppState>(appStateReducers,
-  initialState: AppState.newAppState(),
-  middleware: middlewares()
-  );
+  static var store;
+  final store1;
+  MyApp({this.store1});
   @override
-  State<StatefulWidget> createState() => MyAppState(store: store);
-  
+  State<StatefulWidget> createState() {
+    store = store1;
+    return MyAppState(store: store);
+  }
   
 }
 
