@@ -12,7 +12,6 @@ AppState appStateReducers(AppState state, dynamic action) {
           feedState: feedReducer(state.feedState, action),
           postFeedState: postFeedReducer(state.postFeedState, action),
           userHistoryState: userHistoryReducer(state.userHistoryState, action),
-          userState: userStateReducers(state.userState, action),
           anomalyDetailsState: anomalyDetailsReducer(state.anomalyDetailsState, action),
           auth: authReducer(state.auth,action),
           eventState: eventReducer(state.eventState, action)
