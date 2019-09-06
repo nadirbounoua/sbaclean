@@ -43,44 +43,51 @@ class MainDrawer extends StatelessWidget {
                     new ListTile(
                         leading: new Icon(Icons.account_circle),
                         title: new Text('Profile'),
-                        onTap: () => {
+                        onTap: () {
+                          Navigator.pop(context);
                           Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => ProfilePage()),
-                          )
+                          );
                         }
                     ),
                       new ListTile(
                           leading: new Icon(Icons.grade),
                           title: new Text('Ranking'),
-                          onTap: () => {
+                          onTap: ()  {
+                            Navigator.pop(context);
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => UserRankingScreen()),
-                            )
+                            );
                           }
                       ),
+/*
                     new ListTile(
                         leading: new Icon(Icons.build),
                         title: new Text('Settings'),
-                        onTap: () =>  {
+                        onTap: ()   {
+                          Navigator.pop(context);
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => Settings()),
-                          )
+                          );
                         }
                     ),
-
+                    */
+/*
                     new ListTile(
                         leading: new Icon(Icons.info),
                         title: new Text('About'),
-                        onTap: () =>  {
+                        onTap: ()   {
+                          Navigator.pop(context);
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => EventScreen()),
-                          )
+                          );
                         }
                     ),
+                    */
                     new Divider(),
                     new ListTile(
                         leading: new Icon(Icons.exit_to_app),
