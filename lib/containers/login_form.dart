@@ -27,12 +27,9 @@ class _LoginFormState extends State<LoginForm> {
 
     @override
     Widget build(BuildContext context) {
-        return new StoreConnector<AppState, dynamic>(
-            converter: (Store<AppState> store) {
-                return (BuildContext context, String username, String password) => 
-                    store.dispatch(login(context, username, password));
-            },
-            builder: (BuildContext context, loginAction) {
+        return new StoreConnector<AppState, Store<AppState>>(
+            converter: (Store<AppState> store) => store,
+            builder: (BuildContext context, store) {
                 return new Form(
                     key: formKey,
                     child: new Column(
@@ -55,9 +52,9 @@ class _LoginFormState extends State<LoginForm> {
                                 child: new FlatButton(
                                     onPressed:() {
                                         _submit();
-                                        loginAction(context, _username, _password);
+                                        store.dispatch(login(context, _username, _password));
                                     },
-                                    child: new Text('Log In'),
+                                    child: store.state.auth.isAuthenticating ? CircularProgressIndicator() : new Text('Log In'),
                                 ),
                             ),
                             new Padding(
