@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/user_history_actions.dart';
+import 'package:sbaclean/screens/edit_screen.dart';
 import 'package:sbaclean/screens/user-history/user-history.dart';
 import 'package:sbaclean/screens/user-history/widgets/history_list.dart';
 import 'package:sbaclean/screens/user_ranking/user_ranking_screen.dart';
@@ -311,6 +312,10 @@ class _ProfileState extends State<ProfileScreen> {
                           _buildFullName(),
                           _buildEmail(context),
                         ],
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> EditScreen())),
                       )
                     ],
                   ),
