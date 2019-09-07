@@ -50,7 +50,7 @@ class MapSampleState extends State<MapSample> {
         markersSet.add(Marker(
           markerId: MarkerId(event.post.id.toString()),
           position: LatLng(double.parse(event.post.latitude), double.parse(event.post.longitude)),
-          icon: BitmapDescriptor.fromAsset("assets/dopeman.jpeg"),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
         ));
       });
       return GoogleMap(
