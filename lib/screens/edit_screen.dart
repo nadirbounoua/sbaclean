@@ -9,9 +9,7 @@ class EditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        title: 'Edit Profile',
-        home: new Scaffold(
+    return new Scaffold(
             appBar: AppBar(title: const Text('Edit Profile')),
             body: new Padding(
                 padding: new EdgeInsets.fromLTRB(32.0, MediaQuery.of(context).padding.top + 32.0, 32.0, 32.0),
@@ -22,7 +20,7 @@ class EditScreen extends StatelessWidget {
                   ],
                 )
             )
-        )
+        
     );
   }
 
