@@ -41,18 +41,21 @@ class _EditProfileFormState extends State<EditProfileForm> {
       child: new Column(
         children: [
           new TextFormField(
+            initialValue: user.username,
             decoration: new InputDecoration(labelText: 'Username'),
             validator: (val) =>
             val.isEmpty ? 'Please enter your username.' : null,
             onSaved: (val) => _username = val,
           ),
           new TextFormField(
+            initialValue: user.phone_number.toString(),
             decoration: new InputDecoration(labelText: 'Phone'),
             validator: (val) =>
             val.isEmpty ? 'Please enter your phone number.' : null,
             onSaved: (val) => _phone_number = val,
           ),
           new TextFormField(
+            initialValue: user.address,
             decoration: new InputDecoration(labelText: 'Address'),
             validator: (val) =>
             val.isEmpty ? 'Please enter your address.' : null,
