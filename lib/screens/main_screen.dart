@@ -165,6 +165,6 @@ class TabItem {
 const List<TabItem> TabItems = const <TabItem>[
     const TabItem(title: 'Anomalies', icon: Icons.warning),
     const TabItem(title: 'Evénements', icon: Icons.calendar_today),
-    const TabItem(title: 'Statistiques', icon: Icons.graphic_eq)
+    const TabItem(title: 'Carte', icon: Icons.map)
 ];
 
