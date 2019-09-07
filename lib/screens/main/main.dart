@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:material_search/material_search.dart';
 import 'package:sbaclean/main.dart';
 import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/models/post.dart';
@@ -42,7 +43,8 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
   bool isLoading=false;
   bool havePosition = false;
   Position position;
-  List<Placemark> placemark;
+  Placemark placemark;
+  List<Placemark> positionPlacemark;
   String description;
   String title;
   String latitude;
@@ -86,7 +88,13 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
   @override
   Widget build(BuildContext context) {
     
-    return Scaffold(
+    return StoreConnector<AppState, Store<AppState>>(
+      onDispose: (store) {
+        store.dispatch(DeletePositionAction(null,null,false));
+                  store.dispatch(DeleteAnomalyImageAction());
+      },
+      converter: (store) => store,
+      builder: (context, store) => Scaffold(
       appBar: AppBar(title: const Text('Ajouter un post')),
 
       body:Center(
@@ -95,10 +103,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: StoreConnector<AppState,Store<AppState>>(
-                converter: (store) => store,
-                builder: (context, store) {
-                return IconButton(
+              leading: IconButton(
                   icon: (store.state.postFeedState.image == null) ? Icon(Icons.image) : Image.file(store.state.postFeedState.image,height: 100,width: 100,),
                   iconSize: (store.state.postFeedState.image != null ) ? 60 : 24,
                   onPressed:  () async {
@@ -112,24 +117,12 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                     store.dispatch(new SetAnomalyImageAction());
 
                 },
-              );
-                },
-                onDispose: (store) {
-                  store.dispatch(DeletePositionAction(null,null,false));
-                  store.dispatch(DeleteAnomalyImageAction());
-                },
+              
+                
               ),
               title: Text(title),
-              subtitle: 
-              StoreConnector<AppState,AppState>(
-                converter: (store) {
-                  return store.state;
-                },
-                builder: (context, state) => 
-                  state.postFeedState.havePosition ? Text(state.postFeedState.placemark[0].locality + ", "+state.postFeedState.placemark[0].country) 
-                  : Text("")
-                ,
-              )
+              subtitle: store.state.postFeedState.havePosition ? Text(store.state.postFeedState.placemark.locality + ", "+store.state.postFeedState.placemark.country) 
+                  : Text(""),
             ),
             Form(
               key: _formKey,
@@ -196,27 +189,21 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                 ],
               ),
             ),
-            StoreConnector<AppState, AppState>(
-              converter: (store1) => store1.state,
-              builder: (context, state) =>
-                StoreConnector<AppState,Store<AppState>>(
-                  converter: (store) => store, 
-                  builder: (context, store) {
-                    return MaterialButton(
-                      
-                      onPressed:() {
-                        state.postFeedState.havePosition ? 
-                        store.dispatch(new DeletePositionAction(null, null, false)) 
-                        : store.dispatch(new AddPositionAction(position, placemark, havePosition));
-                        },
-                      child:
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          !state.postFeedState.havePosition ?
-                           state.postFeedState.isGpsLoading ? 
-                            SizedBox(
+            MaterialButton(
+
+              onPressed:() {
+                store.state.postFeedState.havePosition ? 
+                store.dispatch(new DeletePositionAction(null, null, false)) 
+                : store.dispatch(new AddPositionAction(position, placemark, havePosition));
+                },
+              child:
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  !store.state.postFeedState.havePosition ?
+                   store.state.postFeedState.isGpsLoading ? 
+                    SizedBox(
                               child:CircularProgressIndicator(
                                 strokeWidth: 2.5, 
                                 backgroundColor: Colors.white,
@@ -224,19 +211,34 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                               height: 20,
                               width: 20,
                               )
-                          : Icon(Icons.gps_fixed)
-                          : Icon(Icons.delete),
+                  : Icon(Icons.gps_fixed)
+                  : Icon(Icons.delete),
+                  Padding(padding: EdgeInsets.all(8),),
+                  !store.state.postFeedState.havePosition ?
+                   store.state.postFeedState.isGpsLoading ? Text('Loacalisation GPS ..') : Text('Ajouter ma position') : Text("Supprimer ma position") 
+                ],
+              ),
+              color: store.state.postFeedState.havePosition ? Colors.red : Colors.blue,
+              textColor: Colors.white,
+              ),
+              store.state.postFeedState.havePosition ? Padding(padding: EdgeInsets.all(0),) : MaterialButton(
+                      
+                      onPressed:() {
+                        _showMaterialSearch(context, store);
+                        },
+                      child:
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(Icons.search),
                           Padding(padding: EdgeInsets.all(8),),
-                          !state.postFeedState.havePosition ?
-                           state.postFeedState.isGpsLoading ? Text('Loacalisation GPS ..') : Text('Ajouter ma position') : Text("Supprimer ma position") 
+                          Text('Chercher par addresse') 
                         ],
                       ),
-                      color:state.postFeedState.havePosition ? Colors.red : Colors.blue,
+                      color: Colors.grey,
                       textColor: Colors.white,
-                      );
-                  },
-                )
-                ),
+                      ),
             ButtonTheme.bar(
               // make buttons use the appropriate styles for cards
               child: ButtonBar(
@@ -245,47 +247,28 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
                     child: const Text('Annuler'),
                     onPressed: () {/* ... */},
                   ),
-                  StoreConnector<AppState,OnSaveAnomaly>(
-                    converter: (Store<AppState> store) {
-                      return (title, description, latitude, longitude) {
-                        store.dispatch(new AddAnomalyAction(
+                  FlatButton(
+                    child: store.state.feedState.isAddAnomalyLoading ? 
+                      Text('En train de poster ...', style: TextStyle(color: Colors.grey[400]),): Text("Poster"),
+                    onPressed: store.state.feedState.isAddAnomalyLoading ?
+                     () {} 
+                    : () async {
+                    
+                    if (_formKey.currentState.validate()){
+                      store.dispatch(new AddAnomalyAction(
                           post: Post(
                             title: title,
                             description: description, 
-                            latitude: latitude, 
-                            longitude: longitude),
+                            latitude: store.state.postFeedState.position.latitude.toString(), 
+                            longitude: store.state.postFeedState.position.longitude.toString()),
                           user: store.state.auth.user,
                           anomaly: Anomaly()
                           ));
-                      };
+                      _formKey.currentState.reset();
+                      Navigator.pop(context);
+                      }
                     },
-
-                    builder: (BuildContext context, onSave) {
-                      return new 
-                        StoreConnector<AppState,AppState> (
-                          converter: (store) => store.state,
-                          builder: (context, state) =>
-                            FlatButton(
-                              child: state.feedState.isAddAnomalyLoading ? 
-                                Text('En train de poster ...', style: TextStyle(color: Colors.grey[400]),): Text("Poster"),
-                              onPressed: state.feedState.isAddAnomalyLoading ?
-                               () {} 
-                              : () async {
-                              
-                              if (_formKey.currentState.validate()){
-                                print(title);
-                                onSave(title,description, state.postFeedState.position.latitude.toString(), state.postFeedState.position.longitude.toString());
-                                _formKey.currentState.reset();
-                                Navigator.pop(context);
-                                }
-                              },
-                              )
-                          ,
-                        )
-                      ;
-                      
-                    },
-                  ),
+                    ), 
                 ],
               ),
             ),
@@ -297,8 +280,74 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
   
 
 
-    );
+    ));
    
+  }
+
+  _showMaterialSearch(BuildContext context, Store<AppState> store) {
+    Navigator.of(context)
+      .push(_buildMaterialSearchPage(context, store))
+      .then((dynamic value) {
+      });
+  }
+
+  _buildMaterialSearchPage(BuildContext context, Store<AppState> store) {
+    return 
+        MaterialPageRoute<dynamic>(
+      settings: new RouteSettings(
+        name: 'material_search',
+        isInitialRoute: false,
+      ),
+      builder: (BuildContext context) {
+        return new Material(
+          child: 
+            MaterialSearch<dynamic>(
+            placeholder: 'Search',
+            getResults: (String criteria) async {
+              if (criteria.isEmpty) {
+                
+                setState(() {
+                 positionPlacemark = [];
+               });
+              } else {
+               Geolocator().placemarkFromAddress(criteria)
+                    .then((onValue) => setState((){
+                        positionPlacemark = onValue;
+                    }))
+                    .catchError((onError) => print("error"));
+              
+               
+              }
+              return positionPlacemark.map((position) => new MaterialSearchResult<dynamic>(
+                value: position, //The value must be of type <String>
+                text:position.thoroughfare 
+              +','+
+              position.locality
+              +','+
+              position.administrativeArea
+              +','+
+              position.country, //String that will be show in the list
+                //icon: anomaly.imageUrl == "/media/images/default.png" ? Icons.image : ImageIcon(Image.network(src))
+                //.network(anomaly.imageUrl ,width: 24, height: 24,)
+              )).toList();
+            },
+
+            onSelect: (dynamic value) {
+              print(value);
+              store.dispatch(AddPositionFromSearchAction(null, value, true));
+              Navigator.pop(context);
+            } ,
+            onSubmit: (dynamic value) {
+              print(value);
+              store.dispatch(AddPositionFromSearchAction(null, value, true));
+              Navigator.pop(context);
+            },
+          ),
+       
+        );
+      }
+    );
+      
   }
 
 }
