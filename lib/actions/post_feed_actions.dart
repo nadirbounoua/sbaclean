@@ -26,22 +26,30 @@ class RemoveLoadingAction {
 class FinishAddPositionAction {
   final bool havePosition;
   final Position position;
-  final List<Placemark> placemark;
+  final Placemark placemark;
   FinishAddPositionAction(this.position, this.placemark, this.havePosition);
 }
 
 class AddPositionAction {
   final bool havePosition;
   final Position position;
-  final List<Placemark> placemark;
+  final Placemark placemark;
   AddPositionAction(this.position, this.placemark, this.havePosition);
+
+}
+
+class AddPositionFromSearchAction {
+  final bool havePosition;
+  final Position position;
+  final Placemark placemark;
+  AddPositionFromSearchAction(this.position, this.placemark, this.havePosition);
 
 }
 
 class DeletePositionAction {
   final bool havePosition;
   final Position position;
-  final List<Placemark> placemark;
+  final Placemark placemark;
   Completer completer = Completer();
   DeletePositionAction(this.position, this.placemark, this.havePosition);
 

@@ -8,7 +8,7 @@ class PostFeedState {
   final bool chooseCamera;
   final Position position;
   final bool havePosition;
-  final List<Placemark> placemark;
+  final Placemark placemark;
   final File image;
   final bool isGpsLoading;
   final bool isPosting;
@@ -26,7 +26,7 @@ class PostFeedState {
       bool chooseCamera,
       Position position,
       bool havePosition,
-      List<Placemark> placemark,
+      Placemark placemark,
       File image,
       bool isGpsLoading,
       bool isPosting

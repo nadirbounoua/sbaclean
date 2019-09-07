@@ -33,7 +33,7 @@ getPosition(){
       final myPosition =  await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       await Geolocator().placemarkFromCoordinates(myPosition.latitude, myPosition.longitude)
             .then((location) {
-                getPositionHelper(store, myPosition, location);
+                getPositionHelper(store, myPosition, location[0]);
       });   
   };
 }

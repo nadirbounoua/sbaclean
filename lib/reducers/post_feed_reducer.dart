@@ -7,6 +7,8 @@ import 'package:sbaclean/actions/post_feed_actions.dart';
 
 Reducer<PostFeedState> postFeedReducer = combineReducers([
   new TypedReducer<PostFeedState, AddPositionAction>(getPostion),
+  new TypedReducer<PostFeedState, AddPositionFromSearchAction>(getPostionFromSearch),
+
   new TypedReducer<PostFeedState, FinishDeletePostionAction>(deletePosition),
   new TypedReducer<PostFeedState, ChoosePickerCameraAction>(chooseCamera),
   new TypedReducer<PostFeedState, ChoosePickerGalleryAction>(chooseGallery),
@@ -24,6 +26,15 @@ PostFeedState finishGetPostionContent(PostFeedState state, FinishAddPositionActi
 
   if (action.position != null)   
     return state.copyWith(position: action.position,placemark: action.placemark, havePosition: action.havePosition);
+
+  return state.copyWith();
+}
+
+PostFeedState getPostionFromSearch(PostFeedState state, AddPositionFromSearchAction action){
+
+  if (action.placemark != null)   
+    print(action.placemark.country);
+    return state.copyWith(position: action.placemark.position,placemark: action.placemark, havePosition: true);
 
   return state.copyWith();
 }
