@@ -202,7 +202,7 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
                   )
                 ],
               ),
-           StoreConnector<AppState,Store<AppState>>(
+            StoreConnector<AppState,Store<AppState>>(
                   converter: (store) => store,
                   onInit: (store) {
                     store.dispatch(GetCommentsAction(list: [],postId: anomaly.post.id.toString()));
@@ -219,7 +219,7 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
                     comments: store.state.anomalyDetailsState.comments,
                 ),
                 ),
-                StoreConnector<AppState,Store<AppState>>(
+            StoreConnector<AppState,Store<AppState>>(
                   converter: (store) => store,
                   builder: (context,store) => CommentInput(
                     commentOwner: int.parse(store.state.auth.user.id),
