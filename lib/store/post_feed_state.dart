@@ -12,6 +12,7 @@ class PostFeedState {
   final File image;
   final bool isGpsLoading;
   final bool isPosting;
+  final bool gpsError;
   PostFeedState({
             this.chooseCamera,
             this.position,
@@ -19,7 +20,8 @@ class PostFeedState {
             this.havePosition = false,
             this.image,
             this.isGpsLoading = false,
-            this.isPosting = false
+            this.isPosting = false,
+            this.gpsError = false
   });
 
   PostFeedState copyWith({
@@ -29,7 +31,8 @@ class PostFeedState {
       Placemark placemark,
       File image,
       bool isGpsLoading,
-      bool isPosting
+      bool isPosting,
+      bool gpsError
 
   }) {
       return PostFeedState(
@@ -39,7 +42,8 @@ class PostFeedState {
         placemark: placemark ?? this.placemark,
         image: image ?? this.image,
         isGpsLoading: isGpsLoading ?? this.isGpsLoading,
-        isPosting: isPosting ?? this.isPosting
+        isPosting: isPosting ?? this.isPosting,
+        gpsError: gpsError ?? this.gpsError
       );
   }
 }

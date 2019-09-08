@@ -31,12 +31,13 @@ class Event {
             starts_at: json['event'][0]['starts_at'] as String,
             max_participants: json['event'][0]['max_participants'] as int,
             approved_by: json['event'][0]['approved_by'] as int,
-            );
+    );
   }
 
   factory Event.fromJsonPost(Map<String,dynamic> json){
 
     return Event(
+      id: json['id'] as int,
       approved_at: json["approved_at"],
       starts_at: json["starts_at"],
       approved_by: json["approved_by"],

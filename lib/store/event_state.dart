@@ -7,18 +7,22 @@ class EventState {
 
   final List<Event> events;
   final bool isEventsLoading;
+  final bool isPostingEvent;
 
   EventState({this.events = const [],
-            this.isEventsLoading =false
+            this.isEventsLoading =false,
+            this.isPostingEvent = false
   });
 
   EventState copyWith({
     List<Event> events,
     bool isEventsLoading,
+    bool isPostingEvent
   }) {
     return EventState(
         events: events ?? this.events,
-        isEventsLoading: isEventsLoading ?? this.isEventsLoading
+        isEventsLoading: isEventsLoading ?? this.isEventsLoading,
+        isPostingEvent: isPostingEvent ?? this.isPostingEvent
     );
   }
 

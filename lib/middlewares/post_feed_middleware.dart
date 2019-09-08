@@ -30,11 +30,14 @@ List<Middleware<AppState>> postFeedMiddleware() {
 getPosition(){
   return (Store<AppState> store, AddPositionAction action, NextDispatcher next) async {
       next(action);
-      final myPosition =  await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      await Geolocator().placemarkFromCoordinates(myPosition.latitude, myPosition.longitude)
+      Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((myPosition) => Geolocator().placemarkFromCoordinates(myPosition.latitude, myPosition.longitude)
             .then((location) {
                 getPositionHelper(store, myPosition, location[0]);
-      });   
+      
+      })).catchError((onError) {
+        store.dispatch(PositionErrorAction());
+      });
   };
 }
 

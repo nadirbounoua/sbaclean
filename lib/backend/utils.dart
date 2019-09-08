@@ -101,26 +101,26 @@ String calculateTime(dynamic date){
 //--------------------------------------------------------
 
 Event createFromJsonPostE(dynamic json, dynamic post) {
-  Event event = Event.fromJson(json);
+  Event event = Event.fromJsonPost(json);
+
   event.post = post;
+  
   return event;
 }
 
 Event parseOneEvent(dynamic responseBody){
-  print(responseBody);
   final parsed = json.decode(responseBody['response']);
   return createFromJsonPostE(parsed,responseBody['post']);
 }
 
 Event createFromJsonEvent(dynamic json) {
-      Post post = Post.fromJson(json);
-      User user = User.fromJson(json['user']);
-      Event event = Event.fromJson(json);
-      post.owner = user;
-      print(post);
-      event.post = post;
-      
-      return event;
+  Post post = Post.fromJson(json);
+  User user = User.fromJson(json['user']);
+  Event event = Event.fromJson(json);
+  post.owner = user;
+  event.post = post;
+  
+  return event;
 }
 
 List<Event> parseEvents(String responseBody){

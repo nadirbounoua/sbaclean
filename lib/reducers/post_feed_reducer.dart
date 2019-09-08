@@ -17,10 +17,23 @@ Reducer<PostFeedState> postFeedReducer = combineReducers([
   new TypedReducer<PostFeedState, FinishAddPositionAction>(finishGetPostion),
   new TypedReducer<PostFeedState, FinishAddPositionAction>(finishGetPostionContent),
   new TypedReducer<PostFeedState, FinishSetAnomalyImageAction>(finishSetAnomalyImage),
+  new TypedReducer<PostFeedState, PositionErrorAction>(gpsError),
+  new TypedReducer<PostFeedState, RemovePositionErrorAction>(removeGpsError),
 
 
 
 ]);
+
+PostFeedState removeGpsError(PostFeedState state, RemovePositionErrorAction action){
+
+  return state.copyWith(gpsError: false);
+}
+
+
+PostFeedState gpsError(PostFeedState state, PositionErrorAction action){
+
+  return state.copyWith(gpsError: true);
+}
 
 PostFeedState finishGetPostionContent(PostFeedState state, FinishAddPositionAction action){
 
@@ -33,7 +46,6 @@ PostFeedState finishGetPostionContent(PostFeedState state, FinishAddPositionActi
 PostFeedState getPostionFromSearch(PostFeedState state, AddPositionFromSearchAction action){
 
   if (action.placemark != null)   
-    print(action.placemark.country);
     return state.copyWith(position: action.placemark.position,placemark: action.placemark, havePosition: true);
 
   return state.copyWith();

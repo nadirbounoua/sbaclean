@@ -12,16 +12,14 @@ class AddEventScreen extends StatelessWidget {
         return new Scaffold(
             appBar: AppBar(title: const Text('Add event')),
             body: new Container(
-                child: new Padding(
-                    padding: new EdgeInsets.fromLTRB(32.0, MediaQuery.of(context).padding.top + 32.0, 32.0, 32.0),
-                    child: new Column(
+                child:  Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                             new AddEventForm(),
                         ],
                     )
                 )
-            )
+            
         );
     }
 
