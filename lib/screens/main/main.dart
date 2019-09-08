@@ -73,15 +73,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
     // widget tree.
     titleController.dispose();
     descriptionController.dispose();
-    final  deleteAnomalyImageAction = DeleteAnomalyImageAction(image: null);
-    final deletePositionAction = DeletePositionAction(null, null, false) ;
 
-    //MyApp.store.dispatch(deleteAnomalyImageAction.setImage());
-    //MyApp.store.dispatch(deletePositionAction.deletePosition());
-    Future.wait([
-      deleteAnomalyImageAction.completer.future,
-      deletePositionAction.completer.future
-    ]);
     super.dispose();
   }
 
@@ -91,7 +83,7 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
     return StoreConnector<AppState, Store<AppState>>(
       onDispose: (store) {
         store.dispatch(DeletePositionAction(null,null,false));
-                  store.dispatch(DeleteAnomalyImageAction());
+        store.dispatch(DeleteAnomalyImageAction());
       },
       converter: (store) => store,
       builder: (context, store) => Scaffold(
@@ -221,7 +213,8 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
               color: store.state.postFeedState.havePosition ? Colors.red : Colors.blue,
               textColor: Colors.white,
               ),
-              store.state.postFeedState.havePosition ? Padding(padding: EdgeInsets.all(0),) : MaterialButton(
+            store.state.postFeedState.havePosition ? Padding(padding: EdgeInsets.all(0),) : 
+            MaterialButton(
                       
                       onPressed:() {
                         _showMaterialSearch(context, store);
