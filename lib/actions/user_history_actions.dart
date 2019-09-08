@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/models/event.dart';
 import 'package:sbaclean/models/reaction.dart';
@@ -57,7 +58,7 @@ class FinishGetUserEventHistoryAction {
     final response = await api.copyWith(store.state.auth.user.authToken)
                                   .getUserEvents(userId);
     List<Event> eventList = await parseEvents(response);
-   Future.delayed(Duration(seconds: 3),() =>store.dispatch(new FinishGetUserEventHistoryAction(list: eventList))) ;
+    store.dispatch(new FinishGetUserEventHistoryAction(list: eventList));
 
 
   };
