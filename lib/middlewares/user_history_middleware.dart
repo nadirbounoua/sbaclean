@@ -29,7 +29,7 @@ getUserAnomaliesHistory(){
     return (Store<AppState> store, GetUserAnomaliesHistoryAction action, NextDispatcher next) async {
       next(action);
       await api.copyWith(store.state.auth.user.authToken)
-                .getUserAnomaliesHistory(store.state.auth.user.id)
+                .getUserAnomaliesHistory(store.state.auth.user.id.toString())
                   .then((response) {
                     getUserAnomaliesHistoryHelper(store, response);
                   });
@@ -40,6 +40,6 @@ getEventAnomaliesHistory(){
     return (Store<AppState> store, GetUserEventHistoryAction action, NextDispatcher next) async {
       next(action);
       store.dispatch(FinishGetUserEventHistoryAction(
-              userId: store.state.auth.user.id, list: []).getEvents());
+              userId: store.state.auth.user.id.toString(), list: []).getEvents());
     };
 }

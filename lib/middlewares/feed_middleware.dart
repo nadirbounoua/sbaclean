@@ -56,7 +56,7 @@ getReactions() {
   return (Store<AppState> store, GetUserReactionAction action, NextDispatcher next) async {
     next(action);
     await api.copyWith(store.state.auth.user.authToken)
-        .getUserReaction(int.parse(store.state.auth.user.id))
+        .getUserReaction(store.state.auth.user.id)
           .then((response) => getReactionsHelper(store, response)
     );
   };

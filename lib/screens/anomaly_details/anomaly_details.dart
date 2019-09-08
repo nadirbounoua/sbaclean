@@ -161,7 +161,7 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
                                               reaction: Reaction(
                                                           isLike: true, 
                                                           post: anomaly.post.id, 
-                                                          reactionOwner:  int.parse(store.state.auth.user.id)
+                                                          reactionOwner:  store.state.auth.user.id
                                                         )
                                               )
                           )
@@ -194,7 +194,7 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
                         .post.userReaction.isLike ?
                         store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.post.userReaction))
                         :store.dispatch( new DeleteReactionAction(anomaly: anomaly))
-                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.post.id, reactionOwner: int.parse(store.state.auth.user.id))));
+                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.post.id, reactionOwner: store.state.auth.user.id)));
                       },
                     ),
                   ),
@@ -222,7 +222,7 @@ class AnomalyDetailsScreenState extends State<AnomalyDetails> {
             StoreConnector<AppState,Store<AppState>>(
                   converter: (store) => store,
                   builder: (context,store) => CommentInput(
-                    commentOwner: int.parse(store.state.auth.user.id),
+                    commentOwner: store.state.auth.user.id,
                     commentPost: anomaly.post.id,
                   ),
                 ), 

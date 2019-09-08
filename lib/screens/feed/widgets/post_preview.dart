@@ -170,7 +170,7 @@ class PostPreview extends StatelessWidget {
                           
                         store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.post.userReaction))
                         :store.dispatch( new DeleteReactionAction(anomaly: anomaly))
-                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.post.id, reactionOwner: int.parse(store.state.auth.user.id))))
+                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: true, post: anomaly.post.id, reactionOwner: store.state.auth.user.id)))
                           
                         
                      
@@ -205,7 +205,7 @@ class PostPreview extends StatelessWidget {
                         .post.userReaction.isLike ?
                         store.dispatch(new UpdateReactionAction(anomaly: anomaly, reaction: anomaly.post.userReaction))
                         :store.dispatch( new DeleteReactionAction(anomaly: anomaly))
-                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.post.id, reactionOwner: int.parse(store.state.auth.user.id))));
+                        :store.dispatch(new SetReactionAction(anomaly: anomaly, reaction: Reaction(isLike: false, post: anomaly.post.id, reactionOwner: store.state.auth.user.id)));
                       },
                     ),
                   ),
