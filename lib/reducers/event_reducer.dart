@@ -5,12 +5,12 @@ import '../store/event_state.dart';
 import '../actions/event_actions.dart';
 
 Reducer<EventState> eventReducer = combineReducers([
-    new TypedReducer<EventState, FinishGetEventsAction>(finishGetEvents),
-    new TypedReducer<EventState, GetEventsAction>(getEvents),
-
+  new TypedReducer<EventState, FinishGetEventsAction>(finishGetEvents),
+  new TypedReducer<EventState, GetEventsAction>(getEvents),
   new TypedReducer<EventState, FinishGetEventsAction>(finishGetEventsContent),
+  new TypedReducer<EventState, AddEventsAction>(addItem),
+  new TypedReducer<EventState, FinishAddEventsAction>(finishAddItem),
 
-  //new TypedReducer<EventState, AddEventAction>(addItem),
 
 ]);
 
@@ -21,17 +21,25 @@ EventState getEvents(EventState state, GetEventsAction action) {
 
 EventState finishGetEventsContent(EventState state, FinishGetEventsAction action) {
   print("reducer" + action.events.toString());
-  return state.copyWith(events: action.events);
+  return state.copyWith(events: action.events
+                              ..sort((event,event1) => event1.id.compareTo(event.id))
+  );
 }
 
 EventState finishGetEvents(EventState state, FinishGetEventsAction action) {
   print("reducer" + false.toString());
   return state.copyWith(isEventsLoading: false);
 }
-/*
-EventState addItem(EventState state, AddEventAction action) {
-  var list = List.from(state.events)..add(action.event);
-  print(list);
-  return state.copyWith(events: List.from(state.events)..add(action.event));
-}*/
+
+EventState addItem(EventState state, AddEventsAction action) {
+  
+  return state.copyWith(isPostingEvent: true);
+}
+
+EventState finishAddItem(EventState state, FinishAddEventsAction action) {
+  List<Event> list = List.from(state.events)
+                ..add(action.event)
+                ..sort((event,event1) => event1.id.compareTo(event.id));
+  return state.copyWith(events: list, isPostingEvent: false);
+}
 

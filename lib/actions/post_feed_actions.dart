@@ -46,6 +46,14 @@ class AddPositionFromSearchAction {
 
 }
 
+class PositionErrorAction {
+
+}
+
+class RemovePositionErrorAction {
+  
+}
+
 class DeletePositionAction {
   final bool havePosition;
   final Position position;

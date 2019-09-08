@@ -11,12 +11,33 @@ import '../models/post.dart';
 
 Api api = Api();
 
-final Function postEvent = (BuildContext context,token,title,description,user,max,starts_at) {
-  Api api = Api();
-      api.createEvent(token,title,description,user,max,starts_at);
 
-};
 
+class AddEventsAction {
+  final Event event;
+  final BuildContext context;
+  AddEventsAction({this.event, this.context});
+
+}
+
+class FinishAddEventsAction {
+  final Event event;
+
+  FinishAddEventsAction({this.event});
+
+  
+  ThunkAction<AppState> addEvent(BuildContext context) {
+  return (Store<AppState> store) async {
+    final response = await api.copyWith(store.state.auth.user.authToken)
+                                  .createEvent(event, store.state.auth.user);
+    Event parsedEvent = await parseOneEvent(response);
+    print(parsedEvent);
+    Navigator.pop(context);
+   Future.delayed(Duration(seconds: 5),() =>store.dispatch(new FinishAddEventsAction(event: parsedEvent))) ;
+  };
+  }
+  
+}
 
 
 class GetEventsAction {
@@ -38,10 +59,8 @@ class FinishGetEventsAction {
     final response = await api.copyWith(store.state.auth.user.authToken)
                                   .getEvents();
     List<Event> eventList = await parseEvents(response);
-    //final response = await api.getPosts();
-   Future.delayed(Duration(seconds: 3),() =>store.dispatch(new FinishGetEventsAction(events: eventList))) ;
+   store.dispatch(new FinishGetEventsAction(events: eventList));
 
-    //store.dispatch(new GetAnomaliesAction([]).getAnomalies());
 
   };
   }

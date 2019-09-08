@@ -16,6 +16,7 @@ Api api = Api();
 List<Middleware<AppState>> eventMiddleware() {
   return [
     TypedMiddleware<AppState, GetEventsAction>(getEvents()),
+    TypedMiddleware<AppState, AddEventsAction>(addEvents()),
 
 
 
@@ -26,6 +27,16 @@ getEvents() {
   return (Store<AppState> store, GetEventsAction action, NextDispatcher next) async {
     next(action);
     store.dispatch(FinishGetEventsAction(events: []).getEvents());
+
+  };
+}
+
+addEvents() {
+  return (Store<AppState> store, AddEventsAction action, NextDispatcher next) async {
+    next(action);
+    var imageurl = await api.copyWith(store.state.auth.user.authToken).upload(store.state.postFeedState.image);
+    action.event.post.imageUrl = imageurl;
+    store.dispatch(FinishAddEventsAction(event: action.event).addEvent(action.context));
 
   };
 }

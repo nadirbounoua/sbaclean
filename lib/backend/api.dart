@@ -1,4 +1,5 @@
 import 'package:sbaclean/backend/utils.dart';
+import 'package:sbaclean/models/event.dart';
 
 import '../models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
@@ -37,7 +38,7 @@ class Api {
     var response = await http.post(url,
     body : {'title': post.title,'description': post.description, 
     'longitude': post.longitude, 'latitude':post.latitude, 
-    'post_owner': user.id,'city':'1', 'image':post.imageUrl},    
+    'post_owner': user.id.toString(),'city':'1', 'image':post.imageUrl},    
     headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
     print(response.body);
@@ -297,17 +298,17 @@ Future getComments(String postId) async {
 
 
 
-  Future createEvent(String token,String title,String description,String user,String max,starts_at) async {
-    String responseBody = await createPostE(token,title,description,user);
+  Future createEvent(Event event, User user) async {
+    String responseBody = await createPost(event.post, user);
     Post preEvent = parseOnePost(responseBody);
     var map = new Map<String, dynamic>();
     map["post"] = preEvent.id.toString();
-    map["max_participants"] = max;
-    map["starts_at"] = starts_at;
+    map["max_participants"] = event.max_participants.toString();
+    map["starts_at"] = event.starts_at;
     var url = ProjectSettings.apiUrl + "/api/v1/events/";
     var response = await http.post(url,body: map,headers: {HttpHeaders.authorizationHeader: "Token "+ token}
     );
-    return response.body;
+    return {"response":response.body,"post":preEvent};
   }
 
   Future getEvents() async {
