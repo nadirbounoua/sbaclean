@@ -22,9 +22,6 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, AppState>(
-        onInit: (store) {
-          store.dispatch(GetCitiesAction([]).getCities());
-        },
         converter: (store) => store.state,
         builder: (context, state) {
           return new Scaffold(

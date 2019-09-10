@@ -88,12 +88,14 @@ class _EditProfileFormState extends State<EditProfileForm> {
                 final form = formKey.currentState;
                 if (form.validate()) {
                   form.save();
-                  modifyPersonal(context,state.auth.user.id,state.auth.user.authToken,
+                  modifyPersonal(context,state.auth.user.id.toString(),state.auth.user.authToken,
                       _first_name,_last_name,_phone_number,_address,_city);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProfileScreen(),
+                        builder: (context) => ProfileScreen(first_name: state.auth.user.first_name ,
+                        last_name: state.auth.user.last_name,address: state.auth.user.address,
+                        city: state.auth.user.city,email: state.auth.user.email,phone: state.auth.user.phone_number),
                       ));
                 }
               },

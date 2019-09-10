@@ -10,22 +10,21 @@ import '../backend/utils.dart';
 
 
 
-Api api = Api();
   
 
+
+final Function getCities = (BuildContext context) {
+  Api api = Api();
+  return (Store<AppState> store) async{
+    final response = await api.getCities();
+    List<City> cities = parseCities(response);
+    store.dispatch(new GetCitiesAction(cities));
+  };
+};
 
 
 class GetCitiesAction {
   final List<City> cities;
   GetCitiesAction(this.cities);
-
-  ThunkAction<AppState> getCities() {
-    return (Store<AppState> store) async {
-      final response = await api.getCities();
-      List<City> cities = parseCities(response);
-      print("cities"+cities.toString());
-      store.dispatch(new GetCitiesAction(cities));
-    };
-  }
 }
 

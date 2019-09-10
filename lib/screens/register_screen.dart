@@ -9,13 +9,13 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        body: new Container(
+        body: new SingleChildScrollView(
             child: new Padding(
                 padding: new EdgeInsets.fromLTRB(32.0, MediaQuery.of(context).padding.top + 32.0, 32.0, 32.0),
                 child: new Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    new Expanded(
+                    new Container(
                       child: new Center(
                         child: new FlutterLogo(
                           colors: colorStyles['primary'],

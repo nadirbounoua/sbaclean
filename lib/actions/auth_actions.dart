@@ -16,7 +16,9 @@ import '../backend/utils.dart';
 import '../models/profile.dart';
 import 'event_actions.dart';
 import 'package:path_provider/path_provider.dart';
+import 'city_actions.dart';
 
+Api api = Api();
 
 
 class UserLoginRequest {}
@@ -55,8 +57,8 @@ final Function login = (BuildContext context, String username, String password) 
                 last_name: pro.last_name,address: pro.address,city: pro.city,
             email: pro.email,phone_number: pro.phone_number);
             persist.writeAsStringSync(json.encode(finalUser.toJSON()));
-
             store.dispatch(new UserLoginSuccess(finalUser));
+            store.dispatch(getCities(context));
             Navigator.of(context).pushNamedAndRemoveUntil('/main', (_) => false);
         } else {
             store.dispatch(new UserLoginFailure('Username or password were incorrect.'));

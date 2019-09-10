@@ -4,6 +4,7 @@ import 'package:material_search/material_search.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/actions.dart';
 import 'package:sbaclean/actions/auth_actions.dart';
+import 'package:sbaclean/backend/api.dart';
 import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/main.dart';
 import 'package:sbaclean/models/anomaly.dart';
@@ -36,6 +37,7 @@ class MainScreenState extends State<MainScreen> {
     String _title;
     int _index;
     List<Anomaly> anomalies = [];
+    Api api = Api();
 
     @override
     void initState() {

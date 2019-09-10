@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:sbaclean/reducers/city_reducer.dart';
 import '../screens/login_screen.dart';
-import '../actions/auth_actions.dart';
-import '../models/city.dart';
 import '../store/app_state.dart';
 import '../actions/city_actions.dart';
 import 'register_login_form.dart';
-import '../actions/city_actions.dart';
 
 class RegisterForm extends StatefulWidget {
   @override
@@ -26,7 +22,7 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, AppState>(
         onInit: (store) {
-          store.dispatch(GetCitiesAction([]).getCities());
+          store.dispatch(getCities(context));
         },
         converter: (store) => store.state,
         builder: (context, state) {
