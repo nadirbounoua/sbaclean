@@ -43,11 +43,14 @@ final Function login = (BuildContext context, String username, String password) 
         final condition = response.contains("token");
         final token = response.substring(10,response.length - 2);
         final profile = await api.getProfile(username, token);
-        User pro = parseProfile(profile);
         if (condition) {
+            User pro = parseProfile(profile);
+
             final directory = await getApplicationDocumentsDirectory();
             File persist = File(directory.path +'/loginFile.json');
-            User finalUser =User(authToken: token,id: pro.id,
+            File(directory.path +'/loginFile.json').existsSync() ? File(directory.path +'/loginFile.json').deleteSync() : File(directory.path +'/loginFile.json').createSync();
+
+            User finalUser =User(password:password,authToken: token,id: pro.id,
                 username: pro.username,first_name: pro.first_name,
                 last_name: pro.last_name,address: pro.address,city: pro.city,
             email: pro.email,phone_number: pro.phone_number);
@@ -63,23 +66,28 @@ final Function login = (BuildContext context, String username, String password) 
 
 
 
-final Function register = (BuildContext context, String username, String phone_number, String address, String city, String password) {
+final Function register = (BuildContext context, String username,String first_name,String last_name,String phone_number, String city,String address, String email, String password) async {
     Api api = Api();
-    api.addUser(username,phone_number, address, city, password);
+    await api.addUser(username,first_name,last_name,phone_number, city,address, email, password);
 };
 
-final Function modify = (BuildContext context,String id,String token,String username, String phone_number, String address, String city) {
+final Function modifyPersonal = (BuildContext context,String id,String token,String first_name,String last_name, String phone_number, String address, String city) {
     Api api = Api();
-    api.modifyProfile(id,token,username,phone_number, address, city);
+    api.modifyPersonal(id,token,first_name,last_name,phone_number, address, city);
 };
+
+final Function modifyLogin = (BuildContext context,String id,String token,String username,String email, String password) {
+    Api api = Api();
+    api.modifyLogin(id,token,username,email,password);
+};
+
 
 final Function logout = (BuildContext context) {
     return (Store<AppState> store) async {
         final directory = await getApplicationDocumentsDirectory();
         File persist;
-        File(directory.path +'/loginFile.json').existsSync() ? null : File(directory.path +'/loginFile.json').createSync();
         persist = File(directory.path +'/loginFile.json');
-        await persist.delete();
+        persist.deleteSync();
         store.dispatch(new UserLogout());
         Navigator.of(context).pushNamedAndRemoveUntil('/login', (_) => false);
     };
