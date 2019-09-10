@@ -1,5 +1,7 @@
 import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/models/event.dart';
+import 'package:sbaclean/models/participation.dart';
+import 'package:sbaclean/models/report.dart';
 
 import '../models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
@@ -239,17 +241,16 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future addUser(String username,String phone_number,String address, String city, String password) async {
-    print("$username--$phone_number---$address--$city---$password");
+  Future addUser(String username,String first_name,String last_name,String phone_number,String city,String address, String email, String password) async {
     var map = new Map<String, dynamic>();
     map["username"] = username;
     map["password"] = password;
+    map["first_name"] = first_name;
+    map["last_name"] = last_name;
     map["phone_number"] = phone_number;
+    map["email"] = email;
     map["address"] = address;
-    map["city"] = '1';
-    map["email"] = 'bouaninba.yahia@gmail.com';
-    map["first_name"] = 'yaya';
-    map["last_name"] = 'yyyy';
+    map["city"] = city;
     map["is_staff"] = '0';
 
     var url = ProjectSettings.apiUrl + "/api/v1/accounts/register/";
@@ -273,12 +274,25 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future modifyProfile(String id,String token,String username,String phone_number,String address, String city) async {
+  Future modifyPersonal(String id,String token,String first_name, String last_name,String phone_number,String address, String city) async {
     var map = new Map<String, dynamic>();
-    map["username"] = username;
+    map["first_name"] = first_name;
+    map["last_name"] = last_name;
     map["phone_number"] = phone_number;
     map["address"] = address;
     map["city"] = city;
+    map["is_staff"] = "0";
+    var url = ProjectSettings.apiUrl + "/api/v1/accounts/$id";
+    var response = await http.patch(url,body: map, headers: {HttpHeaders.authorizationHeader: "Token "+ token });
+    return response.body;
+  }
+
+  Future modifyLogin(String id,String token,String username, String email,String password) async {
+    var map = new Map<String, dynamic>();
+    map["username"] = username;
+    map["email"] = email;
+    map["password"] = password;
+    map["is_staff"] = "0";
     var url = ProjectSettings.apiUrl + "/api/v1/accounts/$id";
     var response = await http.patch(url,body: map, headers: {HttpHeaders.authorizationHeader: "Token "+ token });
     return response.body;
@@ -342,7 +356,41 @@ Future getComments(String postId) async {
         headers: {HttpHeaders.authorizationHeader : "Token "+ token});
     return response.body;
   }
+  Future getCities() async {
+    var url = ProjectSettings.apiUrl+"/api/v1/address/city/";
+    var response = await http.get(url);
+    return response.body;
+  }
 
+    Future createParticipation(String token,Participation participation) async {
+    var map = new Map<String, dynamic>();
+    map["user"] = participation.user;
+    map["event"] = participation.event;
+    var url = ProjectSettings.apiUrl + "/api/v1/events/participate/";
+    var response = await http.post(url,body: map,headers: {HttpHeaders.authorizationHeader: "Token "+ token}
+    );
+    return response.body;
+  }
 
+  Future getParticipations(String id) async {
+    var url = ProjectSettings.apiUrl+"/api/v1/events/participate/?event=$id";
+    var response = await http.get(url);
+    return response.body;
+  }
+  Future createReport(String token,Report report) async {
+    var map = new Map<String, dynamic>();
+    map["user"] = report.user;
+    map["anomaly"] = report.anomaly;
+    var url = ProjectSettings.apiUrl + "/api/v1/anomalys/signal/";
+    var response = await http.post(url,body: map,headers: {HttpHeaders.authorizationHeader: "Token "+ token}
+    );
+    return response.body;
+  }
+
+  Future getReport(String anomaly_id,String user_id) async {
+    var url = ProjectSettings.apiUrl+"/api/v1/anomalys/signal/?anomaly=$anomaly_id&user=$user_id";
+    var response = await http.get(url);
+    return response.body;
+  }
 }
 

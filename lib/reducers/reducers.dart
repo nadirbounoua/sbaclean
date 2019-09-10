@@ -1,5 +1,8 @@
 import 'package:sbaclean/reducers/auth_reducer.dart';
+import 'package:sbaclean/reducers/city_reducer.dart';
 import 'package:sbaclean/reducers/event_reducer.dart';
+import 'package:sbaclean/reducers/participation_reducer.dart';
+import 'package:sbaclean/reducers/report_reducer.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:sbaclean/reducers/feed_reducer.dart';
 import 'package:sbaclean/reducers/post_feed_reducer.dart';
@@ -14,7 +17,10 @@ AppState appStateReducers(AppState state, dynamic action) {
           userHistoryState: userHistoryReducer(state.userHistoryState, action),
           anomalyDetailsState: anomalyDetailsReducer(state.anomalyDetailsState, action),
           auth: authReducer(state.auth,action),
-          eventState: eventReducer(state.eventState, action)
+          eventState: eventReducer(state.eventState, action),
+          cityState: cityReducer(state.cityState, action),
+          participationState: participationReducer(state.participationState, action),
+          reportState: reportReducer(state.reportState, action)
     );
 }
 

@@ -1,4 +1,7 @@
+import 'package:sbaclean/models/city.dart';
 import 'package:sbaclean/models/event.dart';
+import 'package:sbaclean/models/participation.dart';
+import 'package:sbaclean/models/report.dart';
 
 import '../models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
@@ -133,4 +136,22 @@ List<Event> parseEvents(String responseBody){
 User parseProfile(String responseBody){
   List<dynamic> list = json.decode(responseBody);
   return User.fromJson(list[0]);
+}
+
+List<City> parseCities(String responseBody){
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<City>((json) => City.fromJson(json)).toList();
+}
+
+List<Participation> parseParticipations(String responseBody){
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<Participation>((json) => Participation.fromJson(json)).toList();
+}
+
+List<Report> parseReports(String responseBody){
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<Report>((json) => Report.fromJson(json)).toList();
 }
