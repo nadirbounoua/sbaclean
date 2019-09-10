@@ -1,13 +1,36 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
+import 'package:sbaclean/actions/participation_actions.dart';
 import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/models/event.dart';
+import 'package:sbaclean/models/participation.dart';
+import 'package:sbaclean/store/app_state.dart';
 import '../../../styles/colors.dart';
 
-class EventPreview extends StatelessWidget {
+class EventPreview extends StatefulWidget {
+    Event event;
+  EventPreview({this.event});
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return EventPreviewState(event: event);
+  }
+  
+}
+
+class EventPreviewState extends State<EventPreview> {
   Event event;
-  EventPreview({Key key,  this.event}) : super(key: key);
+  EventPreviewState({Key key,  this.event});
+  bool _isButtonDisabled;
+
+    @override
+  void initState() {
+    _isButtonDisabled = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +38,18 @@ class EventPreview extends StatelessWidget {
     String date = dateTime.year.toString() + "/"+ dateTime.month.toString()+'/'+ dateTime.day.toString();
 
     // TODO: implement build
-    return Card(
+    return StoreConnector<AppState, dynamic>(
+        onInit: (store) {
+      store.dispatch(
+          getParticipations(context, event.id.toString()));
+    },
+        converter: (Store<AppState> store) {
+      return (BuildContext context, String event) =>
+              store.dispatch(addParticipation(context, store.state.auth.user.authToken,
+                  new Participation(user: store.state.auth.user.id.toString(), event: event)));
+
+    }, builder: (BuildContext context, addParticipationAction) {
+      return Card(
       child:    Card(
       child:IntrinsicHeight(
         child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -100,17 +134,63 @@ class EventPreview extends StatelessWidget {
                     ),
                   ),
 
-                  FlatButton(
-                    onPressed: () => print("participate"),
-                    color: Colors.blue,
-                    child: Row(
-                      children: <Widget>[
-                        Text("Participer", style: TextStyle(color: Colors.white),),
-                        Padding(padding: EdgeInsets.all(2),),
-                        Icon(Icons.person_add,color: Colors.white,)
-                      ],
+               StoreConnector<AppState, AppState>(
+              converter: (store) => store.state,
+              builder: (context, state) {
+                int particpator = state.auth.user.id;
+
+// condition to participate ------------------------------------------
+// initialisate values
+
+                List<Participation> participations = new List<Participation>();
+
+// initialisate paticipations values
+                if (state.participationState.participations != null) {
+                  participations = state.participationState.participations;
+
+// first condition
+                  int participaters_num=0;
+                  if (participaters_num < event.max_participants) {
+                    _isButtonDisabled = false;
+                  }
+// second condtion
+                  participations.forEach((f) {
+                    if (int.parse(f.user) == particpator) {
+                      print(particpator);
+                      _isButtonDisabled = true;
+                    }
+                  });
+                }
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  textDirection: TextDirection.ltr,
+                  children: <Widget>[
+                    
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          
+                          FlatButton(
+                            color: colorStyles['primary'],
+                            onPressed: () {
+                              if (_isButtonDisabled) {
+                              } else {
+                                addParticipationAction(context, event.id.toString());
+                              }
+                            },
+                            child: new Text(_isButtonDisabled
+                                ? "Hold on..."
+                                : "Participate"),
+                          ),
+                        ],
+                      ),
+                    
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
                     ),
-                  )
+                  ],
+                );
+              }),
                   
                 ],
               ),
@@ -120,11 +200,13 @@ class EventPreview extends StatelessWidget {
           ),
         ]),
       ),
-    ),
+    )
+      );}
     );
+    
   }
-}
 
+  }
 /*Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[

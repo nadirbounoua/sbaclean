@@ -1,24 +1,56 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
+import 'package:sbaclean/actions/report_actions.dart';
 import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
+import 'package:sbaclean/models/report.dart';
 import 'package:sbaclean/models/user.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:sbaclean/store/user_state.dart';
 
 import 'package:redux/redux.dart';
+import 'package:toast/toast.dart';
+
 import 'package:sbaclean/actions/feed_actions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class PostPreview extends StatelessWidget {
+class PostPreview extends StatefulWidget {
   final Anomaly anomaly;
   PostPreview({Key key, this.anomaly}) : super(key: key);     
 
-  
+   @override
+  PostPreviewState createState() {
+    return PostPreviewState(
+        anomaly: this.anomaly,
+       );
+  }
+}
+
+class PostPreviewState extends State<PostPreview> {
+  final Anomaly anomaly;
+  bool _isButtonDisabled;
+  PostPreviewState({Key key, this.anomaly});
+
+  @override
+  void initState() {
+    _isButtonDisabled = true;
+  }
 
   @override
   Widget build(BuildContext context) {
+    return StoreConnector<AppState, dynamic>(
+            onInit: (store) {
+              store.dispatch(
+                  getReport(context,anomaly.id.toString(),store.state.auth.user.id.toString()));
+            },
+            converter: (Store<AppState> store) {
+              return (BuildContext context, String anomaly) =>
+                  store.dispatch(addReport(context, store.state.auth.user.authToken,
+                      new Report(user: store.state.auth.user.id.toString(), anomaly: anomaly)));
+
+            }, builder: (BuildContext context, addReportAction) { 
     return Center(
       child: Padding(
       padding: EdgeInsets.only(
@@ -62,15 +94,57 @@ class PostPreview extends StatelessWidget {
                         calculateTime(anomaly.post.createdAt)
                       )
                   ),               
-                  PopupMenuButton(
-                    icon: Icon(Icons.more_vert),
-                    
-                    itemBuilder: (context) => <PopupMenuEntry<String>>[
-                      PopupMenuItem<String>(
-                        child: Text("Signalez"),
-                      )
-                    ],
-                  )
+                  new StoreConnector<AppState, AppState>(
+                  converter: (store) => store.state,
+                  builder: (context, state) {
+                    return IconButton(
+                    icon: Icon(Icons.info,color: Colors.blueGrey),
+                    onPressed: (){
+                      if(state.reportState.reports.length == 0){
+                        _isButtonDisabled = false;
+                      }
+                      else {
+                        _isButtonDisabled = true;
+                      }
+                      if(_isButtonDisabled){
+                        Toast.show("Already reported", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                      }
+                      else {
+                        return showDialog<void>(
+                          context: context,
+                          barrierDismissible: false, // user must tap button!
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Report Anomaly'),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[
+                                    Text('You will report this anomaly.'),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text('Report'),
+                                  onPressed: () {
+                                    addReportAction(context,anomaly.id.toString());
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+
+                  );}),
                 ],
               ),
 
@@ -218,6 +292,8 @@ class PostPreview extends StatelessWidget {
       ),
 
     )
+    );
+  }
     );
   }
 

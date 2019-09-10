@@ -35,7 +35,18 @@ class CommentInputState extends State<CommentInput> {
           ),
       builder: (context, viewModel) => TextField(
           keyboardType: TextInputType.text,
-          decoration: InputDecoration(hintText: "Enter a comment"),
+          decoration: InputDecoration(
+            hintText: "Enter a comment",
+            suffix: IconButton(
+              icon: Icon(Icons.add_comment,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                viewModel.addItemToList(commentOwner,commentPost,controller.text);
+
+              },
+            )
+          ),
           controller: controller,
           
           onSubmitted: (text) {
