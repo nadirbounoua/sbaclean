@@ -1,81 +1,103 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:sbaclean/store/app_state.dart';
-import 'package:sbaclean/models/user.dart';
-import 'package:redux/redux.dart';
-import '../screens/login_screen.dart';
-
-
-import '../presentation/platform_adaptive.dart';
+import '../store/app_state.dart';
 import '../actions/auth_actions.dart';
+import '../presentation/platform_adaptive.dart';
+import '../actions/city_actions.dart';
+import '../screens/profile_screen.dart';
 
 class EditProfileForm extends StatefulWidget {
+  List<String> cities;
+  EditProfileForm({this.cities});
   @override
-  _EditProfileFormState createState() => new _EditProfileFormState();
+  _EditProfileFormState createState() => new _EditProfileFormState(cities: cities);
 }
 
 class _EditProfileFormState extends State<EditProfileForm> {
   final formKey = new GlobalKey<FormState>();
 
-  String _username;
-  String _password;
+  String _first_name;
+  String _last_name;
   String _phone_number;
   String _address;
   String _city;
+  List<String> cities;
 
-  void _submit() {
-    final form = formKey.currentState;
-
-    if (form.validate()) {
-      form.save();
-    }
+  _EditProfileFormState({this.cities});
+  @override
+  void initState() {
+    _city = cities[0];
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState,User> (
-    converter: (store) =>  store.state.auth.user,
-    builder: (context,user) {
+    return StoreConnector<AppState,AppState> (
+    converter: (store) =>  store.state,
+    builder: (context,state) {
       return new Form(
       key: formKey,
       child: new Column(
         children: [
           new TextFormField(
-            initialValue: user.username,
-            decoration: new InputDecoration(labelText: 'Username'),
+            decoration: new InputDecoration(labelText: 'FirstName'),
+            initialValue: state.auth.user.first_name,
             validator: (val) =>
-            val.isEmpty ? 'Please enter your username.' : null,
-            onSaved: (val) => _username = val,
+            val.isEmpty ? 'Please enter your firstname.' : null,
+            onSaved: (val) => _first_name = val,
           ),
           new TextFormField(
-            initialValue: user.phone_number.toString(),
+            decoration: new InputDecoration(labelText: 'LastName'),
+            initialValue: state.auth.user.last_name,
+            validator: (val) =>
+            val.isEmpty ? 'Please enter your username.' : null,
+            onSaved: (val) => _last_name = val,
+          ),
+          new TextFormField(
             decoration: new InputDecoration(labelText: 'Phone'),
+            keyboardType: TextInputType.phone,
+            initialValue: state.auth.user.phone_number.toString(),
             validator: (val) =>
             val.isEmpty ? 'Please enter your phone number.' : null,
             onSaved: (val) => _phone_number = val,
           ),
           new TextFormField(
-            initialValue: user.address,
             decoration: new InputDecoration(labelText: 'Address'),
+            initialValue: state.auth.user.address,
             validator: (val) =>
             val.isEmpty ? 'Please enter your address.' : null,
             onSaved: (val) => _address = val,
           ),
-          new TextFormField(
-            decoration: new InputDecoration(labelText: 'City'),
-            validator: (val) =>
-            val.isEmpty ? 'Please enter your city.' : null,
-            onSaved: (val) => _city = val,
+          DropdownButton<String>(
+            value: _city,
+            items: cities.map((label) => DropdownMenuItem(
+              child: Text(label),
+              value: label,
+            ))
+                .toList(),
+            onChanged: (String newValue) {
+              setState(() {
+                _city = newValue;
+              });
+            },
           ),
           new Padding(
             padding: new EdgeInsets.only(top: 20.0),
-            child: new PlatformAdaptiveButton(
+            child: new FlatButton(
               onPressed:() {
-                _submit();
-                modify(context,user.id,user.authToken,_username,_phone_number,_address,_city);
+                final form = formKey.currentState;
+                if (form.validate()) {
+                  form.save();
+                  modifyPersonal(context,state.auth.user.id,state.auth.user.authToken,
+                      _first_name,_last_name,_phone_number,_address,_city);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfileScreen(),
+                      ));
+                }
               },
-              icon: new Icon(Icons.done),
-              child: new Text('Submit'),
+              child: new Text('Save'),
             ),
           ),
         ],

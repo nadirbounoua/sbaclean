@@ -11,14 +11,15 @@ class User {
   String city;
   String authToken;
   Position position;
+  String password;
 
   
   User({this.id , this.username, this.email, this.first_name, this.last_name, this.phone_number, this.address, this.city,
-       this.authToken, this.position});
+       this.authToken, this.position, this.password});
   
   factory User.fromJson(Map<String,dynamic> json){
     print(json);
-    //print(json['username']);
+    print(json['username']);
     return User(id: json['id']  == null ? json['pk'] as int : json['id'] as int,
                 username: json['username'] as String,
                 email: json['email'] as String,
