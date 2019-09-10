@@ -16,6 +16,8 @@ class _LoginFormState extends State<LoginForm> {
 
     String _username;
     String _password;
+    final _usernameController = TextEditingController();
+    final _passwordController = TextEditingController();
 
     void _submit() {
         final form = formKey.currentState;
@@ -23,6 +25,13 @@ class _LoginFormState extends State<LoginForm> {
         if (form.validate()) {
             form.save();
         }
+    }
+        @override
+    void dispose() {
+        _usernameController.dispose();
+        _passwordController.dispose();
+
+        super.dispose();
     }
 
     @override
@@ -35,17 +44,41 @@ class _LoginFormState extends State<LoginForm> {
                     child: new Column(
                         children: [
                             new TextFormField(
+                                controller: _usernameController,
+                                autocorrect: false,
                                 decoration: new InputDecoration(labelText: 'Username'),
                                 validator: (val) =>
                                     val.isEmpty ? 'Please enter your username.' : null,
                                 onSaved: (val) => _username = val,
                             ),
                             new TextFormField(
+                                controller: _passwordController, 
                                 decoration: new InputDecoration(labelText: 'Password'),
                                 validator: (val) =>
                                     val.isEmpty ? 'Please enter your password.' : null,
                                 onSaved: (val) => _password = val,
                                 obscureText: true,
+                            ),
+                                                       Container(
+                              child: new StoreConnector<AppState,AppState>( converter:(store) => store.state,
+                                  builder: (context,state) {
+                                      if( state.auth.error == null){
+                                          return Container();
+                                      } else return
+                                          Container(
+                                              padding: EdgeInsets.only(top: 26.0, bottom: 4.0),
+                                              child: Center(
+                                                  child: Text(
+                                                      "Username or password were incorrect.",
+                                                      style: TextStyle(
+                                                          color: Colors.red,
+                                                      ),
+                                                  ),
+                                              ),
+                                          );
+                                  }
+                              
+                              ),
                             ),
                             new Padding(
                                 padding: new EdgeInsets.only(top: 20.0),
