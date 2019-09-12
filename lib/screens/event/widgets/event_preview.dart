@@ -42,10 +42,6 @@ class EventPreviewState extends State<EventPreview> {
 
     // TODO: implement build
     return StoreConnector<AppState, dynamic>(
-        onInit: (store) {
-      store.dispatch(
-          getParticipations(context, event.id.toString()));
-    },
         converter: (Store<AppState> store) {
       return (BuildContext context, String event) =>
               store.dispatch(addParticipation(context, store.state.auth.user.authToken,
