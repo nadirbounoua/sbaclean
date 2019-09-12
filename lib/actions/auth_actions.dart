@@ -73,14 +73,16 @@ final Function register = (BuildContext context, String username,String first_na
     await api.addUser(username,first_name,last_name,phone_number, city,address, email, password);
 };
 
-final Function modifyPersonal = (BuildContext context,String id,String token,String first_name,String last_name, String phone_number, String address, String city) {
+
+final Function modifyPersonal = (BuildContext context,String id,String token,String username, String email, String first_name,String last_name, String phone_number, String address, String city) {
     Api api = Api();
-    api.modifyPersonal(id,token,first_name,last_name,phone_number, address, city);
+    print("Im in user action");
+    api.modifyPersonal(id,token,username,email,first_name,last_name,phone_number, address, city);
 };
 
-final Function modifyLogin = (BuildContext context,String id,String token,String username,String email, String password) {
+final Function modifyPassword = (BuildContext context,String id,String token, String password) {
     Api api = Api();
-    api.modifyLogin(id,token,username,email,password);
+    api.modifyPassword(id,token,password);
 };
 
 

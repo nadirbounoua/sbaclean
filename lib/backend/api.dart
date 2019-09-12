@@ -274,8 +274,11 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future modifyPersonal(String id,String token,String first_name, String last_name,String phone_number,String address, String city) async {
+  Future modifyPersonal(String id,String token,String username,String email,String first_name, String last_name,String phone_number,String address, String city) async {
     var map = new Map<String, dynamic>();
+    print("Im in api");
+    map["username"] = username;
+    map["email"] = email;
     map["first_name"] = first_name;
     map["last_name"] = last_name;
     map["phone_number"] = phone_number;
@@ -287,10 +290,8 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future modifyLogin(String id,String token,String username, String email,String password) async {
+  Future modifyPassword(String id,String token,String password) async {
     var map = new Map<String, dynamic>();
-    map["username"] = username;
-    map["email"] = email;
     map["password"] = password;
     map["is_staff"] = "0";
     var url = ProjectSettings.apiUrl + "/api/v1/accounts/$id";

@@ -15,7 +15,8 @@ class EditProfileForm extends StatefulWidget {
 
 class _EditProfileFormState extends State<EditProfileForm> {
   final formKey = new GlobalKey<FormState>();
-
+  String _username;
+  String _email;
   String _first_name;
   String _last_name;
   String _phone_number;
@@ -33,79 +34,106 @@ class _EditProfileFormState extends State<EditProfileForm> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState,AppState> (
-    converter: (store) =>  store.state,
-    builder: (context,state) {
-      return new Form(
-      key: formKey,
-      child: new Column(
-        children: [
-          new TextFormField(
-            decoration: new InputDecoration(labelText: 'FirstName'),
-            initialValue: state.auth.user.first_name,
-            validator: (val) =>
-            val.isEmpty ? 'Please enter your firstname.' : null,
-            onSaved: (val) => _first_name = val,
-          ),
-          new TextFormField(
-            decoration: new InputDecoration(labelText: 'LastName'),
-            initialValue: state.auth.user.last_name,
-            validator: (val) =>
-            val.isEmpty ? 'Please enter your username.' : null,
-            onSaved: (val) => _last_name = val,
-          ),
-          new TextFormField(
-            decoration: new InputDecoration(labelText: 'Phone'),
-            keyboardType: TextInputType.phone,
-            initialValue: state.auth.user.phone_number.toString(),
-            validator: (val) =>
-            val.isEmpty ? 'Please enter your phone number.' : null,
-            onSaved: (val) => _phone_number = val,
-          ),
-          new TextFormField(
-            decoration: new InputDecoration(labelText: 'Address'),
-            initialValue: state.auth.user.address,
-            validator: (val) =>
-            val.isEmpty ? 'Please enter your address.' : null,
-            onSaved: (val) => _address = val,
-          ),
-          DropdownButton<String>(
-            value: _city,
-            items: cities.map((label) => DropdownMenuItem(
-              child: Text(label),
-              value: label,
-            ))
-                .toList(),
-            onChanged: (String newValue) {
-              setState(() {
-                _city = newValue;
-              });
-            },
-          ),
-          new Padding(
-            padding: new EdgeInsets.only(top: 20.0),
-            child: new FlatButton(
-              onPressed:() {
-                final form = formKey.currentState;
-                if (form.validate()) {
-                  form.save();
-                  modifyPersonal(context,state.auth.user.id.toString(),state.auth.user.authToken,
-                      _first_name,_last_name,_phone_number,_address,_city);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfileScreen(first_name: state.auth.user.first_name ,
-                        last_name: state.auth.user.last_name,address: state.auth.user.address,
-                        city: state.auth.user.city,email: state.auth.user.email,phone: state.auth.user.phone_number),
-                      ));
-                }
-              },
-              child: new Text('Save'),
+        converter: (store) =>  store.state,
+        builder: (context,state) {
+          return new Form(
+            key: formKey,
+            child: new Column(
+              children: [
+                new TextFormField(
+                  decoration:
+                  new InputDecoration(labelText: 'Username'),
+                  initialValue: state.auth.user.username,
+                  validator: (val) => val.isEmpty
+                      ? 'Please enter your username.'
+                      : null,
+                  onSaved: (val) => _username = val,
+                ),
+                new TextFormField(
+                  decoration:
+                  new InputDecoration(labelText: 'Email'),
+                  initialValue: state.auth.user.email,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (val){
+                    if (val.isEmpty) {
+                      return 'Please entre the email';
+                    }
+                    if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(val)) {
+                      return 'Please entre a valid emailAddress';
+                    }
+
+                    return null;
+                  },
+                  onSaved: (val) => _email = val,
+                ),
+                new TextFormField(
+                  decoration: new InputDecoration(labelText: 'FirstName'),
+                  initialValue: state.auth.user.first_name,
+                  validator: (val) =>
+                  val.isEmpty ? 'Please enter your firstname.' : null,
+                  onSaved: (val) => _first_name = val,
+                ),
+                new TextFormField(
+                  decoration: new InputDecoration(labelText: 'LastName'),
+                  initialValue: state.auth.user.last_name,
+                  validator: (val) =>
+                  val.isEmpty ? 'Please enter your username.' : null,
+                  onSaved: (val) => _last_name = val,
+                ),
+                new TextFormField(
+                  decoration: new InputDecoration(labelText: 'Phone'),
+                  keyboardType: TextInputType.phone,
+                  initialValue: state.auth.user.phone_number.toString(),
+                  validator: (val) =>
+                  val.isEmpty ? 'Please enter your phone number.' : null,
+                  onSaved: (val) => _phone_number = val,
+                ),
+                new TextFormField(
+                  decoration: new InputDecoration(labelText: 'Address'),
+                  initialValue: state.auth.user.address,
+                  validator: (val) =>
+                  val.isEmpty ? 'Please enter your address.' : null,
+                  onSaved: (val) => _address = val,
+                ),
+                DropdownButton<String>(
+                  value: _city,
+                  items: cities.map((label) => DropdownMenuItem(
+                    child: Text(label),
+                    value: label,
+                  ))
+                      .toList(),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      _city = newValue;
+                    });
+                  },
+                ),
+                new Padding(
+                  padding: new EdgeInsets.only(top: 20.0),
+                  child: new FlatButton(
+                    onPressed:() {
+                      final form = formKey.currentState;
+                      if (form.validate()) {
+                        form.save();
+                        modifyPersonal(context,state.auth.user.id,state.auth.user.authToken,_username,_email,
+                            _first_name,_last_name,_phone_number,_address,(cities.indexOf(_city) + 1)
+                                .toString());
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(first_name: _first_name,
+                                  last_name: _last_name,phone:int.parse(_phone_number),email: _email,
+                                  address: _address,city: _city),
+                            ));
+                      }
+                    },
+                    child: new Text('Save'),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
-    });
+          );
+        });
   }
 
 }
