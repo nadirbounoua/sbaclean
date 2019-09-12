@@ -12,19 +12,22 @@ import '../../../styles/colors.dart';
 
 class EventPreview extends StatefulWidget {
     Event event;
-  EventPreview({this.event});
+    bool closed;
+    EventPreview({this.event});
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return EventPreviewState(event: event);
+    return EventPreviewState(event: event,closed: closed);
   }
   
 }
 
 class EventPreviewState extends State<EventPreview> {
   Event event;
-  EventPreviewState({Key key,  this.event});
+  bool closed;
+
+  EventPreviewState({Key key,  this.event,this.closed});
   bool _isButtonDisabled;
 
     @override
@@ -49,6 +52,12 @@ class EventPreviewState extends State<EventPreview> {
                   new Participation(user: store.state.auth.user.id.toString(), event: event)));
 
     }, builder: (BuildContext context, addParticipationAction) {
+      if(!closed){
+        _isButtonDisabled = false;
+      }
+      else {
+        _isButtonDisabled = true;
+      }
       return Card(
       child:    Card(
       child:IntrinsicHeight(
@@ -134,34 +143,7 @@ class EventPreviewState extends State<EventPreview> {
                     ),
                   ),
 
-               StoreConnector<AppState, AppState>(
-              converter: (store) => store.state,
-              builder: (context, state) {
-                int particpator = state.auth.user.id;
-
-// condition to participate ------------------------------------------
-// initialisate values
-
-                List<Participation> participations = new List<Participation>();
-
-// initialisate paticipations values
-                if (state.participationState.participations != null) {
-                  participations = state.participationState.participations;
-
-// first condition
-                  int participaters_num=0;
-                  if (participaters_num < event.max_participants) {
-                    _isButtonDisabled = false;
-                  }
-// second condtion
-                  participations.forEach((f) {
-                    if (int.parse(f.user) == particpator) {
-                      print(particpator);
-                      _isButtonDisabled = true;
-                    }
-                  });
-                }
-                return Row(
+                  Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   textDirection: TextDirection.ltr,
                   children: <Widget>[
@@ -175,7 +157,8 @@ class EventPreviewState extends State<EventPreview> {
                             onPressed: () {
                               if (_isButtonDisabled) {
                               } else {
-                                addParticipationAction(context, event.id.toString());
+                                addParticipationAction(context,event.id.toString());
+                                closed = true;
                               }
                             },
                             child: new Text(_isButtonDisabled
@@ -189,8 +172,7 @@ class EventPreviewState extends State<EventPreview> {
                       padding: EdgeInsets.only(left: 10),
                     ),
                   ],
-                );
-              }),
+                ),
                   
                 ],
               ),

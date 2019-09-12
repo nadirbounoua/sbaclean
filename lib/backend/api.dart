@@ -372,8 +372,8 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future getParticipations(String id) async {
-    var url = ProjectSettings.apiUrl+"/api/v1/events/participate/?event=$id";
+  Future getParticipations() async {
+    var url = ProjectSettings.apiUrl+"/api/v1/events/participate/";
     var response = await http.get(url);
     return response.body;
   }

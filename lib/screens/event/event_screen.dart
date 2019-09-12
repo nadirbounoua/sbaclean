@@ -4,6 +4,7 @@ import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/event_actions.dart';
 import 'package:sbaclean/screens/event/widgets/event_loading.dart';
 import 'package:sbaclean/screens/feed/widgets/post_loading.dart';
+import '../../actions/participation_actions.dart';
 import '../../store/app_state.dart';
 import 'widgets/event_list.dart';
 
@@ -13,6 +14,8 @@ class EventScreen extends StatelessWidget{
         converter: (store) =>  store,
         onInit: (store)  {
            store.dispatch(GetEventsAction(events:[]));
+           store.dispatch(
+               getParticipations(context));
         },
         builder: (context,store) {
           print(store.state.eventState.isEventsLoading);
@@ -20,7 +23,7 @@ class EventScreen extends StatelessWidget{
             
             child:store.state.eventState.isEventsLoading ? 
             ListView(children: <Widget>[EventLoading(), EventLoading(),EventLoading(),EventLoading(),],physics: NeverScrollableScrollPhysics(),)
-            : EventList(events: store.state.eventState.events),
+            : EventList(events: store.state.eventState.events,participations: store.state.participationState.participations),
           );
         }
     );
