@@ -22,7 +22,7 @@ class EventList extends StatelessWidget {
 
         List<Participation> participations_event = getParticipationsEvent(participations,events[index].id.toString());
         bool test_max = participations_event.length == events[index].max_participants;
-        bool test_user = checkEvent(participations_event,state.auth.user.id);
+        bool test_user = checkEvent(participations_event,state.auth.user.id.toString());
 
         return EventPreview(
           event : events[index],

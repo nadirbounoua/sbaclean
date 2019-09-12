@@ -115,7 +115,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                       final form = formKey.currentState;
                       if (form.validate()) {
                         form.save();
-                        modifyPersonal(context,state.auth.user.id,state.auth.user.authToken,_username,_email,
+                        modifyPersonal(context,state.auth.user.id.toString(),state.auth.user.authToken,_username,_email,
                             _first_name,_last_name,_phone_number,_address,(cities.indexOf(_city) + 1)
                                 .toString());
                         Navigator.push(
