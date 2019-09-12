@@ -13,7 +13,7 @@ import '../../../styles/colors.dart';
 class EventPreview extends StatefulWidget {
     Event event;
     bool closed;
-    EventPreview({this.event});
+    EventPreview({this.event, this.closed});
 
   @override
   State<StatefulWidget> createState() {

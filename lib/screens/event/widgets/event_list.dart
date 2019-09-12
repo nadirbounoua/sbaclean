@@ -25,7 +25,8 @@ class EventList extends StatelessWidget {
         bool test_user = checkEvent(participations_event,state.auth.user.id);
 
         return EventPreview(
-          event : events[index]
+          event : events[index],
+          closed : test_max | test_user
           ,
         );
       },

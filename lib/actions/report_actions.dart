@@ -8,6 +8,7 @@ import '../backend/api.dart';
 import '../backend/utils.dart';
 import 'dart:async';
 
+
 Api api = Api();
 
 
@@ -27,10 +28,11 @@ class AddReportAction {
 
 
 
-final Function getReport = (BuildContext context,String anomaly_id,String user_id) {
+final Function getReport = (BuildContext context,String user_id) {
   Api api = Api();
+  print('test');
   return (Store<AppState> store) async{
-    final response = await api.getReport(anomaly_id,user_id);
+    final response = await api.getReport(user_id);
     List<Report> reports = parseReports(response);
     store.dispatch(new GetReportAction(reports));
   };
@@ -40,3 +42,14 @@ class GetReportAction {
   final List<Report> reports;
   GetReportAction(this.reports);
 }
+
+final Function checkAnomaly = (List<Report> reports,int anomaly_id) {
+  bool reported = false;
+  reports.forEach((f){
+    if (int.parse(f.anomaly) == anomaly_id){
+      reported = true;
+    }
+  });
+  return reported;
+
+};

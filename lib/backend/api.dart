@@ -387,8 +387,8 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future getReport(String anomaly_id,String user_id) async {
-    var url = ProjectSettings.apiUrl+"/api/v1/anomalys/signal/?anomaly=$anomaly_id&user=$user_id";
+  Future getReport(String user_id) async {
+    var url = ProjectSettings.apiUrl+"/api/v1/anomalys/signal/?user=$user_id";
     var response = await http.get(url);
     return response.body;
   }
