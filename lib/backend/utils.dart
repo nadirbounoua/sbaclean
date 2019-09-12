@@ -1,3 +1,4 @@
+import 'package:http/http.dart';
 import 'package:sbaclean/models/city.dart';
 import 'package:sbaclean/models/event.dart';
 import 'package:sbaclean/models/participation.dart';
@@ -12,14 +13,22 @@ import '../models/anomaly.dart';
 import '../models/user.dart';
 import 'package:sbaclean/models/post.dart';
 
-List<Anomaly> parseAnomalies(String responseBody){
-    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+List<Anomaly> parsePreAnomalies(String responseBody){
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  
+  return parsed.map<Anomaly>((json) {
     
-    return parsed.map<Anomaly>((json) {
-      
-      return createFromJson(json);
-      }).toList();
+      return Anomaly.preFromJsonPost(json);
+    }).toList();
 }
+
+List<Anomaly> parseAnomalies(List<Response> responses){
+    return responses.map<Anomaly>((response) {
+      return createFromJson(json.decode(response.body));
+    }).toList();
+    
+}
+
 
 Anomaly createFromJson(dynamic json) {
       Post post = Post.fromJson(json);
@@ -42,6 +51,11 @@ List<Reaction> parseReaction(String responseBody){
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     
     return parsed.map<Reaction>((json) => Reaction.fromJson(json)).toList();
+}
+
+Reaction parseOneReaction(String responseBody){
+  final parsed = json.decode(responseBody);
+  return Reaction.fromJson(parsed[0]);
 }
 
 Comment createCommentFromJson(dynamic json) {
@@ -75,11 +89,17 @@ User parseOneUser(String responseBody){
     final parsed = json.decode(responseBody);
     return User.fromJson(parsed);
 }
-Anomaly parseOneAnomaly(dynamic responseBody){
+Anomaly parseOneAnomalyPost(dynamic responseBody){
   print(responseBody);
     final parsed = json.decode(responseBody['response']);
 
     return createFromJsonPost(parsed,responseBody['post']);
+}
+
+Anomaly parseOneAnomaly(dynamic responseBody){
+    final parsed = json.decode(responseBody);
+
+    return Anomaly.fromJsonPost(parsed);
 }
 
 Post parseOnePost(String responseBody) {

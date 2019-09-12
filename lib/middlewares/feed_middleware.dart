@@ -30,7 +30,7 @@ loadAnomalies() {
   return (Store<AppState> store, GetAnomaliesAction action, NextDispatcher next) async {
     next(action);
     await api.copyWith(store.state.auth.user.authToken)
-        .getAnomalies()
+        .getAnomalies(store)
           .then((anomalies) => {
               getAnomalies(store, anomalies)
           });
@@ -104,7 +104,7 @@ refreshAnomalies() {
     return (Store<AppState> store, RefreshAnomaliesAction action, NextDispatcher next) async {
     next(action);
     await api.copyWith(store.state.auth.user.authToken)
-        .getAnomalies()
+        .getAnomalies(store)
           .then((anomalies) => {
               refreshAnomaliesHelper(store, anomalies)
           });

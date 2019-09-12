@@ -2,6 +2,7 @@ import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/models/event.dart';
 import 'package:sbaclean/models/participation.dart';
 import 'package:sbaclean/models/report.dart';
+import 'package:sbaclean/store/app_state.dart';
 
 import '../models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
@@ -58,11 +59,28 @@ Future createAnomaly(Post post, User user) async {
   return {"response":response.body,"post":preAnomaly};
 }
 
-Future getAnomalies() async {
-    var url = ProjectSettings.apiUrl+"/api/v1/posts/post/?anomaly";
-    var response = await http.get(url,
-    headers: {HttpHeaders.authorizationHeader : "Token "+token});
-    return response.body;
+Future getAnomalies(Store<AppState> store) async {
+    //var url = ProjectSettings.apiUrl+"/api/v1/posts/post/?anomaly";
+    String idCity = store.state.auth.user.city;
+    bool isArchived = false;
+    var url = ProjectSettings.apiUrl+"/api/v1/anomalys?city=$idCity&archived=$isArchived";
+    var response = await http.get(url, headers: {HttpHeaders.authorizationHeader : "Token "+token});
+    List<Anomaly> preAnomalies = parsePreAnomalies(response.body);
+    List<http.Response> list = await Future.wait(preAnomalies.map((preAnomaly)=> getPost(preAnomaly.post.id)));
+    
+    return list;
+}
+
+Future getOneAnomaly(int id) async{
+  var url = ProjectSettings.apiUrl+"/api/v1/anomalys/$id";
+  var response = await http.get(url, headers: {HttpHeaders.authorizationHeader : "Token "+token});
+  return response.body;
+}
+
+Future getUserPostReaction(int postId, int userId) async {
+  var url = ProjectSettings.apiUrl+"/api/v1/posts/reaction?owner=$userId&post=$postId";
+  var response = await http.get(url, headers: {HttpHeaders.authorizationHeader : "Token "+token});
+  return response.body;
 }
 
 Future getComments(String postId) async {
@@ -241,13 +259,13 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future addUser(String username,String first_name,String last_name,String phone_number,String city,String address, String email, String password) async {
+  Future addUser(String username,String firstName,String lastName,String phoneNumber,String city,String address, String email, String password) async {
     var map = new Map<String, dynamic>();
     map["username"] = username;
     map["password"] = password;
-    map["first_name"] = first_name;
-    map["last_name"] = last_name;
-    map["phone_number"] = phone_number;
+    map["first_name"] = firstName;
+    map["last_name"] = lastName;
+    map["phone_number"] = phoneNumber;
     map["email"] = email;
     map["address"] = address;
     map["city"] = city;
@@ -341,12 +359,12 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future getPost(int id) async {
+  Future<http.Response> getPost(int id) async {
     var url = ProjectSettings.apiUrl + '/api/v1/posts/post/$id';
     var response = await http.get(url,
         headers: {HttpHeaders.authorizationHeader: "Token " + token}
     );
-    return response.body;
+    return response;
   }
 
   Future getRanking(String cityId) async {
