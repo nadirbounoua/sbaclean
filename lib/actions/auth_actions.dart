@@ -144,3 +144,8 @@ class GetUserPositionAction {
   }
         
 }
+
+class SetUserOneSignalIdAction {
+  String id;
+  SetUserOneSignalIdAction({this.id});
+}

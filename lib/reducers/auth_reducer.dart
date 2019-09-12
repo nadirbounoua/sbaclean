@@ -12,9 +12,16 @@ Reducer<AuthState> authReducer = combineReducers([
     new TypedReducer<AuthState, GetUserRankingAction>(getUserRanking), 
     new TypedReducer<AuthState, GetUserByEmailAction>(getUserByEmail), 
     new TypedReducer<AuthState, GetUserPositionAction>(getUserPosition), 
+    new TypedReducer<AuthState, SetUserOneSignalIdAction>(setUserOneSignalId), 
 
 
 ]);
+
+AuthState setUserOneSignalId(AuthState authState, SetUserOneSignalIdAction action){
+  User user = authState.user;
+  user.userOneSignalId = action.id;
+  return authState.copyWith(user: user);
+}
 
 AuthState getUserPosition(AuthState authState, GetUserPositionAction action){
     User user = authState.user;
