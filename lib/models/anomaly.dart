@@ -1,14 +1,13 @@
-import 'package:sbaclean/models/reaction.dart';
 import 'package:sbaclean/models/post.dart'; 
-import 'dart:convert';
  class Anomaly {
 
   int id;
   Post post;
-  
+  int postId;
   Anomaly({
            this.id, 
-           this.post
+           this.post,
+           this.postId
   });
 
   factory Anomaly.fromJson(Map<String,dynamic> json){
@@ -19,12 +18,22 @@ import 'dart:convert';
             );
   }
 
-    factory Anomaly.fromJsonPost(Map<String,dynamic> json){
+  factory Anomaly.fromJsonPost(Map<String,dynamic> json){
 
     return Anomaly(
             id:json['id'] as int,
-
+            postId: json['post'] as int
             );
+  }
+
+  factory Anomaly.preFromJsonPost(Map<String,dynamic> json){
+
+    return Anomaly(
+            id:json['id'] as int,
+            post: Post(
+              id: json['post'] as int
+            )
+          );
   }
 
   Anomaly copyWith({Post post, int id}){

@@ -12,10 +12,10 @@ class User {
   String authToken;
   Position position;
   String password;
-
+  String userOneSignalId;
   
   User({this.id , this.username, this.email, this.first_name, this.last_name, this.phone_number, this.address, this.city,
-       this.authToken, this.position, this.password});
+       this.authToken, this.position, this.password, this.userOneSignalId});
   
   factory User.fromJson(Map<String,dynamic> json){
     print(json);
