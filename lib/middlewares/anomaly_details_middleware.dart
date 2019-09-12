@@ -1,7 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/anomaly_details_actions.dart';
 import 'dart:convert';
-import 'package:sbaclean/actions/feed_actions.dart';
 import 'package:sbaclean/backend/api.dart';
 import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/middlewares/anomaly_details_helper.dart';
@@ -16,9 +15,24 @@ List<Middleware<AppState>> anomalyDetailsMiddleware() {
   return [
     TypedMiddleware<AppState, GetCommentsAction>(getComments()),
     TypedMiddleware<AppState, AddCommentAction>(addComment()),
+    TypedMiddleware<AppState, GetUserPostReactionAction>(getReaction()),
+
 
 
   ];
+}
+
+getReaction() {
+  return (Store<AppState> store, GetUserPostReactionAction action, NextDispatcher next) async {
+    next(action);
+
+    await api.copyWith(store.state.auth.user.authToken)
+          .getUserPostReaction(action.anomaly.post.id, store.state.auth.user.id)
+            .then((response) {
+                action.anomaly.post.userReaction = parseOneReaction(response);
+            });
+
+  };
 }
 
 getComments() {

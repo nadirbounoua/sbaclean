@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:material_search/material_search.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/actions.dart';
 import 'package:sbaclean/actions/auth_actions.dart';
@@ -9,6 +10,7 @@ import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/main.dart';
 import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/main.dart';
+import 'package:sbaclean/models/post.dart';
 import 'package:sbaclean/presentation/platform_adaptive.dart';
 import 'package:sbaclean/screens/maps/maps.dart';
 import 'package:sbaclean/screens/user-history/user-history.dart';
@@ -18,10 +20,10 @@ import 'package:sbaclean/screens/main_tabs/anomalies_tab.dart';
 import 'package:sbaclean/screens/main_tabs/events_tab.dart';
 import 'package:sbaclean/screens/main_tabs/posts_tab.dart';
 import 'package:sbaclean/screens/main_drawer.dart';
-
+import 'package:http/http.dart';
 import 'anomaly_details/anomaly_details.dart';
 import 'feed/feed.dart';
-import 'settings/settings.dart';
+import 'package:sbaclean/projectSettings.dart' as ProjectSettings;
 
 
 class MainScreen extends StatefulWidget {
@@ -38,6 +40,62 @@ class MainScreenState extends State<MainScreen> {
     int _index;
     List<Anomaly> anomalies = [];
     Api api = Api();
+
+  Future<void> initPlatformState(Store<AppState> store) async {
+      await OneSignal.shared
+              .init(ProjectSettings.oneSignalAppId);
+      OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+      OneSignal.shared.setRequiresUserPrivacyConsent(true);
+
+      OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) {
+        
+          print("notification" + notification.payload.additionalData.toString());
+        
+      });
+
+      OneSignal.shared
+          .setNotificationOpenedHandler((OSNotificationOpenedResult result) async {
+            String anomalyResponse = await api.copyWith(store.state.auth.user.authToken)
+                .getOneAnomaly(result.notification.payload.additionalData['id'] as int);
+            Anomaly anomaly = parseOneAnomaly(anomalyResponse);
+            Response postResponse = await api.copyWith(store.state.auth.user.authToken)
+                .getPost(anomaly.postId);
+            Post post = parseOnePost(postResponse.body);
+            anomaly.post = post;
+            MyApp.navigatorKey.currentState.pushNamed('anomalyDetail',arguments: anomaly);
+      });
+
+      OneSignal.shared
+      .setInAppMessageClickedHandler((OSInAppMessageAction action) {
+        
+      });
+
+      OneSignal.shared
+          .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
+        print("SUBSCRIPTION STATE CHANGED: ${changes.jsonRepresentation()}");
+        store.dispatch(SetUserOneSignalIdAction(id :changes.to.userId));
+      });
+
+      OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {
+        print("PERMISSION STATE CHANGED: ${changes.jsonRepresentation()}");
+      });
+
+      OneSignal.shared.setEmailSubscriptionObserver(
+          (OSEmailSubscriptionStateChanges changes) {
+        print("EMAIL SUBSCRIPTION STATE CHANGED ${changes.jsonRepresentation()}");
+      });
+
+      // NOTE: Replace with your own app ID from https://www.onesignal.com
+      
+
+      OneSignal.shared
+          .setInFocusDisplayType(OSNotificationDisplayType.notification);
+
+      // Some examples of how to use In App Messaging public methods with OneSignal SDK
+
+  }
+ 
 
     @override
     void initState() {
@@ -82,6 +140,7 @@ class MainScreenState extends State<MainScreen> {
               converter: (store) => store,
               onInit: (store) {
                 store.dispatch(GetUserPositionAction().getUserPosition());
+                //initPlatformState(store);
               },
               builder:(context,store) => PageView(
                 physics: NeverScrollableScrollPhysics(),

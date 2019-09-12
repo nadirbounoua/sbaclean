@@ -1,4 +1,5 @@
 import 'package:redux/redux.dart';
+import 'package:sbaclean/actions/anomaly_details_actions.dart';
 
 import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/models/reaction.dart';
@@ -31,6 +32,7 @@ Reducer<FeedState> feedReducer = combineReducers([
   
   new TypedReducer<FeedState, FinishRefreshAnomaliesAction>(finishRefreshAnomalies),
   new TypedReducer<FeedState, FinishRefreshAnomaliesAction>(finishRefreshAnomaliesContent),
+  new TypedReducer<FeedState, GetUserPostReactionAction>(getUserReaction),
 
 
 
@@ -40,7 +42,13 @@ FeedState setPostsChanged(FeedState state,SetPostsChanged action) {
   return state.copyWith(postsChanged: action.changed);
 }
 
-
+FeedState getUserReaction(FeedState state,GetUserPostReactionAction action) {
+  Anomaly anomaly = action.anomaly;
+  List<Anomaly> list = state.anomalies;
+  list.removeWhere((item) => item.id == anomaly.id);
+  list.add(anomaly);
+  return state.copyWith(anomalies: list);
+}
 
 
 FeedState deleteReaction(FeedState state, FinishDeleteReactionAction action) {

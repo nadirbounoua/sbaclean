@@ -1,6 +1,8 @@
+import 'package:sbaclean/models/anomaly.dart';
 import 'package:sbaclean/models/comment.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux/redux.dart';
+import 'package:sbaclean/models/reaction.dart';
 import 'package:sbaclean/store/app_state.dart';
 import 'package:sbaclean/backend/api.dart';
 import 'package:sbaclean/backend/utils.dart';
@@ -20,6 +22,12 @@ class GetCommentsAction {
   List<Comment> list ;
   String postId;
   GetCommentsAction({this.list, this.postId});
+
+}
+
+class GetUserPostReactionAction {
+  Anomaly anomaly;
+  GetUserPostReactionAction({this.anomaly});
 
 }
 
