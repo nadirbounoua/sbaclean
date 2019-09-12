@@ -45,14 +45,17 @@ class MapSampleState extends State<MapSample> {
           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> AnomalyDetails(anomaly: anomaly,)))
         ));
       });
-
-      store.state.eventState.events.forEach((event){
+      try {
+              store.state.eventState.events.forEach((event){
         markersSet.add(Marker(
           markerId: MarkerId(event.post.id.toString()),
           position: LatLng(double.parse(event.post.latitude), double.parse(event.post.longitude)),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
         ));
       });
+      } catch (e) {
+      }
+
       return GoogleMap(
         
         mapType: MapType.normal,
