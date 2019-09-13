@@ -240,12 +240,16 @@ Future getComments(String postId) async {
   }
 
   Future getUserAnomaliesHistory(String userId) async {
-    var url = ProjectSettings.apiUrl + '/api/v1/posts/post/?anomalyOwner=$userId';
+    var url = ProjectSettings.apiUrl + '/api/v1/anomalys?owner=$userId';
     var response = await http.get(url,
       headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
 
-    return response.body;
+    List<Anomaly> preAnomalies = parsePreAnomalies(response.body);
+    List<http.Response> list = await Future.wait(preAnomalies.map((preAnomaly)=> getPost(preAnomaly.post.id)));
+    
+    return list;
+
   }
 
 
