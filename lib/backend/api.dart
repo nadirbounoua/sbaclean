@@ -289,6 +289,15 @@ Future getComments(String postId) async {
     var response = await http.patch(url,body: map, headers: {HttpHeaders.authorizationHeader: "Token "+ token });
     return response.body;
   }
+  Future modifyProfilePicture(String id,String token,String profile_picture) async {
+    var map = new Map<String, dynamic>();
+    print("Im in api");
+    map["profile_pic_url"] = profile_picture;
+    map["is_staff"] = "0";
+    var url = ProjectSettings.apiUrl + "/api/v1/accounts/$id";
+    var response = await http.patch(url,body: map, headers: {HttpHeaders.authorizationHeader: "Token "+ token});
+    return response.body;
+  }
 
   Future modifyPassword(String id,String token,String password) async {
     var map = new Map<String, dynamic>();
@@ -334,6 +343,14 @@ Future getComments(String postId) async {
     return response.body;
   }
 
+  Future removeEvent(String token,String id) async {
+    print("in remove event");
+    var url = ProjectSettings.apiUrl + "/api/v1/events/$id";
+    var response = await http.delete(url,headers: {HttpHeaders.authorizationHeader: "Token "+ token}
+    );
+    return response.body;
+  }
+
   Future getUserEvents(String userId) async {
 
     var url = ProjectSettings.apiUrl+"/api/v1/posts/post/?eventOwner=$userId";
@@ -373,6 +390,26 @@ Future getComments(String postId) async {
     return response.body;
   }
 
+  Future removeParticipation(String token,Participation participation) async {
+    // get participation id
+    String responseBody = await getParticipation(participation);
+    Participation participate = parseOneParticipation(responseBody);
+    final id = participate.id;
+    //remove participation
+    print("Im in remove participation");
+    var url = ProjectSettings.apiUrl + "/api/v1/events/participate/$id";
+    var response = await http.delete(url,headers: {HttpHeaders.authorizationHeader: "Token "+ token}
+    );
+    return response.body;
+  }
+  Future getParticipation(Participation participation) async {
+    final user = participation.user;
+    final event = participation.event;
+    var url = ProjectSettings.apiUrl+"/api/v1/events/participate/?user=$user&event=$event";
+    var response = await http.get(url);
+    return response.body;
+  }
+
   Future getParticipations() async {
     var url = ProjectSettings.apiUrl+"/api/v1/events/participate/";
     var response = await http.get(url);
@@ -394,4 +431,6 @@ Future getComments(String postId) async {
     return response.body;
   }
 }
+
+
 

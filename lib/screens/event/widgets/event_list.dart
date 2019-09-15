@@ -26,8 +26,8 @@ class EventList extends StatelessWidget {
 
         return EventPreview(
           event : events[index],
-          closed : test_max | test_user
-          ,
+          closed : test_max | test_user,
+          test_user: test_user,
         );
       },
     );});

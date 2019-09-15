@@ -11,7 +11,10 @@ Reducer<AuthState> authReducer = combineReducers([
     new TypedReducer<AuthState, UserLogout>(userLogoutReducer),
     new TypedReducer<AuthState, GetUserRankingAction>(getUserRanking), 
     new TypedReducer<AuthState, GetUserByEmailAction>(getUserByEmail), 
-    new TypedReducer<AuthState, GetUserPositionAction>(getUserPosition), 
+    new TypedReducer<AuthState, GetUserPositionAction>(getUserPosition),
+    new TypedReducer<AuthState, EditProfilePicRequest>(updateProfilePicRequest),
+    new TypedReducer<AuthState, UserProfilePicture>(updateUserProfilePicture),
+    new TypedReducer<AuthState, UserUpdate>(userUpdateReducer)
 
 
 ]);
@@ -41,7 +44,6 @@ AuthState userLoginRequestReducer(AuthState auth, UserLoginRequest action) {
 }
 
 AuthState userLoginSuccessReducer(AuthState auth, UserLoginSuccess action) {
-  print("success");
     return auth.copyWith(
         isAuthenticated: true,
         isAuthenticating: false,
@@ -62,6 +64,26 @@ AuthState userLogoutReducer(AuthState auth, UserLogout action) {
 }
 
 AuthState getUserRanking(AuthState state, GetUserRankingAction action) {
-    print('k');
     return state.copyWith(ranks: action.ranks);
+}
+
+AuthState userUpdateReducer(AuthState auth, UserUpdate action) {
+    return auth.copyWith(
+        user: action.user
+    );
+}
+
+AuthState updateUserProfilePicture(AuthState state, UserProfilePicture action) {
+    User user = state.user;
+    user.profile_picture = action.profile_picture;
+    return state.copyWith(
+        isEditingPicture: false,
+        user: user
+
+    );
+}
+AuthState updateProfilePicRequest(AuthState authState, EditProfilePicRequest action){
+    return authState.copyWith(
+        isEditingPicture: true,
+    );
 }

@@ -65,3 +65,18 @@ class FinishGetEventsAction {
   };
   }
 }
+
+
+final Function removeEvent = (BuildContext context,token,Event event) {
+  Api api = Api();
+  return (Store<AppState> store) async{
+    final responseEvent = await api.removeEvent(token,event.id.toString());
+    store.dispatch(new RemoveEventAction(event: event));
+  };
+};
+
+class RemoveEventAction {
+  final Event event;
+
+  RemoveEventAction({this.event});
+}

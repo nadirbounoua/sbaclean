@@ -32,7 +32,7 @@ class MainScreen extends StatefulWidget {
 
 }
 class MainScreenState extends State<MainScreen> {
-    
+
     PageController _tabController;
     String _title;
     int _index;
@@ -50,7 +50,7 @@ class MainScreenState extends State<MainScreen> {
     @override
     Widget build(BuildContext context) {
         return new Scaffold(
-            
+
             appBar: AppBar(
               title:Text(_title,),
               actions: (_index ==0) ? <Widget>[
@@ -62,8 +62,8 @@ class MainScreenState extends State<MainScreen> {
                   icon: new Icon(Icons.search),
                 )] : null,
               ),
-            
-            
+
+
             bottomNavigationBar: new PlatformAdaptiveBottomBar(
                 currentIndex: _index,
                 onTap: onTap,
@@ -92,7 +92,7 @@ class MainScreenState extends State<MainScreen> {
                     EventsTab(),
                     MapSample()
                 ],
-            ), 
+            ),
             ),
 
             drawer: new MainDrawer(),
@@ -107,7 +107,7 @@ class MainScreenState extends State<MainScreen> {
         setState((){
             this._index = tab;
         });
-        
+
         this._title = TabItems[tab].title;
     }
 

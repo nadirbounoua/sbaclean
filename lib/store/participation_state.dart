@@ -8,7 +8,7 @@ class ParticipationState{
   final List<Participation> participations;
 
 
-  ParticipationState({this.participations});
+  ParticipationState({this.participations = const []});
 
   ParticipationState copyWith({
     List<Participation> participations,

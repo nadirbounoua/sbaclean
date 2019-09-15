@@ -18,7 +18,6 @@ class Event {
     this.approved_at,
     this.starts_at,
     this.post,
-
     this.max_participants,
     this.approved_by
   });

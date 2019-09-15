@@ -61,3 +61,15 @@ final Function checkEvent = (List<Participation> participations,String user_id) 
   return closed;
 
 };
+
+
+final Function removeParticipation = (BuildContext context,token,participation) {
+  Api api = Api();
+  return (Store<AppState> store) async{
+    final responseParticipation = await api.removeParticipation(token, participation);
+    store.dispatch(new RemoveParticipationAction());
+  };
+};
+
+class RemoveParticipationAction {
+}

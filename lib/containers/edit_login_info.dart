@@ -8,8 +8,8 @@ import '../actions/city_actions.dart';
 import '../screens/profile_screen.dart';
 
 class EditLoginInfo extends StatefulWidget {
-  @override
-  _EditLoginInfoState createState() => new _EditLoginInfoState();
+@override
+_EditLoginInfoState createState() => new _EditLoginInfoState();
 }
 
 class _EditLoginInfoState extends State<EditLoginInfo> {
@@ -99,3 +99,4 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
         });
   }
 }
+

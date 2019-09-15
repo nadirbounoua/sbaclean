@@ -4,33 +4,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/participation_actions.dart';
+import 'package:sbaclean/actions/event_actions.dart';
 import 'package:sbaclean/backend/utils.dart';
 import 'package:sbaclean/models/event.dart';
 import 'package:sbaclean/models/participation.dart';
 import 'package:sbaclean/store/app_state.dart';
 import '../../../styles/colors.dart';
+import 'package:toast/toast.dart';
+
+import '../../main_screen.dart';
+
 
 class EventPreview extends StatefulWidget {
-    Event event;
-    bool closed;
-    EventPreview({this.event, this.closed});
+  Event event;
+  bool closed;
+  bool test_user;
+  EventPreview({this.event, this.closed, this.test_user});
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return EventPreviewState(event: event,closed: closed);
+    return EventPreviewState(
+        event: event, closed: closed, test_user: test_user);
   }
-  
 }
 
 class EventPreviewState extends State<EventPreview> {
   Event event;
   bool closed;
+  bool test_user;
 
-  EventPreviewState({Key key,  this.event,this.closed});
+  EventPreviewState({Key key, this.event, this.closed, this.test_user});
   bool _isButtonDisabled;
 
-    @override
+  @override
   void initState() {
     _isButtonDisabled = true;
   }
@@ -38,42 +45,45 @@ class EventPreviewState extends State<EventPreview> {
   @override
   Widget build(BuildContext context) {
     DateTime dateTime = DateTime.parse(event.starts_at).toLocal();
-    String date = dateTime.year.toString() + "/"+ dateTime.month.toString()+'/'+ dateTime.day.toString();
+    String date = dateTime.year.toString() +
+        "/" +
+        dateTime.month.toString() +
+        '/' +
+        dateTime.day.toString();
 
     // TODO: implement build
     return StoreConnector<AppState, dynamic>(
         converter: (Store<AppState> store) {
-      return (BuildContext context, String event) =>
-              store.dispatch(addParticipation(context, store.state.auth.user.authToken,
-                  new Participation(user: store.state.auth.user.id.toString(), event: event)));
-
+      return (BuildContext context, String event) => store.dispatch(
+          addParticipation(
+              context,
+              store.state.auth.user.authToken,
+              new Participation(
+                  user: store.state.auth.user.id.toString(), event: event)));
     }, builder: (BuildContext context, addParticipationAction) {
-      if(!closed){
+      if (!closed) {
         _isButtonDisabled = false;
-      }
-      else {
+      } else {
         _isButtonDisabled = true;
       }
       return Card(
-      child:    Card(
-      child:IntrinsicHeight(
-        child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Image.network(
-                     event.post.imageUrl,
-                     width: MediaQuery.of(context).size.width/3,
-                     height: MediaQuery.of(context).size.width/3,
-                     fit: BoxFit.fill,
-                     ),
-        Expanded(
-            child: Column(
-            children: [
-              Container(
-                height: 2*MediaQuery.of(context).size.width/9,
-                width: 2*MediaQuery.of(context).size.width/3,
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child:
-                  Row(
+          child: Card(
+        child: IntrinsicHeight(
+          child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Image.network(
+              event.post.imageUrl,
+              width: MediaQuery.of(context).size.width / 3,
+              height: MediaQuery.of(context).size.width / 3,
+              fit: BoxFit.fill,
+            ),
+            Expanded(
+              child: Column(children: [
+                Container(
+                  height: 2 * MediaQuery.of(context).size.width / 9,
+                  width: 2 * MediaQuery.of(context).size.width / 3,
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -81,110 +91,175 @@ class EventPreviewState extends State<EventPreview> {
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
-                              event.post.title,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 20,
-                                
+                            StoreConnector<AppState, dynamic>(
+                                converter: (Store<AppState> store) {
+                                  return (BuildContext context, Event event) =>
+                                      store.dispatch(removeEvent(
+                                          context,
+                                          store.state.auth.user.authToken,
+                                           event
+                                          ));
+                                }, builder: (BuildContext context,
+                                removeEventAction) {
+                           return  Row(
+                            children: <Widget>[
+                              Text(
+                                event.post.title,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
                               ),
-                            ),
+                              IconButton(
+                                  icon: Icon(Icons.delete,color: Colors.black54)
+                                  , onPressed: (){
+                                showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false, // user must tap button!
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Delete Event'),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text('You will delete this event.'),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Cancel'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        FlatButton(
+                                          child: Text('Delete'),
+                                          onPressed: () {
+                                            removeEventAction(
+                                                context, event);
+                                            Toast.show("Removed Successfuly", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+
+
+                              })
+                            ],
+                            );}),
                             Padding(
                               padding: EdgeInsets.all(8),
                             ),
                             Container(
                               child: Text(
                                 event.post.description,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 16
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    color: Colors.grey[600], fontSize: 16),
                               ),
-                            ),
                             )
                           ],
                         ),
-                         
-                        Text(date,textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontSize: 16
-                          ),
-                        ),
-        ],
-      ),
-    ),
-  ),          
-              Container(
-                margin: EdgeInsets.all(8),
-                height: MediaQuery.of(context).size.width/9,
-                  child:Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    child: Row(
-                      children: <Widget>[
-                        Text(event.max_participants.toString(),
-                          style: TextStyle(
-                            fontSize: 16
-                          ),),
-                        Padding(
-                          padding: EdgeInsets.all(2),
-                        ),
-                        Icon(Icons.person,
-                          size: 30, 
-                          color: Colors.grey,
+                        Text(
+                          date,
+                          textAlign: TextAlign.end,
+                          style: TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
                   ),
-
-                  Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  textDirection: TextDirection.ltr,
-                  children: <Widget>[
-                    
-                    Column(
+                ),
+                Container(
+                  margin: EdgeInsets.all(8),
+                  height: MediaQuery.of(context).size.width / 9,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              event.max_participants.toString(),
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(2),
+                            ),
+                            Icon(
+                              Icons.person,
+                              size: 30,
+                              color: Colors.grey,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.start,
+                        textDirection: TextDirection.ltr,
                         children: <Widget>[
-                          
-                          FlatButton(
-                            color: colorStyles['primary'],
-                            onPressed: () {
-                              if (_isButtonDisabled) {
-                              } else {
-                                addParticipationAction(context,event.id.toString());
-                                closed = true;
-                              }
-                            },
-                            child: new Text(_isButtonDisabled
-                                ? "Hold on..."
-                                : "Participate"),
+                          StoreConnector<AppState, dynamic>(
+                              converter: (Store<AppState> store) {
+                            return (BuildContext context, String event) =>
+                                store.dispatch(removeParticipation(
+                                    context,
+                                    store.state.auth.user.authToken,
+                                    new Participation(
+                                        user:
+                                            store.state.auth.user.id.toString(),
+                                        event: event)));
+                          }, builder: (BuildContext context,
+                                  removeParticipationAction) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                FlatButton(
+                                  color: colorStyles['primary'],
+                                  onPressed: () {
+                                    if (test_user) {
+                                      removeParticipationAction(
+                                          context, event.id.toString());
+                                      test_user = false;
+                                      closed = false;
+                                    } else {
+                                      if (_isButtonDisabled) {
+                                      } else {
+                                        addParticipationAction(
+                                            context, event.id.toString());
+                                        test_user = true;
+                                        closed = true;
+                                      }
+                                    }
+                                  },
+                                  child: new Text(test_user
+                                      ? "Annuller participation"
+                                      : _isButtonDisabled
+                                          ? "closed"
+                                          : "Participate"),
+                                ),
+                              ],
+                            );
+                          }),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10),
                           ),
                         ],
                       ),
-                    
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                  
-                ],
-              ),
-                ),
-            
-            ]),
-          ),
-        ]),
-      ),
-    )
-      );}
-    );
-    
+              ]),
+            ),
+          ]),
+        ),
+      ));
+    });
   }
-
-  }
+}
 /*Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[

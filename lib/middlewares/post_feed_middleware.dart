@@ -52,13 +52,13 @@ setImage() {
   return (Store<AppState> store, SetAnomalyImageAction action, NextDispatcher next) async {
     next(action);
     File image;
-
     if (store.state.postFeedState.chooseCamera)
       image = await ImagePicker.pickImage(source: ImageSource.camera);
     else 
       image = await ImagePicker.pickImage(source: ImageSource.gallery);
     store.dispatch(new FinishSetAnomalyImageAction(image: image));
   };
+
 }
 
 chooseCamera() {
