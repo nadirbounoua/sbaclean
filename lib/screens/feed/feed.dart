@@ -95,6 +95,8 @@ class _FeedState extends State<FeedScreen> {
                 onRefresh: () {
                   final getReactions = GetUserReactionAction([]);
                   final getAnomalies = RefreshAnomaliesAction([]);
+                  store.dispatch(new SetPostsChanged(changed: false));
+
                   FinishRefreshAnomaliesAction.completer = Completer();
                   store.dispatch(getReactions);
                   store.dispatch(getAnomalies);
@@ -112,8 +114,8 @@ class _FeedState extends State<FeedScreen> {
               hasLabel: true,
               labelText: "Ajouter une anomalie",
               labelHasShadow: true,
-              labelBackgroundColor: Colors.grey[400],
-              labelColor: Colors.black54,
+              labelBackgroundColor: Colors.orange[400],
+              labelColor: Colors.white,
               currentButton: FloatingActionButton(
                 heroTag: 'btn1',
                 mini: true,
@@ -126,8 +128,8 @@ class _FeedState extends State<FeedScreen> {
               hasLabel: true,
               labelText: "Ajouter un événement",
               labelHasShadow: true,
-              labelBackgroundColor: Colors.grey[400],
-              labelColor: Colors.black54,
+              labelBackgroundColor: Colors.red[400],
+              labelColor: Colors.white,
               currentButton: FloatingActionButton(
                 heroTag: 'btn2',
                 mini: true,
@@ -146,8 +148,9 @@ class _FeedState extends State<FeedScreen> {
         store.dispatch(GetUserReactionAction([]));
         store.dispatch(GetAnomaliesAction([]));
         timer = Timer.periodic(Duration(seconds: 45), (Timer t) async  {
-        bool changed = await api.copyWith(MyApp.store.state.auth.user.authToken)
-                                .checkNewPosts(MyApp.store.state.feedState);
+        bool changed = await api.copyWith(store.state.auth.user.authToken)
+                                .checkNewPosts(store.state.feedState, 
+                                store.state.auth.user.city);
 
         if (changed) store.dispatch(new SetPostsChanged(changed: changed));
         });
