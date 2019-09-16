@@ -23,6 +23,7 @@ Reducer<FeedState> feedReducer = combineReducers([
   new TypedReducer<FeedState, AddAnomalyAction>(addItem),
   new TypedReducer<FeedState, FinishAddAnomalyAction>(finishAddItem),
   new TypedReducer<FeedState, FinishAddAnomalyAction>(finishAddItemContent),
+  new TypedReducer<FeedState, SilentAddAnomalyAction>(silentAddAnomaly),
 
   new TypedReducer<FeedState, AddAnomalyAction>(addItem),
   new TypedReducer<FeedState, FinishGetAnomaliesAction>(finishLoadAnomalies),
@@ -33,7 +34,7 @@ Reducer<FeedState> feedReducer = combineReducers([
   new TypedReducer<FeedState, FinishRefreshAnomaliesAction>(finishRefreshAnomalies),
   new TypedReducer<FeedState, FinishRefreshAnomaliesAction>(finishRefreshAnomaliesContent),
   new TypedReducer<FeedState, GetUserPostReactionAction>(getUserReaction),
-
+  new TypedReducer<FeedState, FinisheDeleteOneAnomalyAction>(finishDeleteAnomaly)
 
 
 ]);
@@ -153,7 +154,6 @@ FeedState finishRefreshAnomalies(FeedState state, FinishRefreshAnomaliesAction a
 
 FeedState finishAddItemContent(FeedState state, FinishAddAnomalyAction action) {
   var list = List.from(state.anomalies)..add(action.anomaly,);
-  print(list);
   return state.copyWith(anomalies: List.from(state.anomalies)..add(action.anomaly)
     ..sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id) )
   );
@@ -167,4 +167,21 @@ FeedState finishAddItem(FeedState state, FinishAddAnomalyAction action) {
 FeedState addItem(FeedState state, AddAnomalyAction action) {
   
   return state.copyWith(isAddAnomalyLoading: true);
+}
+
+FeedState finishDeleteAnomaly(FeedState state, FinisheDeleteOneAnomalyAction action){
+  List<Anomaly> list = state.anomalies;
+  list.removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  list.sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id));
+  return state.copyWith(anomalies: list);
+
+}
+
+FeedState silentAddAnomaly(FeedState state, SilentAddAnomalyAction action) {
+  
+  return state.copyWith(anomalies: List.from(state.anomalies)
+    ..removeWhere((anomaly) => anomaly.id == action.anomaly.id)
+    ..add(action.anomaly)
+    ..sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id) )
+  );
 }

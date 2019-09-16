@@ -8,11 +8,9 @@ import 'package:sbaclean/store/app_state.dart';
 import 'package:sbaclean/actions/feed_actions.dart';
 
 getAnomalies(Store<AppState> store, List<Response> response ) async {
-      print("anomalieHelper");
       List<Anomaly> anomalyList = await parseAnomalies(response);
       for (var anomaly in anomalyList) {
         for (var reaction in store.state.feedState.userReactions) {
-          print(reaction);
           if (anomaly.post.id == reaction.post) anomaly.post.userReaction = reaction;
         }
       }
@@ -28,7 +26,6 @@ addAnomalyHelper(Store<AppState> store, dynamic response, Post post) async{
 }
 
 getReactionsHelper(Store<AppState> store, String response) async{
-      print("getreactionhelper");
 
     List<Reaction> list = await parseReaction(response);
     store.dispatch(FinishGetUserReactionAction(list: list));

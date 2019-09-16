@@ -1,4 +1,6 @@
 import 'package:redux/redux.dart';
+import 'package:sbaclean/actions/feed_actions.dart';
+import 'package:sbaclean/models/anomaly.dart';
 
 import 'package:sbaclean/store/user_history_state.dart';
 import 'package:sbaclean/actions/user_history_actions.dart';
@@ -12,6 +14,7 @@ Reducer<UserHistoryState> userHistoryReducer = combineReducers([
   new TypedReducer<UserHistoryState ,FinishGetUserEventHistoryAction>(finishGetUserEventsHistoryContent),
   new TypedReducer<UserHistoryState ,ShowAnomalyAction>(showAnomaly),
   new TypedReducer<UserHistoryState ,ShowEventAction>(showEvent),
+  new TypedReducer<UserHistoryState ,FinisheDeleteOneAnomalyAction>(finishDeleteAnomaly),
 
 
 
@@ -20,6 +23,14 @@ Reducer<UserHistoryState> userHistoryReducer = combineReducers([
 
 UserHistoryState showAnomaly(UserHistoryState state, ShowAnomalyAction action) {
   return state.copyWith(showEvent: false);
+}
+
+
+UserHistoryState finishDeleteAnomaly(UserHistoryState state, FinisheDeleteOneAnomalyAction action) {
+  List<Anomaly> list = state.userPosts;
+  list.removeWhere((anomaly) => anomaly.id == action.anomaly.id);
+  list.sort((anomaly, anomaly1) => anomaly1.id.compareTo(anomaly.id));
+  return state.copyWith(userPosts: list);
 }
 
 UserHistoryState showEvent(UserHistoryState state, ShowEventAction action) {

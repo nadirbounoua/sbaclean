@@ -20,8 +20,7 @@ List<Middleware<AppState>> feedMiddleware() {
     TypedMiddleware<AppState, DeleteReactionAction>(deleteReaction()),
     TypedMiddleware<AppState, UpdateReactionAction>(updateReaction()),
     TypedMiddleware<AppState, RefreshAnomaliesAction>(refreshAnomalies()),
-
-
+    TypedMiddleware<AppState, DeleteAnomalyAction>(deleteAnomaly()),
 
   ];
 }
@@ -48,6 +47,18 @@ addAnomaly() {
           .then((response)  {
               print(response);
               addAnomalyHelper(store, response, action.post);
+          });
+  };
+}
+
+deleteAnomaly() {
+  return (Store<AppState> store, DeleteAnomalyAction action, NextDispatcher next) async {
+
+    next(action);
+    await api.copyWith(store.state.auth.user.authToken)
+        .deleteOneANomaly(action.anomaly.id)
+          .then((response)  {
+              store.dispatch(FinisheDeleteOneAnomalyAction(anomaly: action.anomaly));
           });
   };
 }
