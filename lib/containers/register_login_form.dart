@@ -67,100 +67,100 @@ class _RegisterLoginFormState extends State<RegisterLoginForm> {
                       ),
                     ),
 
-                      new Form(
-                            key: formKey,
-                            child: new Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                new TextFormField(
-                                  decoration: new InputDecoration(
-                                      labelText: "FirstName"),
-                                  keyboardType: TextInputType.text,
-                                  validator: (val) => val.isEmpty
-                                      ? 'Please enter your firstname.'
-                                      : null,
-                                  onSaved: (val) => _first_name = val,
-                                ),
-                                new TextFormField(
-                                  decoration: new InputDecoration(
-                                      labelText: "LastName"),
-                                  keyboardType: TextInputType.text,
-                                  validator: (val) => val.isEmpty
-                                      ? 'Please enter your firstname.'
-                                      : null,
-                                  onSaved: (val) => _last_name = val,
-                                ),
-                                new TextFormField(
-                                  decoration:
-                                      new InputDecoration(labelText: "Address"),
-                                  keyboardType: TextInputType.text,
-                                  validator: (val) => val.isEmpty
-                                      ? 'Please enter your address.'
-                                      : null,
-                                  onSaved: (val) => _address = val,
-                                ),
-                                DropdownButton<String>(
-                                  value: _city,
-                                  items: cities
-                                      .map((label) => DropdownMenuItem(
-                                            child: Text(label),
-                                            value: label,
-                                          ))
-                                      .toList(),
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      _city = newValue;
-                                    });
-                                  },
-                                ),
-                                new Padding(
-                                  padding: new EdgeInsets.only(top: 20.0),
-                                  child: new FlatButton(
-                                    onPressed: () {
-                                      final form = formKey.currentState;
+                    new Form(
+                      key: formKey,
+                      child: new Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          new TextFormField(
+                            decoration: new InputDecoration(
+                                labelText: "FirstName"),
+                            keyboardType: TextInputType.text,
+                            validator: (val) => val.isEmpty
+                                ? 'Please enter your firstname.'
+                                : null,
+                            onSaved: (val) => _first_name = val,
+                          ),
+                          new TextFormField(
+                            decoration: new InputDecoration(
+                                labelText: "LastName"),
+                            keyboardType: TextInputType.text,
+                            validator: (val) => val.isEmpty
+                                ? 'Please enter your firstname.'
+                                : null,
+                            onSaved: (val) => _last_name = val,
+                          ),
+                          new TextFormField(
+                            decoration:
+                            new InputDecoration(labelText: "Address"),
+                            keyboardType: TextInputType.text,
+                            validator: (val) => val.isEmpty
+                                ? 'Please enter your address.'
+                                : null,
+                            onSaved: (val) => _address = val,
+                          ),
+                          DropdownButton<String>(
+                            value: _city,
+                            items: cities
+                                .map((label) => DropdownMenuItem(
+                              child: Text(label),
+                              value: label,
+                            ))
+                                .toList(),
+                            onChanged: (String newValue) {
+                              setState(() {
+                                _city = newValue;
+                              });
+                            },
+                          ),
+                          new Padding(
+                            padding: new EdgeInsets.only(top: 20.0),
+                            child: new FlatButton(
+                              onPressed: () {
+                                final form = formKey.currentState;
 
-                                      if (form.validate()) {
-                                        form.save();
-                                        register(
-                                            context,
-                                            username,
-                                            _first_name,
-                                            _last_name,
-                                            phone_number,
-                                            (cities.indexOf(_city) + 1)
-                                                .toString(),
-                                            _address,
-                                            email,
-                                            password);
+                                if (form.validate()) {
+                                  form.save();
+                                  register(
+                                      context,
+                                      username,
+                                      _first_name,
+                                      _last_name,
+                                      phone_number,
+                                      (cities.indexOf(_city) + 1)
+                                          .toString(),
+                                      _address,
+                                      email,
+                                      password);
 
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginScreen()),
-                                        );
-                                      }
-                                    },
-                                    child: new Text('Register'),
-                                  ),
-                                ),
-                                new Padding(
-                                  padding: new EdgeInsets.only(top: 5.0),
-                                  child: new FlatButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RegisterScreen()),
-                                      );
-                                    },
-                                    child: new Text('back'),
-                                  ),
-                                )
-                              ],
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoginScreen()),
+                                  );
+                                }
+                              },
+                              child: new Text('Register'),
+                            ),
+                          ),
+                          new Padding(
+                            padding: new EdgeInsets.only(top: 5.0),
+                            child: new FlatButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          RegisterScreen()),
+                                );
+                              },
+                              child: new Text('back'),
                             ),
                           )
+                        ],
+                      ),
+                    )
 
                   ],
                 ))));

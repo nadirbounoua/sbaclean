@@ -67,14 +67,15 @@ class _EditProfileFormState extends State<EditProfileForm> {
                         new InputDecoration(labelText: 'Email'),
                         initialValue: state.auth.user.email,
                         keyboardType: TextInputType.emailAddress,
-                        validator: (val){
+                        validator: (val) {
                           if (val.isEmpty) {
                             return 'Please entre the email';
                           }
-                          if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(val)) {
-                            return 'Please entre a valid emailAddress';
+                          if (!RegExp(
+                              r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+                              .hasMatch(val)) {
+                            return 'Please entre a valid email';
                           }
-
                           return null;
                         },
                         onSaved: (val) => _email = val,
@@ -96,9 +97,17 @@ class _EditProfileFormState extends State<EditProfileForm> {
                       new TextFormField(
                         decoration: new InputDecoration(labelText: 'Phone'),
                         keyboardType: TextInputType.phone,
-                        initialValue: state.auth.user.phone_number.toString(),
-                        validator: (val) =>
-                        val.isEmpty ? 'Please enter your phone number.' : null,
+                        validator: (val) {
+                          if (val.isEmpty) {
+                            return 'Please entre the phone_number';
+                          }
+                          if (!RegExp(
+                              r"(?:(?:\+|00)2130|0)\s*[1-9](?:[\s.-]*\d{2}){4}")
+                              .hasMatch(val)) {
+                            return 'Please entre a valid phone number';
+                          }
+                          return null;
+                        },
                         onSaved: (val) => _phone_number = val,
                       ),
                       new TextFormField(
