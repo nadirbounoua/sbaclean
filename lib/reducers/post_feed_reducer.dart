@@ -63,7 +63,7 @@ PostFeedState finishGetPostion(PostFeedState state, FinishAddPositionAction acti
 
 PostFeedState deletePosition(PostFeedState state, FinishDeletePostionAction action){ 
   print("k");
-  return PostFeedState();
+  return state.copyWith(havePosition: false);
 }
 
 PostFeedState chooseCamera(PostFeedState state,ChoosePickerCameraAction action) {
