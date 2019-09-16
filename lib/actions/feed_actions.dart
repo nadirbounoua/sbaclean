@@ -60,6 +60,24 @@ class AddAnomalyAction {
 
 }
 
+class SilentAddAnomalyAction {
+  Anomaly anomaly;
+  SilentAddAnomalyAction({this.anomaly});
+
+}
+
+class DeleteAnomalyAction {
+  Anomaly anomaly;
+  DeleteAnomalyAction({this.anomaly});
+
+}
+
+class FinisheDeleteOneAnomalyAction {
+  Anomaly anomaly;
+  FinisheDeleteOneAnomalyAction({this.anomaly});
+}
+
+
 class GetAnomaliesAction {
   final List<Anomaly> list;
   Completer completer=  new Completer();
