@@ -44,7 +44,6 @@ class Api {
     'post_owner': user.id.toString(),'city':'1', 'image':post.imageUrl},    
     headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
-    print(response.body);
     return response.body;
 }
 
@@ -75,6 +74,12 @@ Future getOneAnomaly(int id) async{
   var url = ProjectSettings.apiUrl+"/api/v1/anomalys/$id";
   var response = await http.get(url, headers: {HttpHeaders.authorizationHeader : "Token "+token});
   return response.body;
+}
+
+Future deleteOneANomaly(int id) async {
+  var url = ProjectSettings.apiUrl + '/api/v1/anomalys/$id';
+  var response = await http.delete(url);
+  return response.statusCode;
 }
 
 Future getUserPostReaction(int postId, int userId) async {
@@ -133,12 +138,15 @@ Future getComments(String postId) async {
 
   }
 
-  Future checkNewPosts(FeedState state) async {
+  Future checkNewPosts(FeedState state, String city) async {
     String count = state.anomalies.length.toString();
     print("Tokeen $token");
-    var url = ProjectSettings.apiUrl + "/api/v1/mobile/check_new_posts/";
+    var url = ProjectSettings.apiUrl + "/api/v1/notification/check_new_posts/";
     var response = await http.post(url,
-    body: {'count':count},
+    body: {
+      'count':count,
+      'city': city
+      },
     headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -328,7 +336,6 @@ Future getComments(String postId) async {
           'post_owner': user,'city':'1'},
         headers: {HttpHeaders.authorizationHeader: "Token "+token}
     );
-    print(response.body);
     return response.body;
   }
 
