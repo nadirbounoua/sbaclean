@@ -17,6 +17,7 @@ class PostsChangedNotification extends StatelessWidget {
             store.dispatch(new GetAnomaliesAction([]));
           },
           color: Colors.blueAccent,
+          textColor: Colors.white,
           elevation: 1.0,
           
         ) ,

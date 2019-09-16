@@ -89,16 +89,24 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
       builder: (context, store) => Scaffold(
       appBar: AppBar(title: const Text('Ajouter un post')),
 
-      body:Center(
-      child: Card(
-        child: Column(
+      body:Card(
+        child: SingleChildScrollView(
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            ListTile(
-              leading: IconButton(
-                  icon: (store.state.postFeedState.image == null) ? Icon(Icons.image) : Image.file(store.state.postFeedState.image,height: 100,width: 100,),
-                  iconSize: (store.state.postFeedState.image != null ) ? 60 : 24,
-                  onPressed:  () async {
+            GestureDetector(
+              child: (store.state.postFeedState.image == null) ? 
+                Image.asset('assets/24px.png',
+                  filterQuality: FilterQuality.high,              
+                  height: MediaQuery.of(context).size.height *0.4,
+                  width: MediaQuery.of(context).size.width - 8,             
+                )
+              : Image.file(store.state.postFeedState.image,
+                  filterQuality: FilterQuality.high,              
+                  height: MediaQuery.of(context).size.height *0.4,
+                  width: MediaQuery.of(context).size.width - 8,
+                ),
+              onTap: () async {
 
                     await showDialog(
                       context: context,
@@ -108,20 +116,37 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
 
                     store.dispatch(new SetAnomalyImageAction());
 
-                },
-              
-                
-              ),
-              title: Text(title),
-              subtitle: store.state.postFeedState.havePosition ? Text(store.state.postFeedState.placemark.locality + ", "+store.state.postFeedState.placemark.country) 
-                  : Text(""),
+              },
             ),
+            Padding(padding: EdgeInsets.all(2),),
+                        
+            Row(
+              children: <Widget>[
+                Text('Type :',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 16
+                  ),
+                ),
+                Padding(padding: EdgeInsets.all(4),
+                ),
+                 Text(title, 
+                  style: TextStyle(
+                    fontSize: 16
+
+                  ),
+                 ),
+              ],
+              
+            ),
+            store.state.postFeedState.havePosition ? Text(store.state.postFeedState.placemark.locality + ", "+store.state.postFeedState.placemark.country) 
+                  : Container(width: 0, height: 0,),
             Form(
               key: _formKey,
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 0),
+                    padding: EdgeInsets.only(left: 0, top: 8),
                     child:                  
                     Row(
                     
@@ -267,13 +292,10 @@ class _MyStatefulWidgetState extends State<PostScreenWidget> {
             ),
           ],
         ),
-      ),
-    )
-  ,
   
-
-
-    ));
+        )     ),
+    ),
+  );
    
   }
 

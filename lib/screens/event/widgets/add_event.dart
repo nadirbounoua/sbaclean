@@ -55,17 +55,23 @@ class _AddEventFormState extends State<AddEventForm> {
     },
     builder: (context,store) {
     return Card(
-      child: Form(
-      key: formKey,
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
+        child:Column(
+          mainAxisSize: MainAxisSize.min,
 
-        children: [
-          ListTile(
-              leading: IconButton(
-                  icon: (store.state.postFeedState.image == null) ? Icon(Icons.image) : Image.file(store.state.postFeedState.image,height: 100,width: 100,),
-                  iconSize: (store.state.postFeedState.image != null ) ? 60 : 24,
-                  onPressed:  () async {
+          children : [
+            GestureDetector(
+              child: (store.state.postFeedState.image == null) ? 
+                Image.asset('assets/24px.png',
+                  filterQuality: FilterQuality.high,              
+                  height: MediaQuery.of(context).size.height *0.4,
+                  width: MediaQuery.of(context).size.width - 8,             
+                )
+              : Image.file(store.state.postFeedState.image,
+                  filterQuality: FilterQuality.high,              
+                  height: MediaQuery.of(context).size.height *0.4,
+                  width: MediaQuery.of(context).size.width - 8,
+                ),
+              onTap: () async {
 
                     await showDialog(
                       context: context,
@@ -75,16 +81,38 @@ class _AddEventFormState extends State<AddEventForm> {
 
                     store.dispatch(new SetAnomalyImageAction());
 
-                },
-              
-                
-              ),
-              title: Text(title),
-              subtitle: store.state.postFeedState.havePosition ? Text(store.state.postFeedState.placemark.locality + ", "+store.state.postFeedState.placemark.country) 
-                  : Text(""),
+              },
             ),
- 
-          TextFormField(
+            Padding(padding: EdgeInsets.all(2),),
+                        
+            Row(
+              children: <Widget>[
+                Text('Position :',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 16
+                  ),
+                ),
+                Padding(padding: EdgeInsets.all(4),
+                ),
+                store.state.postFeedState.havePosition ? Text(store.state.postFeedState.placemark.locality + ", "+store.state.postFeedState.placemark.country) 
+                  : 
+                 Text("Votre position", 
+                  style: TextStyle(
+                    fontSize: 16
+
+                  ),
+                 ),
+              ],
+              
+            ),
+            
+
+           Form(
+              key: formKey,
+      child: Column(
+          children: <Widget>[
+                        TextFormField(
             readOnly: store.state.eventState.isPostingEvent,
             decoration: new InputDecoration(labelText: 'Title',
                           enabled: !store.state.eventState.isPostingEvent,
@@ -127,7 +155,11 @@ class _AddEventFormState extends State<AddEventForm> {
           ),
           Padding(padding: EdgeInsets.all(8),),
 
-          MaterialButton(
+          
+          ],
+        )
+        ),
+        MaterialButton(
               onPressed:() {
                 store.state.postFeedState.havePosition ? 
                 store.dispatch(new DeletePositionAction(null, null, false)) 
@@ -211,14 +243,18 @@ class _AddEventFormState extends State<AddEventForm> {
 
               },
               child: store.state.eventState.isPostingEvent ? CircularProgressIndicator() :new Text('Submit'),
-            ),
+            )
           ),
         ],
       ),
-    ),
+ 
+          
+
+    
+    );}
     );
-  });
   }
+  
 
 
 

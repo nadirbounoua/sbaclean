@@ -12,13 +12,14 @@ class AddEventScreen extends StatelessWidget {
         return new Scaffold(
             appBar: AppBar(title: const Text('Add event')),
             body: new Container(
-                child:  Column(
+                child :SingleChildScrollView( child:  Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                             new AddEventForm(),
                         ],
                     )
                 )
+            )
             
         );
     }
