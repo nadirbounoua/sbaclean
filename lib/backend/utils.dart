@@ -54,8 +54,11 @@ List<Reaction> parseReaction(String responseBody){
 }
 
 Reaction parseOneReaction(String responseBody){
-  final parsed = json.decode(responseBody);
+  List<dynamic> parsed = json.decode(responseBody);
+  if (parsed.length > 0 )
   return Reaction.fromJson(parsed[0]);
+  
+  return null;
 }
 
 Comment createCommentFromJson(dynamic json) {
@@ -74,7 +77,6 @@ Comment createCommentFromJsonPost(dynamic responseBody) {
 }
 
 List<Comment> parseComment(String responseBody){
-  print(responseBody);
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
 
     return parsed.map<Comment>((json) => createCommentFromJson(json)).toList();
@@ -90,7 +92,6 @@ User parseOneUser(String responseBody){
     return User.fromJson(parsed);
 }
 Anomaly parseOneAnomalyPost(dynamic responseBody){
-  print(responseBody);
     final parsed = json.decode(responseBody['response']);
 
     return createFromJsonPost(parsed,responseBody['post']);
