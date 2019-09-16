@@ -74,7 +74,7 @@ class _ProfileState extends State<ProfileScreen> {
     TextStyle _nameTextStyle = TextStyle(
       fontFamily: 'Roboto',
       color: Colors.black,
-      fontSize: 22.0,
+      fontSize: 18.0,
       fontWeight: FontWeight.w500,
     );
 
@@ -92,7 +92,7 @@ class _ProfileState extends State<ProfileScreen> {
         style: TextStyle(
           
           color: Colors.grey,
-          fontSize: 18.0,
+          fontSize: 16.0,
           fontWeight: FontWeight.w300,
         ),
       ),
@@ -153,7 +153,6 @@ class _ProfileState extends State<ProfileScreen> {
         children: <Widget>[
           _buildStatItem("Anomalies", store.state.userHistoryState.userPosts.length.toString()),
           _buildStatItem("Evénements", store.state.userHistoryState.userEvents.length.toString()),
-          _buildStatItem("J'aimes", "19"),
 
         ],
       ),
