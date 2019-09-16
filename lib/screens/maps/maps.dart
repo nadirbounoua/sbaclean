@@ -4,18 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:redux/redux.dart';
+import 'package:sbaclean/actions/participation_actions.dart';
+import 'package:sbaclean/models/participation.dart';
 import 'package:sbaclean/screens/anomaly_details/anomaly_details.dart';
 import 'package:sbaclean/store/app_state.dart';
 
 
 class MapSample extends StatefulWidget {
+
+  Store<AppState> store;
+  MapSample({this.store});
   @override
-  State<MapSample> createState() => MapSampleState();
+  State<MapSample> createState() => MapSampleState(store: store);
 }
 
 class MapSampleState extends State<MapSample> {
+  Store<AppState> store;
   Completer<GoogleMapController> _controller = Completer();
-
+  MapSampleState({this.store});
   getIcons() async {
 
   }
@@ -33,10 +39,10 @@ class MapSampleState extends State<MapSample> {
           );
 
       final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target:LatLng(store.state.auth.user.position.latitude, store.state.auth.user.position.longitude),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+        bearing: 192.8334901395799,
+        target:LatLng(store.state.auth.user.position.latitude, store.state.auth.user.position.longitude),
+          tilt: 59.440717697143555,
+          zoom: 19.151926040649414);
       Set<Marker> markersSet =  Set();
       store.state.feedState.anomalies.forEach((anomaly) {
         try {
@@ -54,6 +60,44 @@ class MapSampleState extends State<MapSample> {
         markersSet.add(Marker(
           markerId: MarkerId(event.post.id.toString()),
           position: LatLng(double.parse(event.post.latitude), double.parse(event.post.longitude)),
+          onTap: () {
+                showDialog<void>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Participation à "+ event.post.title),
+                      content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[
+                                    Text('Voulez vous participer a cet événement ?'),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Annuler'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text('Particper'),
+                                  onPressed: () {
+                                    store.dispatch(
+                                        addParticipation(
+                                          context,
+                                          store.state.auth.user.authToken,
+                                          new Participation(
+                                              user: store.state.auth.user.id.toString(), event: event.id.toString())));
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                    );
+                  }
+                );
+          }
         ));
       });
       } catch (e) {

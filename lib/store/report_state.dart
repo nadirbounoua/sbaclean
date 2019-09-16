@@ -8,7 +8,7 @@ class ReportState{
   final List<Report> reports;
 
 
-  ReportState({this.reports});
+  ReportState({this.reports = const []});
 
   ReportState copyWith({
     List<Report> reports,

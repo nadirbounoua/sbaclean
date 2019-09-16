@@ -12,7 +12,7 @@ class EditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, AppState>(        
+    return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, state) {
           List<String> cities = new List<String>();
@@ -23,19 +23,17 @@ class EditScreen extends StatelessWidget {
           } else {
             cities.add("choose city");
           }
-    return new Scaffold(
-            appBar: AppBar(title: const Text('Edit Profile')),
-            body: new Padding(
-                padding: new EdgeInsets.fromLTRB(32.0, MediaQuery.of(context).padding.top + 32.0, 32.0, 32.0),
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    new EditProfileForm(cities: cities),
-                  ],
-                )
-            )
-        
-    );});
+          return new Scaffold(
+              appBar: AppBar(title: const Text('Edit Profile')),
+              body: new Padding(
+                  padding: new EdgeInsets.fromLTRB(32.0,
+                      MediaQuery.of(context).padding.top + 32.0, 32.0, 32.0),
+                  child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      new EditProfileForm(cities: cities),
+                    ],
+                  )));
+        });
   }
-
 }

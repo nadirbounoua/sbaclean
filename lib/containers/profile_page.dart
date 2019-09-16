@@ -17,7 +17,7 @@ class ProfilePage extends StatelessWidget{
             appBar: AppBar(
               title: Text('Profile Page'),
             ),
-            body: ProfileScreen(first_name : profile.first_name, last_name: profile.last_name, address: profile.address, city: profile.city, email: profile.email, phone: profile.phone_number),
+            body: ProfileScreen(first_name : profile.first_name, last_name: profile.last_name, address: profile.address, city: profile.city, email: profile.email, phone: profile.phone_number, profile_picture: profile.profile_picture),
           );
         }
     );

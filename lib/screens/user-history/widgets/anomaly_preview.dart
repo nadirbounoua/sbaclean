@@ -144,40 +144,22 @@ class AnomalyHistoryPreviewState extends State<AnomalyHistoryPreview> {
                               fontSize: 14
                             ),
                           ),
-                          Expanded(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 16),
-                                  child: IconButton(
-                                      icon: Icon(Icons.edit),
-                                      onPressed: () {},
-                                  ),
-                                ),
-
-                                IconButton(
+                          /*Expanded(
+                            child: 
+                              Container(
+                                color: Colors.red,
+                                child: IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () { store.dispatch(DeleteAnomalyAction(anomaly: anomaly));},
-                                ),
-                              ],
-                            )
-                          ),
-
-
-
-
-                        ],
+                               ),
+                              )                     
+                          )*/
+                      ],
                     ),
-                  ),
-
-                  
-                  
+                  ),  
                 ],
               ),
                 ),
-            
             ]),
           ),
         ]),

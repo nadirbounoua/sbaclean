@@ -304,8 +304,11 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future modifyPersonal(String id,String token,String first_name, String last_name,String phone_number,String address, String city) async {
+  Future modifyPersonal(String id,String token,String username,String email,String first_name, String last_name,String phone_number,String address, String city) async {
     var map = new Map<String, dynamic>();
+    print("Im in api");
+    map["username"] = username;
+    map["email"] = email;
     map["first_name"] = first_name;
     map["last_name"] = last_name;
     map["phone_number"] = phone_number;
@@ -316,11 +319,18 @@ Future getComments(String postId) async {
     var response = await http.patch(url,body: map, headers: {HttpHeaders.authorizationHeader: "Token "+ token });
     return response.body;
   }
-
-  Future modifyLogin(String id,String token,String username, String email,String password) async {
+  Future modifyProfilePicture(String id,String token,String profile_picture) async {
     var map = new Map<String, dynamic>();
-    map["username"] = username;
-    map["email"] = email;
+    print("Im in api");
+    map["profile_pic_url"] = profile_picture;
+    map["is_staff"] = "0";
+    var url = ProjectSettings.apiUrl + "/api/v1/accounts/$id";
+    var response = await http.patch(url,body: map, headers: {HttpHeaders.authorizationHeader: "Token "+ token});
+    return response.body;
+  }
+
+  Future modifyPassword(String id,String token,String password) async {
+    var map = new Map<String, dynamic>();
     map["password"] = password;
     map["is_staff"] = "0";
     var url = ProjectSettings.apiUrl + "/api/v1/accounts/$id";
@@ -359,6 +369,14 @@ Future getComments(String postId) async {
     var url = ProjectSettings.apiUrl+"/api/v1/posts/post/?event";
     var response = await http.get(url,
         headers: {HttpHeaders.authorizationHeader : "Token "+ token});
+    return response.body;
+  }
+
+  Future removeEvent(String token,String id) async {
+    print("in remove event");
+    var url = ProjectSettings.apiUrl + "/api/v1/events/$id";
+    var response = await http.delete(url,headers: {HttpHeaders.authorizationHeader: "Token "+ token}
+    );
     return response.body;
   }
 
@@ -401,8 +419,28 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future getParticipations(String id) async {
-    var url = ProjectSettings.apiUrl+"/api/v1/events/participate/?event=$id";
+  Future removeParticipation(String token,Participation participation) async {
+    // get participation id
+    String responseBody = await getParticipation(participation);
+    Participation participate = parseOneParticipation(responseBody);
+    final id = participate.id;
+    //remove participation
+    print("Im in remove participation");
+    var url = ProjectSettings.apiUrl + "/api/v1/events/participate/$id";
+    var response = await http.delete(url,headers: {HttpHeaders.authorizationHeader: "Token "+ token}
+    );
+    return response.body;
+  }
+  Future getParticipation(Participation participation) async {
+    final user = participation.user;
+    final event = participation.event;
+    var url = ProjectSettings.apiUrl+"/api/v1/events/participate/?user=$user&event=$event";
+    var response = await http.get(url);
+    return response.body;
+  }
+
+  Future getParticipations() async {
+    var url = ProjectSettings.apiUrl+"/api/v1/events/participate/";
     var response = await http.get(url);
     return response.body;
   }
@@ -416,10 +454,12 @@ Future getComments(String postId) async {
     return response.body;
   }
 
-  Future getReport(String anomaly_id,String user_id) async {
-    var url = ProjectSettings.apiUrl+"/api/v1/anomalys/signal/?anomaly=$anomaly_id&user=$user_id";
+  Future getReport(String user_id) async {
+    var url = ProjectSettings.apiUrl+"/api/v1/anomalys/signal/?user=$user_id";
     var response = await http.get(url);
     return response.body;
   }
 }
+
+
 

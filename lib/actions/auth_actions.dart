@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:redux_persist/redux_persist.dart';
 import 'package:redux_thunk/redux_thunk.dart';
+import 'package:sbaclean/actions/post_feed_actions.dart';
+import 'package:sbaclean/containers/profile_page.dart';
 import 'package:sbaclean/store/auth_state.dart';
 import '../models/event.dart';
 import 'package:redux/redux.dart';
@@ -22,6 +24,8 @@ Api api = Api();
 
 
 class UserLoginRequest {}
+
+class EditProfilePicRequest{}
 
 class UserLoginSuccess {
     final User user;
@@ -55,7 +59,7 @@ final Function login = (BuildContext context, String username, String password) 
             User finalUser =User(password:password,authToken: token,id: pro.id,
                 username: pro.username,first_name: pro.first_name,
                 last_name: pro.last_name,address: pro.address,city: pro.city,
-            email: pro.email,phone_number: pro.phone_number);
+            email: pro.email,phone_number: pro.phone_number, profile_picture: pro.profile_picture);
             persist.writeAsStringSync(json.encode(finalUser.toJSON()));
             store.dispatch(new UserLoginSuccess(finalUser));
             store.dispatch(getCities(context));
@@ -73,14 +77,31 @@ final Function register = (BuildContext context, String username,String first_na
     await api.addUser(username,first_name,last_name,phone_number, city,address, email, password);
 };
 
-final Function modifyPersonal = (BuildContext context,String id,String token,String first_name,String last_name, String phone_number, String address, String city) {
+
+final Function modifyPersonal = (BuildContext context,String id,String token,String password,String username, String email, String first_name,String last_name, String phone_number, String address, String city, String profile_picture) {
     Api api = Api();
-    api.modifyPersonal(id,token,first_name,last_name,phone_number, address, city);
+    return (Store<AppState> store) async{
+
+        // modify api
+        api.modifyPersonal(id,token,username,email,first_name,last_name,phone_number, address, city);
+
+        // modify state
+        store.dispatch(new UserUpdate(new User(authToken: token,id: int.parse(id),
+            username: username,password: password ,first_name: first_name,
+            last_name: last_name,address: address,city: city,
+            email: email,phone_number: int.parse(phone_number),profile_picture:profile_picture)));
+    };
 };
 
-final Function modifyLogin = (BuildContext context,String id,String token,String username,String email, String password) {
+class UserUpdate {
+    final User user;
+
+    UserUpdate(this.user);
+}
+
+final Function modifyPassword = (BuildContext context,String id,String token, String password) {
     Api api = Api();
-    api.modifyLogin(id,token,username,email,password);
+    api.modifyPassword(id,token,password);
 };
 
 
@@ -144,4 +165,28 @@ class GetUserPositionAction {
 class SetUserOneSignalIdAction {
   String id;
   SetUserOneSignalIdAction({this.id});
+}
+
+final Function modifyProfilePicture = (BuildContext context,String id,String token) {
+    Api api = Api();
+    return (Store<AppState> store) async{
+        store.dispatch(new EditProfilePicRequest());
+        // get image url
+        var image_url = await api.upload(store.state.postFeedState.image);
+        print(image_url);
+        // modify api
+        api.modifyProfilePicture(id,token,image_url);
+        // modify state
+        store.dispatch(new UserProfilePicture(image_url));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProfilePage()));
+    };
+
+};
+
+class UserProfilePicture {
+    final String profile_picture;
+    UserProfilePicture(this.profile_picture);
 }

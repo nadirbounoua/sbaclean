@@ -10,6 +10,8 @@ Reducer<EventState> eventReducer = combineReducers([
   new TypedReducer<EventState, FinishGetEventsAction>(finishGetEventsContent),
   new TypedReducer<EventState, AddEventsAction>(addItem),
   new TypedReducer<EventState, FinishAddEventsAction>(finishAddItem),
+  new TypedReducer<EventState, RemoveEventAction>(removeEventReducer)
+
 
 
 ]);
@@ -41,5 +43,11 @@ EventState finishAddItem(EventState state, FinishAddEventsAction action) {
                 ..add(action.event)
                 ..sort((event,event1) => event1.id.compareTo(event.id));
   return state.copyWith(events: list, isPostingEvent: false);
+}
+
+EventState removeEventReducer(EventState state, RemoveEventAction action) {
+  List<Event> list = state.events;
+  list.remove(action.event);
+  return state.copyWith(events: list);
 }
 

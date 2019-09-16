@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:sbaclean/actions/post_feed_actions.dart';
 import 'package:redux/redux.dart';
 import 'package:sbaclean/actions/user_history_actions.dart';
+import 'package:sbaclean/containers/profile_page.dart';
 import 'package:sbaclean/screens/edit_screen.dart';
 import 'package:sbaclean/screens/user-history/user-history.dart';
 import 'package:sbaclean/screens/user-history/widgets/history_list.dart';
 import 'package:sbaclean/screens/user_ranking/user_ranking_screen.dart';
 import 'package:sbaclean/store/app_state.dart';
+import 'package:sbaclean/actions/auth_actions.dart';
+import 'main/widgets/image_chooser.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -16,12 +20,13 @@ class ProfileScreen extends StatefulWidget {
   int phone;
   String address;
   String city;
-  ProfileScreen({this.first_name, this.last_name, this.email, this.phone, this.address, this.city});
+  String profile_picture;
+  ProfileScreen({this.first_name, this.last_name, this.email, this.phone, this.address, this.city, this.profile_picture});
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _ProfileState(first_name: first_name,last_name: last_name,email: email, phone: phone,address: address, city: city);
+    return _ProfileState(first_name: first_name,last_name: last_name,email: email, phone: phone,address: address, city: city, profile_picture: profile_picture);
   }
 }
 
@@ -35,37 +40,87 @@ class _ProfileState extends State<ProfileScreen> {
   int phone;
   String address;
   String city;
+  String profile_picture;
 
-
-  _ProfileState({this.first_name, this.last_name, this.email, this.phone, this.address, this.city});
+  _ProfileState({this.first_name, this.last_name, this.email, this.phone, this.address, this.city, this.profile_picture});
 
   
 
   Widget _buildProfileImage() {
     return Center(
-      child: Container(
-        width: 100.0,
-        height: 100.0,
-        decoration: BoxDecoration(
-          
-          boxShadow: [
-            new BoxShadow(
-              color: Colors.grey[300],
-              offset: new Offset(20.0, 10.0),
-              blurRadius: 20.0,
-            )
-          ],
-          image: DecorationImage(
-            
-            image: AssetImage('assets/dopeman0x.jpeg'),
-            fit: BoxFit.cover,
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: 100.0,
+            height: 100.0,
+            decoration: BoxDecoration(
+
+              boxShadow: [
+                new BoxShadow(
+                  color: Colors.grey[300],
+                  offset: new Offset(20.0, 10.0),
+                  blurRadius: 20.0,
+                )
+              ],
+              image: DecorationImage(
+
+                image:  NetworkImage(profile_picture),
+                fit: BoxFit.cover,
+              ),
+              borderRadius: BorderRadius.circular(80.0),
+              border: Border.all(
+                color: Colors.white,
+                width: 5.0,
+              ),
+            ),
           ),
-          borderRadius: BorderRadius.circular(80.0),
-          border: Border.all(
-            color: Colors.white,
-            width: 5.0,
+          FlatButton(
+            child: Text("edit"),
+            onPressed: () async {
+                 showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Material(
+                      color: Colors.white.withOpacity(0.5),
+                      child: StoreConnector<AppState,Store<AppState>> (
+    converter: (store) =>  store,
+    builder: (context,store) { return
+
+                    Column(
+                        children: <Widget>[
+                          Padding(padding: EdgeInsets.only(top:300.0)
+                            ,),
+                          IconButton(
+                            icon: (store.state.postFeedState.image == null) ? Icon(Icons.image,color: Colors.grey[800],) : Image.file(store.state.postFeedState.image,height: 200,width: 200,),
+                            iconSize: (store.state.postFeedState.image != null ) ? 200 : 140,
+                            onPressed:  () async {
+                              await showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return ImageChooser();
+                                  });
+
+                              store.dispatch(new SetAnomalyImageAction());
+
+                            },
+                          ),
+                          FlatButton(
+                            child: store.state.auth.isEditingPicture? CircularProgressIndicator() : new Text("save"),
+                            onPressed: (){
+                              store.dispatch(modifyProfilePicture(context,store.state.auth.user.id.toString()
+                                  ,store.state.auth.user.authToken));
+
+                            },
+                          ),
+                        ],
+                      );}),
+                    );
+                  });
+
+
+            },
           ),
-        ),
+        ],
       ),
     );
   }

@@ -18,20 +18,24 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class PostPreview extends StatefulWidget {
   final Anomaly anomaly;
-  PostPreview({Key key, this.anomaly}) : super(key: key);     
+  bool reported;
+
+  PostPreview({Key key, this.anomaly, this.reported}) : super(key: key);
 
    @override
   PostPreviewState createState() {
     return PostPreviewState(
         anomaly: this.anomaly,
+        reported: this.reported
        );
   }
 }
 
 class PostPreviewState extends State<PostPreview> {
   final Anomaly anomaly;
+  bool reported;
   bool _isButtonDisabled;
-  PostPreviewState({Key key, this.anomaly});
+  PostPreviewState({Key key, this.anomaly, this.reported});
 
   @override
   void initState() {
@@ -41,10 +45,6 @@ class PostPreviewState extends State<PostPreview> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, dynamic>(
-            onInit: (store) {
-              store.dispatch(
-                  getReport(context,anomaly.id.toString(),store.state.auth.user.id.toString()));
-            },
             converter: (Store<AppState> store) {
               return (BuildContext context, String anomaly) =>
                   store.dispatch(addReport(context, store.state.auth.user.authToken,
@@ -93,14 +93,12 @@ class PostPreviewState extends State<PostPreview> {
                       child: Text(
                         calculateTime(anomaly.post.createdAt)
                       )
-                  ),               
-                  new StoreConnector<AppState, AppState>(
-                  converter: (store) => store.state,
-                  builder: (context, state) {
-                    return IconButton(
+                  ),
+                  IconButton(
                     icon: Icon(Icons.info,color: Colors.blueGrey),
-                    onPressed: (){
-                      if(state.reportState.reports.length == 0){
+                    onPressed: () {
+                      print(reported.toString()+"-----------"+anomaly.id.toString());
+                      if(!reported){
                         _isButtonDisabled = false;
                       }
                       else {
@@ -110,7 +108,7 @@ class PostPreviewState extends State<PostPreview> {
                         Toast.show("Already reported", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
                       }
                       else {
-                        return showDialog<void>(
+                        showDialog<void>(
                           context: context,
                           barrierDismissible: false, // user must tap button!
                           builder: (BuildContext context) {
@@ -134,6 +132,7 @@ class PostPreviewState extends State<PostPreview> {
                                   child: Text('Report'),
                                   onPressed: () {
                                     addReportAction(context,anomaly.id.toString());
+                                    reported = true;
                                     Navigator.of(context).pop();
                                   },
                                 ),
@@ -144,7 +143,7 @@ class PostPreviewState extends State<PostPreview> {
                       }
                     },
 
-                  );}),
+                  ),
                 ],
               ),
 

@@ -26,10 +26,10 @@ class AddParticipationAction {
 
 
 
-final Function getParticipations = (BuildContext context,String event_id) {
+final Function getParticipations = (BuildContext context) {
   Api api = Api();
   return (Store<AppState> store) async{
-    final response = await api.getParticipations(event_id);
+    final response = await api.getParticipations();
     List<Participation> participations = parseParticipations(response);
     store.dispatch(new GetParticipationsAction(participations));
   };
@@ -38,4 +38,38 @@ final Function getParticipations = (BuildContext context,String event_id) {
 class GetParticipationsAction {
   final List<Participation> participations;
   GetParticipationsAction(this.participations);
+}
+
+final Function getParticipationsEvent = (List<Participation> participations,String event_id) {
+  List<Participation> list = new List<Participation>();
+  participations.forEach((f){
+    if (int.parse(f.event) == int.parse(event_id)){
+      list.add(f);
+    }
+  });
+  return list;
+
+};
+
+final Function checkEvent = (List<Participation> participations,String user_id) {
+  bool closed = false;
+  participations.forEach((f){
+    if (int.parse(f.user) == int.parse(user_id)){
+      closed = true;
+    }
+  });
+  return closed;
+
+};
+
+
+final Function removeParticipation = (BuildContext context,token,participation) {
+  Api api = Api();
+  return (Store<AppState> store) async{
+    final responseParticipation = await api.removeParticipation(token, participation);
+    store.dispatch(new RemoveParticipationAction());
+  };
+};
+
+class RemoveParticipationAction {
 }

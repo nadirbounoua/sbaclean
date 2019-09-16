@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' as prefix0;
 import 'package:image_picker/image_picker.dart';
 import 'package:redux/redux.dart';
 import 'dart:convert';
@@ -36,6 +37,7 @@ getPosition(){
                 getPositionHelper(store, myPosition, location[0]);
       
       })).catchError((onError) {
+        print("ERROR" + onError.toString());
         store.dispatch(PositionErrorAction());
       });
   };
@@ -52,13 +54,13 @@ setImage() {
   return (Store<AppState> store, SetAnomalyImageAction action, NextDispatcher next) async {
     next(action);
     File image;
-
     if (store.state.postFeedState.chooseCamera)
       image = await ImagePicker.pickImage(source: ImageSource.camera);
     else 
       image = await ImagePicker.pickImage(source: ImageSource.gallery);
     store.dispatch(new FinishSetAnomalyImageAction(image: image));
   };
+
 }
 
 chooseCamera() {

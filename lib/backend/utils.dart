@@ -176,3 +176,10 @@ List<Report> parseReports(String responseBody){
 
   return parsed.map<Report>((json) => Report.fromJson(json)).toList();
 }
+
+
+Participation parseOneParticipation(String responseBody) {
+  final parsed = jsonDecode(responseBody);
+
+  return Participation.fromJson(parsed[0]);
+}
