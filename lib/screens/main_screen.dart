@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:material_search/material_search.dart';
@@ -141,6 +143,8 @@ class MainScreenState extends State<MainScreen> {
               onInit: (store) {
                 store.dispatch(GetUserPositionAction().getUserPosition());
                 //initPlatformState(store);
+                  Timer.periodic(Duration(seconds: 60),(Timer t) async => await backgroundFetchHeadlessTask());
+
               },
               builder:(context,store) => PageView(
                 physics: NeverScrollableScrollPhysics(),
