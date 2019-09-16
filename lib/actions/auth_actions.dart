@@ -103,10 +103,8 @@ class GetUserRankingAction {
     
     ThunkAction<AppState> getRanking() {
     return (Store<AppState> store) async {
-      print('kk');
       final response3 = await api.copyWith(store.state.auth.user.authToken)
                                 .getRanking(store.state.auth.user.city);
-      print(response3);
       List<User> ranks = parseUsers(response3);
           store.dispatch(new GetUserRankingAction(ranks)); 
     };
@@ -121,9 +119,7 @@ class GetUserByEmailAction {
     
     ThunkAction<AppState> getUser() {
     return (Store<AppState> store) async {
-      print('kk');
       final response3 = await api.getUserByEmail(email);
-      print("response" +response3);
       List<User> user= parseUsers(response3);
           store.dispatch(new GetUserByEmailAction(user: user[0])); 
     };

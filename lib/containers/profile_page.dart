@@ -13,7 +13,6 @@ class ProfilePage extends StatelessWidget{
     return StoreConnector<AppState,User> (
         converter: (store) =>  store.state.auth.user,
         builder: (context,profile) {
-          print(profile.username);
           return Scaffold(
             appBar: AppBar(
               title: Text('Profile Page'),

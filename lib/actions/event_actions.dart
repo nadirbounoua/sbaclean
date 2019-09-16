@@ -31,7 +31,6 @@ class FinishAddEventsAction {
     final response = await api.copyWith(store.state.auth.user.authToken)
                                   .createEvent(event, store.state.auth.user);
     Event parsedEvent = await parseOneEvent(response);
-    print(parsedEvent);
     Navigator.pop(context);
    Future.delayed(Duration(seconds: 5),() =>store.dispatch(new FinishAddEventsAction(event: parsedEvent))) ;
   };

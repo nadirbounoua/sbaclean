@@ -5,7 +5,6 @@ import 'package:sbaclean/models/comment.dart';
 import 'package:sbaclean/store/app_state.dart';
 
 getCommentsHelper(Store<AppState> store, dynamic response){
-  print(response);
   List<Comment> commentList = parseComment(response);
   Future.delayed(Duration(seconds: 3), () => store.dispatch(new FinishGetCommentsAction(list: commentList)));
 

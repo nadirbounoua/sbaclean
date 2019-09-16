@@ -113,7 +113,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           .contains(new RegExp(r'' + criteria.toLowerCase().trim() + ''));
                       },
                       onSelect: (dynamic v) {
-                        print(v);
                       },
                       validator: (dynamic value) => value == null ? 'Required field' : null,
                       formatter: (dynamic v) => 'Hello, $v',
