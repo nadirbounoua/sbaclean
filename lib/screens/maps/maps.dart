@@ -39,33 +39,77 @@ class MapSampleState extends State<MapSample> {
       zoom: 19.151926040649414);
       Set<Marker> markersSet =  Set();
       store.state.feedState.anomalies.forEach((anomaly) {
-        markersSet.add(Marker(
+        try {
+          markersSet.add(Marker(
           position: LatLng(double.parse(anomaly.post.latitude), double.parse(anomaly.post.longitude)),
           markerId: MarkerId(anomaly.post.id.toString()),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> AnomalyDetails(anomaly: anomaly,)))
         ));
-      });
+        } catch (e) {
+        }
+             });
       try {
-              store.state.eventState.events.forEach((event){
+      store.state.eventState.events.forEach((event){
         markersSet.add(Marker(
           markerId: MarkerId(event.post.id.toString()),
           position: LatLng(double.parse(event.post.latitude), double.parse(event.post.longitude)),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
         ));
       });
       } catch (e) {
       }
 
-      return GoogleMap(
-        
-        mapType: MapType.normal,
-        markers: markersSet,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      );
+      return Stack(
+        alignment: AlignmentDirectional.topEnd,
+        children: <Widget>[
+         
+        GoogleMap( 
+          mapType: MapType.normal,
+          markers: markersSet,
+          initialCameraPosition: _kGooglePlex,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+        ),
+          Container(
+            height: 100,
+            padding: EdgeInsets.all(8),
+            margin: EdgeInsets.all(8),
+            width: 150,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(25))
+
+            ),
+            child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Icon(Icons.location_on, color: Colors.yellow,),
+                  Text("Anomaly"),
+
+                ],
+              ),
+              Padding(padding: EdgeInsets.all(8),),
+              Row(
+                children: <Widget>[
+                  Icon(Icons.location_on, color: Colors.red,),
+                  Text("Evénement"),
+
+
+                ],
+              )
+            ],
+          ),
+          ),
+         
   
+        ],
+      );
+      
+      
         },
       ),
           
